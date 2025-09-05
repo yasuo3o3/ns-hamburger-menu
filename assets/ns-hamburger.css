@@ -1,0 +1,123 @@
+:root{
+  --ns-start:#0ea5e9;
+  --ns-end:#a78bfa;
+  --ns-columns:2;
+  --ns-top-fz:24px;
+  --ns-sub-fz:16px;
+  --ns-hue-speed:12s;
+  --ns-hue-range:360d; /* ← PHP側で「deg」相当の値を流し込み（例: 16d） */
+  --ns-z:9999;
+}
+
+/* ハンバーガー（右上固定） */
+.ns-hb{
+  position:fixed; top:16px; right:16px;
+  z-index:calc(var(--ns-z) + 1);
+  width:44px;height:44px;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:transparent;border:none;padding:0;margin:0;cursor:pointer;
+}
+@media (max-width:782px){ .admin-bar .ns-hb{ top: calc(16px + 46px); } }
+@media (min-width:783px){ .admin-bar .ns-hb{ top: calc(16px + 32px); } }
+
+.ns-hb-box{ position:relative;width:28px;height:20px; }
+.ns-hb-bar, .ns-hb-bar::before, .ns-hb-bar::after{
+  position:absolute; left:0; right:0; height:2px; background:#111; border-radius:1px;
+  transition:transform .28s ease, top .28s ease, opacity .28s ease, background-color .28s ease, height .28s ease, width .28s ease;
+}
+.ns-hb-bar{ top:9px; }
+.ns-hb-bar::before{ content:""; top:-8px; }
+.ns-hb-bar::after{  content:""; top: 8px; }
+
+/* オープン時は大きなXに変形（白） */
+.ns-open .ns-hb{ width:64px;height:64px; }
+.ns-open .ns-hb-box{ width:36px;height:36px; }
+.ns-open .ns-hb .ns-hb-bar{ background:transparent; }
+.ns-open .ns-hb .ns-hb-bar::before{ top:0; transform:rotate(45deg); background:#fff; height:3px; }
+.ns-open .ns-hb .ns-hb-bar::after{  top:0; transform:rotate(-45deg); background:#fff; height:3px; }
+
+/* オーバーレイ（右上→左下に広がる） */
+.ns-overlay{
+  position:fixed; inset:0; z-index:var(--ns-z);
+  display:block;
+  color:#fff;
+  overflow:auto;
+  clip-path: circle(0% at 100% 0);
+  -webkit-clip-path: circle(0% at 100% 0);
+  transition: clip-path .6s ease-in-out;
+  will-change: clip-path;
+}
+.ns-overlay[hidden]{ display:block; visibility:hidden; }
+
+/* 背景：右上→左下のグラデーション、色相が“少しだけ”往復で変化 */
+.ns-overlay::before{
+  content:"";
+  position:absolute; inset:0; z-index:-1;
+  background: linear-gradient(to bottom left, var(--ns-start), var(--ns-end));
+  animation: none; /* ns-hue-off でOFF。ON時は下の指定が適用 */
+}
+.ns-open .ns-overlay{
+  clip-path: circle(150vmax at 100% 0);
+  -webkit-clip-path: circle(150vmax at 100% 0);
+}
+.ns-open .ns-overlay::before{
+  animation: ns-hue var(--ns-hue-speed) ease-in-out infinite alternate;
+  will-change: filter;
+}
+
+/* 色相アニメOFF（JS/サーバでクラス付与） */
+.ns-hue-off::before{ animation: none !important; }
+
+@keyframes ns-hue{
+  to{ filter: hue-rotate(var(--ns-hue-range)); } /* 例：16deg まで → 往復 */
+}
+
+/* インナー */
+.ns-overlay__inner{
+  min-height:100%;
+  display:flex; flex-direction:column;
+}
+.ns-overlay__nav{
+  width:min(1200px, 92vw);
+  margin: clamp(56px, 8vh, 96px) auto;
+}
+
+/* メニュー：親が1/2/3列に流れる */
+.ns-menu{
+  list-style:none; padding:0; margin:0;
+  display:grid; gap: clamp(12px, 2vw, 24px) clamp(16px, 3vw, 32px);
+  grid-template-columns: repeat(var(--ns-columns), minmax(0, 1fr));
+}
+.ns-menu > li{ break-inside: avoid; list-style:none; }
+
+.ns-menu > li > a{
+  display:inline-block; text-decoration:none; color:#fff;
+  font-size: var(--ns-top-fz);
+  font-weight: 800;
+  line-height:1.2;
+  letter-spacing:.02em;
+}
+.ns-menu > li > a:hover{ opacity:.9; text-decoration: underline; }
+
+/* サブメニュー */
+.ns-menu .sub-menu{
+  margin: 8px 0 16px 0; padding:0; list-style:none;
+}
+.ns-menu .sub-menu li a{
+  display:block; text-decoration:none; color:#fff;
+  font-size: var(--ns-sub-fz);
+  font-weight: 500;
+  line-height:1.35;
+  padding: 4px 0;
+  opacity:.95;
+}
+.ns-menu .sub-menu li a:hover{ text-decoration: underline; opacity:1; }
+
+/* スクロール抑止 */
+body.ns-no-scroll{ overflow:hidden; }
+
+/* モーション軽減 */
+@media (prefers-reduced-motion: reduce){
+  .ns-overlay{ transition: none !important; }
+  .ns-open .ns-overlay::before{ animation: none !important; }
+}

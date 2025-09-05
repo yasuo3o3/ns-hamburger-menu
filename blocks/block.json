@@ -1,0 +1,22 @@
+{
+  "apiVersion": 2,
+  "name": "ns/hamburger",
+  "title": "NS Hamburger Menu",
+  "category": "design",
+  "icon": "menu",
+  "description": "全画面オーバーレイのハンバーガーメニュー。親子で文字サイズ差・2〜3列・色相アニメ。",
+  "keywords": ["menu", "hamburger", "overlay", "ナビ"],
+  "textdomain": "ns-hamburger-menu",
+  "supports": { "html": false },
+  "attributes": {
+    "columns": { "type": "number", "default": null },
+    "topFontPx": { "type": "number", "default": null },
+    "subFontPx": { "type": "number", "default": null },
+    "colorStart": { "type": "string", "default": null },
+    "colorEnd": { "type": "string", "default": null },
+    "hueAnim": { "type": "boolean", "default": null },
+    "hueSpeedSec": { "type": "number", "default": null },
+    "zIndex": { "type": "number", "default": null }
+  },
+  "editorScript": "file:./index.js"
+}
