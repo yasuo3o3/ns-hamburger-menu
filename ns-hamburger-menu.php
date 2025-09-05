@@ -1,36 +1,60 @@
 <?php
 /**
  * Plugin Name:       NS Hamburger Overlay Menu
- * Description:       右上ハンバーガー → 全画面オーバーレイ。親子で文字サイズ差・2〜3列・斜め拡張＆色相アニメのシンプルメニュー。ブロック対応。
- * Version:           0.11
+ * Plugin URI:        https://github.com/netservice/ns-hamburger-menu
+ * Description:       Accessible hamburger overlay menu with gradient animations, multi-column layout, and full keyboard navigation support.
+ * Version:           0.10.0
+ * Requires at least: 6.5
+ * Requires PHP:      7.4
  * Author:            Netservice
+ * Author URI:        https://netservice.jp
+ * License:           GPL v2 or later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       ns-hamburger-menu
+ * Domain Path:       /languages
+ * Network:           false
  */
 
-if (!defined('ABSPATH')) exit;
+// Prevent direct access
+if (!defined('ABSPATH')) {
+    exit;
+}
 
+// Define plugin constants
+define('NSHM_VERSION', '0.10.0');
+define('NSHM_PLUGIN_FILE', __FILE__);
+define('NSHM_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('NSHM_PLUGIN_PATH', plugin_dir_path(__FILE__));
+
+// Load text domain
+function nshm_load_textdomain() {
+    load_plugin_textdomain('ns-hamburger-menu', false, dirname(plugin_basename(__FILE__)) . '/languages');
+}
+add_action('plugins_loaded', 'nshm_load_textdomain');
+
+// Require core files
+require_once NSHM_PLUGIN_PATH . 'inc/Core.php';
+require_once NSHM_PLUGIN_PATH . 'inc/Admin.php';
+require_once NSHM_PLUGIN_PATH . 'inc/Frontend.php';
+
+// Initialize plugin
+function nshm_init() {
+    new NSHM_Core();
+    if (is_admin()) {
+        new NSHM_Admin();
+    }
+    new NSHM_Frontend();
+}
+add_action('init', 'nshm_init');
+
+// Legacy compatibility
 class NS_Hamburger_Menu {
     const OPT_KEY = 'ns_hamburger_options';
-    const VER     = '0.11';
+    const VER     = NSHM_VERSION;
 
     public function __construct() {
-        add_action('init', [$this, 'register_menu_location']);
-        add_action('init', [$this, 'register_block']);
-        add_action('admin_init', [$this, 'register_settings']);
-        add_action('admin_menu', [$this, 'add_settings_page']);
-        add_action('admin_enqueue_scripts', [$this, 'admin_assets']);
-        add_action('wp_enqueue_scripts', [$this, 'front_assets']);
-        add_shortcode('ns_hamburger_menu', [$this, 'shortcode']);
-
-        // 自動挿入（※スロットは対象外）
-        add_action('wp_footer', function () {
-            $opt = $this->get_options();
-            if (!empty($opt['auto_inject'])) echo $this->render_markup(false, [], null, '');
-        }, 99);
-        add_action('wp_body_open', function () {
-            $opt = $this->get_options();
-            if (!empty($opt['auto_inject'])) echo $this->render_markup(false, [], null, '');
-        }, 1);
+        // Deprecated: This class is kept for backward compatibility only
+        // The actual functionality has been moved to NSHM_* classes
     }
 
     public function register_menu_location() {
@@ -262,4 +286,8 @@ class NS_Hamburger_Menu {
         if ($return_string) return $html; echo $html;
     }
 }
-new NS_Hamburger_Menu();
+
+// Maintain backward compatibility
+if (!class_exists('NSHM_Core')) {
+    new NS_Hamburger_Menu();
+}

@@ -1,0 +1,142 @@
+# Copyright (C) 2024 NS Hamburger Overlay Menu
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: NS Hamburger Overlay Menu 0.10.0\n"
+"Report-Msgid-Bugs-To: https://github.com/netservice/ns-hamburger-menu/issues\n"
+"POT-Creation-Date: 2024-01-01 00:00:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: inc/Admin.php:78
+msgid "Auto Insert"
+msgstr ""
+
+#: inc/Admin.php:82
+msgid "Automatically insert on all pages"
+msgstr ""
+
+#: inc/Admin.php:87
+msgid "Color Preset"
+msgstr ""
+
+#: inc/Admin.php:92
+msgid "Custom"
+msgstr ""
+
+#: inc/Admin.php:93
+msgid "Blue"
+msgstr ""
+
+#: inc/Admin.php:94
+msgid "Green"
+msgstr ""
+
+#: inc/Admin.php:95
+msgid "Red"
+msgstr ""
+
+#: inc/Admin.php:96
+msgid "Orange"
+msgstr ""
+
+#: inc/Admin.php:97
+msgid "Black"
+msgstr ""
+
+#: inc/Admin.php:107
+msgid "Start and end colors can be fine-tuned below."
+msgstr ""
+
+#: inc/Admin.php:111
+msgid "Start Color:"
+msgstr ""
+
+#: inc/Admin.php:115
+msgid "End Color:"
+msgstr ""
+
+#: inc/Admin.php:120
+msgid "Hue Range (degrees):"
+msgstr ""
+
+#: inc/Admin.php:123
+msgid "Lower values create subtle color shifts"
+msgstr ""
+
+#: inc/Admin.php:129
+msgid "Layout & Typography"
+msgstr ""
+
+#: inc/Admin.php:132
+msgid "Columns:"
+msgstr ""
+
+#: inc/Admin.php:139
+msgid "column"
+msgid_plural "columns"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/Admin.php:146
+msgid "Parent font size:"
+msgstr ""
+
+#: inc/Admin.php:150
+msgid "Child font size:"
+msgstr ""
+
+#: inc/Admin.php:157
+msgid "Hue Animation"
+msgstr ""
+
+#: inc/Admin.php:161
+msgid "Enable hue animation"
+msgstr ""
+
+#: inc/Admin.php:166
+msgid "Animation speed:"
+msgstr ""
+
+#: inc/Admin.php:168
+msgid "seconds per cycle"
+msgstr ""
+
+#: inc/Admin.php:174
+msgid "Z-Index"
+msgstr ""
+
+#: inc/Admin.php:177
+msgid "Adjust if the menu appears behind other elements"
+msgstr ""
+
+#: inc/Core.php:28
+msgid "Hamburger Overlay Menu"
+msgstr ""
+
+#: inc/Core.php:231
+msgid "Open menu"
+msgstr ""
+
+#: inc/Core.php:235
+msgid "Hamburger menu"
+msgstr ""
+
+#: inc/Core.php:248
+#, php-format
+msgid "Please assign a menu to the \"%s\" location in Appearance → Menus."
+msgstr ""
+
+#: ns-hamburger-menu.php:48
+msgid "NS Hamburger Menu"
+msgstr ""
+
+#: blocks/index.js:59
+msgid "Add top/bottom slots here to include custom blocks"
+msgstr ""

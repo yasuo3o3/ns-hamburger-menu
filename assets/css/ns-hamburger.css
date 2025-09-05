@@ -5,7 +5,7 @@
   --ns-top-fz:24px;
   --ns-sub-fz:16px;
   --ns-hue-speed:12s;
-  --ns-hue-range:360d; /* ← PHP側で「deg」相当の値を流し込み（例: 16d） */
+  --ns-hue-range:24deg;
   --ns-z:9999;
 }
 

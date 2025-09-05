@@ -1,0 +1,27 @@
+parameters:
+    level: 6
+    paths:
+        - .
+    excludePaths:
+        - vendor/
+        - node_modules/
+        - docs/
+        - languages/
+        - assets/
+        - blocks/
+        - templates/
+    ignoreErrors:
+        # WordPress specific functions that PHPStan doesn't know about
+        - '#Function [a-zA-Z0-9_]+ not found#'
+        - '#Constant [A-Z_]+ not found#'
+        - '#Call to undefined function (add_action|add_filter|wp_enqueue_script|wp_enqueue_style|wp_localize_script|esc_attr|esc_html|esc_url|__|\\_e|_n|plugin_dir_url|plugin_dir_path|get_option|update_option|delete_option|wp_parse_args|sanitize_hex_color|current_user_can|wp_nav_menu|register_nav_menus|register_block_type|render_block|parse_blocks|wp_unique_id|load_plugin_textdomain|plugin_basename|is_admin|is_multisite|get_sites|switch_to_blog|restore_current_blog|wp_cache_flush|wp_add_inline_style|wp_script_add_data|settings_fields|submit_button|get_admin_page_title|checked|selected|register_setting)#'
+        # WordPress global variables and classes
+        - '#Undefined variable: \$wp#'
+        - '#Class WP_Block not found#'
+    scanDirectories:
+        - /tmp/wordpress-stubs/
+    bootstrapFiles:
+        - /tmp/wordpress-stubs/wp-includes/functions.php
+    universalObjectCratesClasses:
+        - WP_Block
+    checkMissingIterableValueType: false

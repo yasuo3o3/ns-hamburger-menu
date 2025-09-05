@@ -1,4 +1,8 @@
-// v0.06: ヘッダー出力でも安全に動作するよう DOMContentLoaded で初期化
+/**
+ * NS Hamburger Menu JavaScript
+ * Accessible hamburger menu with keyboard navigation and focus management
+ * @version 0.10.0
+ */
 document.addEventListener('DOMContentLoaded', function(){
   const focusablesSelector = 'a, button, input, textarea, select, details,[tabindex]:not([tabindex="-1"])';
 
@@ -23,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function(){
       lastFocused = document.activeElement;
       document.body.classList.add('ns-open','ns-no-scroll');
       btn.setAttribute('aria-expanded','true');
-      btn.setAttribute('aria-label','メニューを閉じる');
+      btn.setAttribute('aria-label', (typeof NS_HMB !== 'undefined' && NS_HMB.i18n) ? NS_HMB.i18n.closeMenu : 'Close menu');
       overlay.removeAttribute('hidden');
       const first = overlay.querySelector(focusablesSelector);
       if (first) setTimeout(()=>first.focus(), 50);
@@ -32,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const close = () => {
       document.body.classList.remove('ns-open','ns-no-scroll');
       btn.setAttribute('aria-expanded','false');
-      btn.setAttribute('aria-label','メニューを開く');
+      btn.setAttribute('aria-label', (typeof NS_HMB !== 'undefined' && NS_HMB.i18n) ? NS_HMB.i18n.openMenu : 'Open menu');
       const wait = getTransitionMs() + 50;
       setTimeout(()=>overlay.setAttribute('hidden',''), wait);
       if (lastFocused && typeof lastFocused.focus === 'function') {

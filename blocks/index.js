@@ -56,7 +56,7 @@
         ),
         h(Title),
         h('div', { style:{marginTop:'8px',padding:'8px 10px',background:'#fff',border:'1px solid #e5e7eb',borderRadius:'8px'} },
-          h('div', { style:{fontSize:12,opacity:.7,marginBottom:6} }, 'ここに「上部/下部スロット」を追加して、任意のブロックを入れられます'),
+          h('div', { style:{fontSize:12,opacity:.7,marginBottom:6} }, __('Add top/bottom slots here to include custom blocks', 'ns-hamburger-menu')),
           h(InnerBlocks, { allowedBlocks:['ns/hamburger-slot'], template, templateLock:false })
         )
       );

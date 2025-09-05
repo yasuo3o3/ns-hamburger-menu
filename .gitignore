@@ -1,42 +1,48 @@
-# OS / IDE
-.DS_Store
-Thumbs.db
-*.swp
-*.swo
-.vscode/
-.idea/
-
-# Composer (vendorはリポジトリにコミットしない / lockはコミットする)
+# Development dependencies
 vendor/
-
-# Node（念のため）
 node_modules/
+composer.lock
+
+# Build artifacts
+*.zip
+*.tar.gz
+/build/
+/dist/
+/zips/
+temp-extract/
+
+# Logs
+*.log
+*.tmp
+error_log
+debug.log
 npm-debug.log*
 yarn-error.log
 
-# Build / Temp / Artifacts
-/build/
-temp-extract/
-zips/
-*.zip
-*.log
-.cache/
-coverage/
-dist/
-*.map
-*.tmp
-~*
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
-# Tools caches
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Test files
+phpunit.xml
 .phpunit.result.cache
+tests/
+
+# Cache directories
+.cache/
 .php-cs-fixer.cache
 .phpcs-cache
+coverage/
 
-vendor/
-zips/
-build/
-temp-extract/
-*.zipvendor/
-*.zip
-/build/
-/temp-extract/
+# Backup files
+*.bak
+*.backup
+~*
