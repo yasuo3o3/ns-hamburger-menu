@@ -105,3 +105,113 @@ For issues and feature requests, please use the [GitHub repository](https://gith
 ## License
 
 GPL-2.0-or-later. See LICENSE file for details.
+
+---
+
+# NS Hamburger Overlay Menu (日本語)
+
+![WordPress Plugin Version](https://img.shields.io/badge/WordPress-6.5+-blue)
+![PHP Version](https://img.shields.io/badge/PHP-7.4+-blue)
+![License](https://img.shields.io/badge/License-GPL--2.0--or--later-green)
+
+グラデーションアニメーション、マルチカラムレイアウト、完全なキーボードナビゲーションサポートを備えた、アクセシブルなハンバーガーオーバーレイメニュープラグインです。
+
+## 特徴
+
+- ✅ **アクセシブル**: 完全なARIAサポート、キーボードナビゲーション、フォーカス管理
+- ✅ **レスポンシブ**: すべての画面サイズに対応、モバイル体験も最適化
+- ✅ **カスタマイズ可能**: カラースキーム、カラムレイアウト、タイポグラフィ設定
+- ✅ **ブロックエディター**: ライブプレビュー付きネイティブGutenbergブロック
+- ✅ **パフォーマンス**: 軽量なCSS/JS、jQuery非依存
+- ✅ **i18n対応**: POTファイル付きの完全な翻訳サポート
+
+## 必要環境
+
+- WordPress 6.5以降
+- PHP 7.4以降
+
+## クイックスタート
+
+1. **プラグインをインストール**: WordPress管理画面からアップロード・有効化
+2. **メニューを割り当て**: 外観→メニューで「Hamburger Overlay Menu」の場所にメニューを割り当て
+3. **設定を調整**: 設定→NS Hamburger Menuで外観をカスタマイズ
+4. **ページに追加**: 自動挿入を有効にするか、Gutenbergで手動配置
+
+## 使用方法
+
+### 自動挿入モード
+設定で「自動挿入」を有効にすると、全ページに自動表示されます。
+
+### 手動配置
+Gutenbergブロック「NS Hamburger Menu」またはショートコード`[ns_hamburger_menu]`を使用します。
+
+### テーマ統合
+```php
+// テーマテンプレートに追加
+if (function_exists('nshm_display_menu')) {
+    nshm_display_menu();
+}
+```
+
+## カスタマイズ
+
+### カラースキーム
+内蔵プリセット（ブルー、グリーン、レッド、オレンジ、ブラック）から選択するか、カスタムグラデーションカラーを設定できます。
+
+### レイアウトオプション
+- **カラム数**: 1〜6カラムのグリッドレイアウト
+- **タイポグラフィ**: 親・子メニュー項目の個別フォントサイズ
+- **アニメーション**: 速度調整可能な色相回転アニメーション
+
+### ブロックスロット
+Gutenbergブロック内のスロットブロックを使用して、メニューの上下にカスタムコンテンツを追加できます。
+
+## アクセシビリティ機能
+
+- スクリーンリーダー向けARIAラベル・状態
+- キーボードナビゲーション（Tab、Shift+Tab、Enter、Space、Escape）
+- 開いたメニュー内でのフォーカストラップ
+- メニューを閉じる際のフォーカス復帰
+- `prefers-reduced-motion`への対応
+
+## 開発者向け
+
+### フック・フィルター
+```php
+// メニューマークアップをカスタマイズ
+add_filter('nshm_menu_args', function($args) {
+    $args['depth'] = 3;
+    return $args;
+});
+
+// CSS変数を変更
+add_filter('nshm_css_vars', function($vars) {
+    $vars['--ns-z'] = 99999;
+    return $vars;
+});
+```
+
+### テンプレートオーバーライド
+`/templates/hamburger-menu.php`をテーマの`/ns-hamburger-menu/`フォルダにコピーしてマークアップをカスタマイズできます。
+
+## よくある質問
+
+**Q: どのテーマでも使用できますか？**  
+A: はい、クラシックテーマとブロックテーマの両方で動作します。
+
+**Q: モバイルでも動作しますか？**  
+A: はい、適切な間隔を持つタッチデバイス向けに最適化されています。
+
+**Q: インターフェースを翻訳できますか？**  
+A: はい、POTファイル付きの標準WordPress i18nを使用しています。
+
+**Q: アクセシブルですか？**  
+A: はい、完全なキーボードとスクリーンリーダーサポートでWCAGガイドラインに準拠しています。
+
+## サポート
+
+課題や機能リクエストについては、[GitHubリポジトリ](https://github.com/netservice/ns-hamburger-menu)をご利用ください。
+
+## ライセンス
+
+GPL-2.0-or-later。詳細はLICENSEファイルをご覧ください。
