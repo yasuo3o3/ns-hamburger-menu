@@ -59,7 +59,7 @@ class NS_Hamburger_Menu {
 
     public function register_menu_location() {
         register_nav_menus([
-            'ns_hamburger_menu' => __('Hamburger Overlay Menu', 'ns-hamburger-menu'),
+            'ns_hamburger_menu' => esc_html__('Hamburger Overlay Menu', 'ns-hamburger-menu'),
         ]);
     }
 
