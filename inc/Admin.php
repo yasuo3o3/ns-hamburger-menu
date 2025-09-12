@@ -45,7 +45,7 @@ class NSHM_Admin {
      * @return array Sanitized options
      */
     public function sanitize_options($input) {
-        $defaults = $this->get_defaults();
+        $defaults = NSHM_Defaults::get();
         $output = array();
         
         // Auto inject (boolean)
@@ -136,7 +136,13 @@ class NSHM_Admin {
             return;
         }
         
-        $options = $this->get_options();
+        // Handle form submission with CSRF protection
+        if (isset($_POST['submit']) && check_admin_referer('ns_hamburger_settings', 'ns_hamburger_nonce')) {
+            // Settings are processed by WordPress settings API
+            // Additional security validation can be added here if needed
+        }
+        
+        $options = NSHM_Defaults::get_options();
         $option_name = self::OPTION_KEY;
         ?>
         <div class="wrap">
@@ -144,6 +150,7 @@ class NSHM_Admin {
             
             <form method="post" action="options.php">
                 <?php settings_fields(self::OPTION_KEY); ?>
+                <?php wp_nonce_field('ns_hamburger_settings', 'ns_hamburger_nonce'); ?>
                 
                 <table class="form-table" role="presentation">
                     <tr>
@@ -311,38 +318,4 @@ class NSHM_Admin {
         <?php
     }
     
-    /**
-     * Get default options
-     *
-     * @return array
-     */
-    private function get_defaults() {
-        return array(
-            'auto_inject'   => 1,
-            'columns'       => 2,
-            'top_font_px'   => 24,
-            'sub_font_px'   => 16,
-            'scheme'        => 'custom',
-            'color_start'   => '#0ea5e9',
-            'color_end'     => '#a78bfa',
-            'mid_enabled'   => 0,
-            'color_mid'     => '#ffffff',
-            'grad_type'     => 'linear',
-            'grad_pos'      => 'right top',
-            'hue_anim'      => 1,
-            'hue_speed_sec' => 12,
-            'hue_range_deg' => 24,
-            'z_index'       => 9999,
-        );
-    }
-    
-    /**
-     * Get plugin options with defaults
-     *
-     * @return array
-     */
-    private function get_options() {
-        $options = get_option(self::OPTION_KEY, array());
-        return wp_parse_args($options, $this->get_defaults());
-    }
 }

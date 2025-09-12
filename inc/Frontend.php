@@ -26,7 +26,12 @@ class NSHM_Frontend {
      * Enqueue frontend assets
      */
     public function enqueue_assets() {
-        $options = $this->get_options();
+        // Only enqueue if menu is actually needed
+        if (!$this->should_enqueue_assets()) {
+            return;
+        }
+        
+        $options = NSHM_Defaults::get_options();
         $preset = $this->get_scheme_colors($options['scheme']);
         $c_start = $preset ? $preset[0] : $options['color_start'];
         $c_end = $preset ? $preset[1] : $options['color_end'];
@@ -101,39 +106,42 @@ class NSHM_Frontend {
         wp_localize_script('ns-hmb-script', 'NS_HMB', array(
             'hueAnimDefault' => (int) $options['hue_anim'],
             'i18n' => array(
+                /* translators: Accessible label for hamburger menu button */
                 'openMenu'  => __('Open menu', 'ns-hamburger-menu'),
+                /* translators: Accessible label for close menu button */
                 'closeMenu' => __('Close menu', 'ns-hamburger-menu'),
             ),
         ));
     }
     
     /**
-     * Get plugin options with defaults
+     * Check if assets should be enqueued
      *
-     * @return array
+     * @return bool
      */
-    private function get_options() {
-        $defaults = array(
-            'auto_inject'   => 1,
-            'columns'       => 2,
-            'top_font_px'   => 24,
-            'sub_font_px'   => 16,
-            'scheme'        => 'custom',
-            'color_start'   => '#0ea5e9',
-            'color_end'     => '#a78bfa',
-            'mid_enabled'   => 0,
-            'color_mid'     => '#ffffff',
-            'grad_type'     => 'linear',
-            'grad_pos'      => 'right top',
-            'hue_anim'      => 1,
-            'hue_speed_sec' => 12,
-            'hue_range_deg' => 24,
-            'z_index'       => 9999,
-        );
+    private function should_enqueue_assets() {
+        $options = NSHM_Defaults::get_options();
         
-        $options = get_option('ns_hamburger_options', array());
-        return wp_parse_args($options, $defaults);
+        // Always enqueue if auto-inject is enabled
+        if (!empty($options['auto_inject'])) {
+            return true;
+        }
+        
+        // Check if shortcode is present in current post
+        global $post;
+        if ($post && has_shortcode($post->post_content, 'ns_hamburger_menu')) {
+            return true;
+        }
+        
+        // Check if block is present
+        if ($post && has_block('ns/hamburger-menu', $post)) {
+            return true;
+        }
+        
+        // Allow themes/plugins to force enqueue
+        return apply_filters('nshm_should_enqueue_assets', false);
     }
+    
     
     /**
      * Get scheme colors

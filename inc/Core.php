@@ -50,7 +50,7 @@ class NSHM_Core {
      * Auto-inject in footer
      */
     public function auto_inject_footer() {
-        $options = $this->get_options();
+        $options = NSHM_Defaults::get_options();
         if (!empty($options['auto_inject'])) {
             echo wp_kses_post( $this->render_markup(false, array(), null, '') );
         }
@@ -60,7 +60,7 @@ class NSHM_Core {
      * Auto-inject after body open
      */
     public function auto_inject_body() {
-        $options = $this->get_options();
+        $options = NSHM_Defaults::get_options();
         if (!empty($options['auto_inject'])) {
             echo wp_kses_post( $this->render_markup(false, array(), null, '') );
         }
@@ -97,29 +97,6 @@ class NSHM_Core {
         return $this->render_markup(true, $attrs, $block, $content);
     }
     
-    /**
-     * Get plugin options with defaults
-     *
-     * @return array
-     */
-    private function get_options() {
-        $defaults = array(
-            'auto_inject'   => 1,
-            'columns'       => 2,
-            'top_font_px'   => 24,
-            'sub_font_px'   => 16,
-            'scheme'        => 'custom',
-            'color_start'   => '#0ea5e9',
-            'color_end'     => '#a78bfa',
-            'hue_anim'      => 1,
-            'hue_speed_sec' => 12,
-            'hue_range_deg' => 24,
-            'z_index'       => 9999,
-        );
-        
-        $options = get_option('ns_hamburger_options', array());
-        return wp_parse_args($options, $defaults);
-    }
     
     /**
      * Get scheme colors
@@ -231,7 +208,7 @@ class NSHM_Core {
      * @return string|void
      */
     private function render_markup($return_string = true, $attrs = array(), $block = null, $content = '') {
-        $options = $this->get_options();
+        $options = NSHM_Defaults::get_options();
         
         // Process attributes with validation
         $columns = isset($attrs['columns']) ? max(1, min(6, intval($attrs['columns']))) : $options['columns'];

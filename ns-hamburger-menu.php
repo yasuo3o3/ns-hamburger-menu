@@ -27,6 +27,7 @@ define('NSHM_PLUGIN_PATH', plugin_dir_path(__FILE__));
 
 
 // Require core files
+require_once NSHM_PLUGIN_PATH . 'inc/Defaults.php';
 require_once NSHM_PLUGIN_PATH . 'inc/Core.php';
 require_once NSHM_PLUGIN_PATH . 'inc/Admin.php';
 require_once NSHM_PLUGIN_PATH . 'inc/Frontend.php';
