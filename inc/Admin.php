@@ -58,32 +58,51 @@ class NSHM_Admin {
         $output['top_font_px'] = max(10, intval($input['top_font_px'] ?? $defaults['top_font_px']));
         $output['sub_font_px'] = max(8, intval($input['sub_font_px'] ?? $defaults['sub_font_px']));
         
-        // Color scheme validation
-        $allowed_schemes = array('custom', 'blue', 'green', 'red', 'orange', 'black');
-        $scheme = $input['scheme'] ?? $defaults['scheme'];
-        $output['scheme'] = in_array($scheme, $allowed_schemes, true) ? $scheme : 'custom';
+        // Color preset validation (new radio button system)
+        $allowed_presets = array('blue', 'green', 'red', 'orange', 'black', 'custom');
+        $preset = $input['color_preset'] ?? $defaults['color_preset'];
+        $output['color_preset'] = in_array($preset, $allowed_presets, true) ? $preset : 'custom';
         
-        // Color validation
-        $output['color_start'] = sanitize_hex_color($input['color_start'] ?? $defaults['color_start']) ?: $defaults['color_start'];
-        $output['color_end'] = sanitize_hex_color($input['color_end'] ?? $defaults['color_end']) ?: $defaults['color_end'];
+        // Legacy scheme for backward compatibility
+        $output['scheme'] = $output['color_preset'];
+        
+        // Color validation (only save if custom preset is selected)
+        if ($output['color_preset'] === 'custom') {
+            $output['color_start'] = sanitize_hex_color($input['color_start'] ?? $defaults['color_start']) ?: $defaults['color_start'];
+            $output['color_end'] = sanitize_hex_color($input['color_end'] ?? $defaults['color_end']) ?: $defaults['color_end'];
+        } else {
+            // Use default colors for non-custom presets (will be overridden by scheme colors)
+            $output['color_start'] = $defaults['color_start'];
+            $output['color_end'] = $defaults['color_end'];
+        }
         
         // Hue animation settings
         $output['hue_anim'] = !empty($input['hue_anim']) ? 1 : 0;
         $output['hue_speed_sec'] = max(3, intval($input['hue_speed_sec'] ?? $defaults['hue_speed_sec']));
         $output['hue_range_deg'] = max(0, min(360, intval($input['hue_range_deg'] ?? $defaults['hue_range_deg'])));
         
-        // Mid color settings
-        $output['mid_enabled'] = !empty($input['mid_enabled']) ? 1 : 0;
-        $output['color_mid'] = sanitize_hex_color($input['color_mid'] ?? $defaults['color_mid']) ?: $defaults['color_mid'];
+        // Mid color settings (only save if custom preset is selected)
+        if ($output['color_preset'] === 'custom') {
+            $output['mid_enabled'] = !empty($input['mid_enabled']) ? 1 : 0;
+            $output['color_mid'] = sanitize_hex_color($input['color_mid'] ?? $defaults['color_mid']) ?: $defaults['color_mid'];
+        } else {
+            $output['mid_enabled'] = $defaults['mid_enabled'];
+            $output['color_mid'] = $defaults['color_mid'];
+        }
         
-        // Gradient settings
-        $allowed_grad_types = array('linear', 'radial');
-        $grad_type = $input['grad_type'] ?? $defaults['grad_type'];
-        $output['grad_type'] = in_array($grad_type, $allowed_grad_types, true) ? $grad_type : 'linear';
-        
-        $allowed_grad_pos = array('right top', 'left top', 'left bottom', 'right bottom', 'top', 'bottom', 'left', 'right');
-        $grad_pos = $input['grad_pos'] ?? $defaults['grad_pos'];
-        $output['grad_pos'] = in_array($grad_pos, $allowed_grad_pos, true) ? $grad_pos : 'right top';
+        // Gradient settings (only save if custom preset is selected)
+        if ($output['color_preset'] === 'custom') {
+            $allowed_grad_types = array('linear', 'radial');
+            $grad_type = $input['grad_type'] ?? $defaults['grad_type'];
+            $output['grad_type'] = in_array($grad_type, $allowed_grad_types, true) ? $grad_type : 'linear';
+            
+            $allowed_grad_pos = array('right top', 'left top', 'left bottom', 'right bottom', 'top', 'bottom', 'left', 'right');
+            $grad_pos = $input['grad_pos'] ?? $defaults['grad_pos'];
+            $output['grad_pos'] = in_array($grad_pos, $allowed_grad_pos, true) ? $grad_pos : 'right top';
+        } else {
+            $output['grad_type'] = $defaults['grad_type'];
+            $output['grad_pos'] = $defaults['grad_pos'];
+        }
         
         // Z-index
         $output['z_index'] = max(1000, intval($input['z_index'] ?? $defaults['z_index']));
@@ -126,6 +145,25 @@ class NSHM_Admin {
             NSHM_VERSION,
             true
         );
+        
+        // Add inline CSS for radio button styling
+        $admin_css = '
+            .nshm-custom-settings {
+                border: 1px solid #c3c4c7;
+                padding: 12px;
+                border-radius: 4px;
+                background: #f9f9f9;
+            }
+            fieldset input[type="radio"] {
+                margin-right: 6px;
+            }
+            fieldset label {
+                margin-right: 15px;
+                margin-bottom: 5px;
+                display: inline-block;
+            }
+        ';
+        wp_add_inline_style('wp-color-picker', $admin_css);
     }
     
     /**
@@ -166,86 +204,92 @@ class NSHM_Admin {
                     <tr>
                         <th scope="row"><?php esc_html_e('Color Preset', 'ns-hamburger-menu'); ?></th>
                         <td>
-                            <select id="ns_scheme" name="<?php echo esc_attr($option_name . '[scheme]'); ?>">
+                            <fieldset>
+                                <legend class="screen-reader-text"><?php esc_html_e('Color Preset Selection', 'ns-hamburger-menu'); ?></legend>
                                 <?php
-                                $schemes = array(
-                                    'custom' => __('Custom', 'ns-hamburger-menu'),
-                                    'blue'   => __('Blue', 'ns-hamburger-menu'),
-                                    'green'  => __('Green', 'ns-hamburger-menu'),
-                                    'red'    => __('Red', 'ns-hamburger-menu'),
-                                    'orange' => __('Orange', 'ns-hamburger-menu'),
-                                    'black'  => __('Black', 'ns-hamburger-menu'),
+                                $presets = array(
+                                    'blue'   => esc_html__('Blue', 'ns-hamburger-menu'),
+                                    'green'  => esc_html__('Green', 'ns-hamburger-menu'),
+                                    'red'    => esc_html__('Red', 'ns-hamburger-menu'),
+                                    'orange' => esc_html__('Orange', 'ns-hamburger-menu'),
+                                    'black'  => esc_html__('Black', 'ns-hamburger-menu'),
+                                    'custom' => esc_html__('Custom', 'ns-hamburger-menu'),
                                 );
                                 
-                                foreach ($schemes as $value => $label) {
+                                $current_preset = $options['color_preset'] ?? $options['scheme'] ?? 'custom';
+                                
+                                foreach ($presets as $value => $label) {
                                     printf(
-                                        '<option value="%s" %s>%s</option>',
+                                        '<label><input type="radio" name="%s" value="%s" %s> %s</label><br>',
+                                        esc_attr($option_name . '[color_preset]'),
                                         esc_attr($value),
-                                        selected($options['scheme'], $value, false),
+                                        checked($current_preset, $value, false),
                                         esc_html($label)
                                     );
                                 }
                                 ?>
-                            </select>
+                            </fieldset>
                             
-                            <p class="description">
-                                <?php esc_html_e('Start and end colors can be fine-tuned below.', 'ns-hamburger-menu'); ?>
-                            </p>
-                            
-                            <div style="margin-top:8px;">
-                                <label>
-                                    <?php esc_html_e('Start Color:', 'ns-hamburger-menu'); ?>
-                                    <input type="text" class="ns-color" name="<?php echo esc_attr($option_name . '[color_start]'); ?>" value="<?php echo esc_attr($options['color_start']); ?>">
-                                </label>
-                                <label style="margin-left:12px;">
-                                    <?php esc_html_e('End Color:', 'ns-hamburger-menu'); ?>
-                                    <input type="text" class="ns-color" name="<?php echo esc_attr($option_name . '[color_end]'); ?>" value="<?php echo esc_attr($options['color_end']); ?>">
-                                </label>
-                            </div>
-                            
-                            <div style="margin-top:8px;">
-                                <label>
-                                    <?php esc_html_e('Hue Range (degrees):', 'ns-hamburger-menu'); ?>
-                                    <input type="number" min="0" max="360" step="1" name="<?php echo esc_attr($option_name . '[hue_range_deg]'); ?>" value="<?php echo esc_attr($options['hue_range_deg']); ?>" style="width:90px;">
-                                </label>
-                                <span class="description">
-                                    <?php esc_html_e('Lower values create subtle color shifts', 'ns-hamburger-menu'); ?>
-                                </span>
-                            </div>
-                            
-                            <div style="margin-top:8px;">
-                                <label>
-                                    <input type="checkbox" name="<?php echo esc_attr($option_name . '[mid_enabled]'); ?>" value="1" <?php checked($options['mid_enabled'], 1); ?>>
-                                    <?php esc_html_e('Use middle color', 'ns-hamburger-menu'); ?>
-                                </label>
-                                <label style="margin-left:12px;">
-                                    <?php esc_html_e('Middle Color:', 'ns-hamburger-menu'); ?>
-                                    <input type="text" class="ns-color" name="<?php echo esc_attr($option_name . '[color_mid]'); ?>" value="<?php echo esc_attr($options['color_mid']); ?>">
-                                </label>
-                            </div>
-                            
-                            <div style="margin-top:8px;">
-                                <label>
-                                    <?php esc_html_e('Gradient Type:', 'ns-hamburger-menu'); ?>
-                                    <select id="ns_grad_type" name="<?php echo esc_attr($option_name . '[grad_type]'); ?>">
-                                        <option value="linear" <?php selected($options['grad_type'], 'linear'); ?>><?php esc_html_e('Linear', 'ns-hamburger-menu'); ?></option>
-                                        <option value="radial" <?php selected($options['grad_type'], 'radial'); ?>><?php esc_html_e('Radial', 'ns-hamburger-menu'); ?></option>
-                                    </select>
-                                </label>
+                            <div class="nshm-custom-settings" style="margin-top:12px;">
+                                <p class="description">
+                                    <?php esc_html_e('Custom color options (available when Custom is selected):', 'ns-hamburger-menu'); ?>
+                                </p>
                                 
-                                <label style="margin-left:12px;">
-                                    <?php esc_html_e('Gradient Position:', 'ns-hamburger-menu'); ?>
-                                    <select name="<?php echo esc_attr($option_name . '[grad_pos]'); ?>">
-                                        <option value="right top" <?php selected($options['grad_pos'], 'right top'); ?>><?php esc_html_e('Right Top', 'ns-hamburger-menu'); ?></option>
-                                        <option value="left top" <?php selected($options['grad_pos'], 'left top'); ?>><?php esc_html_e('Left Top', 'ns-hamburger-menu'); ?></option>
-                                        <option value="left bottom" <?php selected($options['grad_pos'], 'left bottom'); ?>><?php esc_html_e('Left Bottom', 'ns-hamburger-menu'); ?></option>
-                                        <option value="right bottom" <?php selected($options['grad_pos'], 'right bottom'); ?>><?php esc_html_e('Right Bottom', 'ns-hamburger-menu'); ?></option>
-                                        <option value="top" <?php selected($options['grad_pos'], 'top'); ?>><?php esc_html_e('Top', 'ns-hamburger-menu'); ?></option>
-                                        <option value="bottom" <?php selected($options['grad_pos'], 'bottom'); ?>><?php esc_html_e('Bottom', 'ns-hamburger-menu'); ?></option>
-                                        <option value="left" <?php selected($options['grad_pos'], 'left'); ?>><?php esc_html_e('Left', 'ns-hamburger-menu'); ?></option>
-                                        <option value="right" <?php selected($options['grad_pos'], 'right'); ?>><?php esc_html_e('Right', 'ns-hamburger-menu'); ?></option>
-                                    </select>
-                                </label>
+                                <div style="margin-top:8px;">
+                                    <label>
+                                        <?php esc_html_e('Start Color:', 'ns-hamburger-menu'); ?>
+                                        <input type="text" class="ns-color" name="<?php echo esc_attr($option_name . '[color_start]'); ?>" value="<?php echo esc_attr($options['color_start']); ?>">
+                                    </label>
+                                    <label style="margin-left:12px;">
+                                        <?php esc_html_e('End Color:', 'ns-hamburger-menu'); ?>
+                                        <input type="text" class="ns-color" name="<?php echo esc_attr($option_name . '[color_end]'); ?>" value="<?php echo esc_attr($options['color_end']); ?>">
+                                    </label>
+                                </div>
+                                
+                                <div style="margin-top:8px;">
+                                    <label>
+                                        <?php esc_html_e('Hue Range (degrees):', 'ns-hamburger-menu'); ?>
+                                        <input type="number" min="0" max="360" step="1" name="<?php echo esc_attr($option_name . '[hue_range_deg]'); ?>" value="<?php echo esc_attr($options['hue_range_deg']); ?>" style="width:90px;">
+                                    </label>
+                                    <span class="description">
+                                        <?php esc_html_e('Lower values create subtle color shifts', 'ns-hamburger-menu'); ?>
+                                    </span>
+                                </div>
+                                
+                                <div style="margin-top:8px;">
+                                    <label>
+                                        <input type="checkbox" name="<?php echo esc_attr($option_name . '[mid_enabled]'); ?>" value="1" <?php checked($options['mid_enabled'], 1); ?>>
+                                        <?php esc_html_e('Use middle color', 'ns-hamburger-menu'); ?>
+                                    </label>
+                                    <label style="margin-left:12px;">
+                                        <?php esc_html_e('Middle Color:', 'ns-hamburger-menu'); ?>
+                                        <input type="text" class="ns-color" name="<?php echo esc_attr($option_name . '[color_mid]'); ?>" value="<?php echo esc_attr($options['color_mid']); ?>">
+                                    </label>
+                                </div>
+                                
+                                <div style="margin-top:8px;">
+                                    <label>
+                                        <?php esc_html_e('Gradient Type:', 'ns-hamburger-menu'); ?>
+                                        <select name="<?php echo esc_attr($option_name . '[grad_type]'); ?>">
+                                            <option value="linear" <?php selected($options['grad_type'], 'linear'); ?>><?php esc_html_e('Linear', 'ns-hamburger-menu'); ?></option>
+                                            <option value="radial" <?php selected($options['grad_type'], 'radial'); ?>><?php esc_html_e('Radial', 'ns-hamburger-menu'); ?></option>
+                                        </select>
+                                    </label>
+                                    
+                                    <label style="margin-left:12px;">
+                                        <?php esc_html_e('Gradient Position:', 'ns-hamburger-menu'); ?>
+                                        <select name="<?php echo esc_attr($option_name . '[grad_pos]'); ?>">
+                                            <option value="right top" <?php selected($options['grad_pos'], 'right top'); ?>><?php esc_html_e('Right Top', 'ns-hamburger-menu'); ?></option>
+                                            <option value="left top" <?php selected($options['grad_pos'], 'left top'); ?>><?php esc_html_e('Left Top', 'ns-hamburger-menu'); ?></option>
+                                            <option value="left bottom" <?php selected($options['grad_pos'], 'left bottom'); ?>><?php esc_html_e('Left Bottom', 'ns-hamburger-menu'); ?></option>
+                                            <option value="right bottom" <?php selected($options['grad_pos'], 'right bottom'); ?>><?php esc_html_e('Right Bottom', 'ns-hamburger-menu'); ?></option>
+                                            <option value="top" <?php selected($options['grad_pos'], 'top'); ?>><?php esc_html_e('Top', 'ns-hamburger-menu'); ?></option>
+                                            <option value="bottom" <?php selected($options['grad_pos'], 'bottom'); ?>><?php esc_html_e('Bottom', 'ns-hamburger-menu'); ?></option>
+                                            <option value="left" <?php selected($options['grad_pos'], 'left'); ?>><?php esc_html_e('Left', 'ns-hamburger-menu'); ?></option>
+                                            <option value="right" <?php selected($options['grad_pos'], 'right'); ?>><?php esc_html_e('Right', 'ns-hamburger-menu'); ?></option>
+                                        </select>
+                                    </label>
+                                </div>
                             </div>
                         </td>
                     </tr>

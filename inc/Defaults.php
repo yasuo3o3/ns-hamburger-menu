@@ -27,6 +27,7 @@ class NSHM_Defaults {
             'top_font_px'   => 24,
             'sub_font_px'   => 16,
             'scheme'        => 'custom',
+            'color_preset'  => 'custom',
             'color_start'   => '#0ea5e9',
             'color_end'     => '#a78bfa',
             'mid_enabled'   => 0,
