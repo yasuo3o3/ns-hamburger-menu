@@ -171,7 +171,7 @@ class NS_Hamburger_Menu {
             </div>
           </td></tr>
           <tr><th>列数 / フォント</th><td>
-            列数：<select name="<?php echo esc_attr($name.'[columns]');?>"><?php foreach (range(1,6) as $c){ printf('<option value="%1$d" %2$s>%1$d 列</option>',$c,selected($opt['columns'],$c,false)); }?></select>
+            列数：<select name="<?php echo esc_attr($name.'[columns]');?>"><?php foreach (range(1,6) as $c){ printf('<option value="%1$s"%3$s>%2$s 列</option>',esc_attr((int)$c),esc_html((int)$c),selected($opt['columns'],(int)$c,false)); }?></select>
             <div style="margin-top:8px">
               親：<input type="number" min="10" name="<?php echo esc_attr($name.'[top_font_px]');?>" value="<?php echo esc_attr($opt['top_font_px']);?>" style="width:90px"> px　
               子：<input type="number" min="8"  name="<?php echo esc_attr($name.'[sub_font_px]');?>" value="<?php echo esc_attr($opt['sub_font_px']);?>" style="width:90px"> px
@@ -270,22 +270,22 @@ class NS_Hamburger_Menu {
             <div class="ns-overlay__inner">
                 <nav class="ns-overlay__nav" aria-label="<?php esc_attr_e('Hamburger menu','ns-hamburger-menu'); ?>">
                     <?php
-                    echo $slot_before; // ULの上
+                    echo wp_kses_post( $slot_before ); // ULの上
                     $menu = wp_nav_menu([
                         'theme_location'=>'ns_hamburger_menu','container'=>false,'menu_class'=>'ns-menu','depth'=>2,'echo'=>false,
                     ]);
-                    if ($menu) { echo $menu; }
+                    if ($menu) { echo wp_kses_post( $menu ); }
                     elseif (current_user_can('edit_theme_options')) {
                         echo '<p style="color:#fff;opacity:.9">※「外観→メニュー」で <strong>Hamburger Overlay Menu</strong> にメニューを割り当ててください。</p>';
                     }
-                    echo $slot_after;  // ULの下
+                    echo wp_kses_post( $slot_after );  // ULの下
                     ?>
                 </nav>
             </div>
         </div>
         <?php
         $html = ob_get_clean();
-        if ($return_string) return $html; echo $html;
+        if ($return_string) return $html; echo wp_kses_post( $html );
     }
 }
 
