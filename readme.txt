@@ -2,7 +2,7 @@
 Contributors: netservice
 Tags: hamburger menu, overlay menu, responsive menu, accessibility, mobile menu
 Requires at least: 6.5
-Tested up to: 6.6
+Tested up to: 6.8
 Requires PHP: 7.4
 Stable tag: 0.10.0
 License: GPL v2 or later
