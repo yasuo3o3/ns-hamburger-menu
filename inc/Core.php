@@ -52,7 +52,7 @@ class NSHM_Core {
     public function auto_inject_footer() {
         $options = $this->get_options();
         if (!empty($options['auto_inject'])) {
-            echo $this->render_markup(false, array(), null, '');
+            echo wp_kses_post( $this->render_markup(false, array(), null, '') );
         }
     }
     
@@ -62,7 +62,7 @@ class NSHM_Core {
     public function auto_inject_body() {
         $options = $this->get_options();
         if (!empty($options['auto_inject'])) {
-            echo $this->render_markup(false, array(), null, '');
+            echo wp_kses_post( $this->render_markup(false, array(), null, '') );
         }
     }
     
@@ -279,7 +279,7 @@ class NSHM_Core {
             <div class="ns-overlay__inner">
                 <nav class="ns-overlay__nav" aria-label="<?php esc_attr_e('Hamburger menu', 'ns-hamburger-menu'); ?>">
                     <?php
-                    echo $slot_before;
+                    echo wp_kses_post( $slot_before );
                     
                     $menu = wp_nav_menu(array(
                         'theme_location' => 'ns_hamburger_menu',
@@ -290,18 +290,18 @@ class NSHM_Core {
                     ));
                     
                     if ($menu) {
-                        echo $menu;
+                        echo wp_kses_post( $menu );
                     } elseif (current_user_can('edit_theme_options')) {
                         echo '<p style="color:#fff;opacity:.9">';
                         printf(
                             /* translators: %s: Menu location name */
-                            __('Please assign a menu to the "%s" location in Appearance → Menus.', 'ns-hamburger-menu'),
-                            __('Hamburger Overlay Menu', 'ns-hamburger-menu')
+                            esc_html__('Please assign a menu to the "%s" location in Appearance → Menus.', 'ns-hamburger-menu'),
+                            esc_html__('Hamburger Overlay Menu', 'ns-hamburger-menu')
                         );
                         echo '</p>';
                     }
                     
-                    echo $slot_after;
+                    echo wp_kses_post( $slot_after );
                     ?>
                 </nav>
             </div>
@@ -313,6 +313,6 @@ class NSHM_Core {
             return $html;
         }
         
-        echo $html;
+        echo wp_kses_post( $html );
     }
 }
