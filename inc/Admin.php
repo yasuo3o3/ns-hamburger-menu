@@ -238,11 +238,11 @@ class NSHM_Admin {
                                 <div style="margin-top:8px;">
                                     <label>
                                         <?php esc_html_e('Start Color:', 'ns-hamburger-menu'); ?>
-                                        <input type="text" class="ns-color" name="<?php echo esc_attr($option_name . '[color_start]'); ?>" value="<?php echo esc_attr($options['color_start']); ?>">
+                                        <input type="text" class="nshm-color" name="<?php echo esc_attr($option_name . '[color_start]'); ?>" value="<?php echo esc_attr($options['color_start']); ?>" data-default-color="<?php echo esc_attr($options['color_start']); ?>">
                                     </label>
                                     <label style="margin-left:12px;">
                                         <?php esc_html_e('End Color:', 'ns-hamburger-menu'); ?>
-                                        <input type="text" class="ns-color" name="<?php echo esc_attr($option_name . '[color_end]'); ?>" value="<?php echo esc_attr($options['color_end']); ?>">
+                                        <input type="text" class="nshm-color" name="<?php echo esc_attr($option_name . '[color_end]'); ?>" value="<?php echo esc_attr($options['color_end']); ?>" data-default-color="<?php echo esc_attr($options['color_end']); ?>">
                                     </label>
                                 </div>
                                 
@@ -263,7 +263,7 @@ class NSHM_Admin {
                                     </label>
                                     <label style="margin-left:12px;">
                                         <?php esc_html_e('Middle Color:', 'ns-hamburger-menu'); ?>
-                                        <input type="text" class="ns-color" name="<?php echo esc_attr($option_name . '[color_mid]'); ?>" value="<?php echo esc_attr($options['color_mid']); ?>">
+                                        <input type="text" class="nshm-color" name="<?php echo esc_attr($option_name . '[color_mid]'); ?>" value="<?php echo esc_attr($options['color_mid']); ?>" data-default-color="<?php echo esc_attr($options['color_mid']); ?>">
                                     </label>
                                 </div>
                                 

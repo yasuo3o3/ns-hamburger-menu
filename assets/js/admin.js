@@ -1,12 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize WordPress color picker for custom color inputs
-    if (typeof wp !== 'undefined' && wp.colorPicker) {
-        const colorInputs = document.querySelectorAll('.ns-color');
-        colorInputs.forEach(function(input) {
-            if (jQuery && jQuery(input).wpColorPicker) {
-                jQuery(input).wpColorPicker();
-            }
-        });
+    if (typeof jQuery !== 'undefined' && jQuery.fn.wpColorPicker) {
+        jQuery('.nshm-color').wpColorPicker();
     }
 
     // Handle color preset radio button changes
@@ -51,10 +46,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             startInput.value = preset.start;
                             endInput.value = preset.end;
 
-                            // Trigger change event for color picker
-                            if (jQuery) {
-                                jQuery(startInput).trigger('change');
-                                jQuery(endInput).trigger('change');
+                            // Trigger change event for WordPress color picker
+                            if (typeof jQuery !== 'undefined' && jQuery.fn.wpColorPicker) {
+                                jQuery(startInput).wpColorPicker('color', preset.start);
+                                jQuery(endInput).wpColorPicker('color', preset.end);
                             }
                         }
                     }
