@@ -164,11 +164,19 @@ msgstr "速度："
 msgid "seconds per cycle"
 msgstr "秒/周"
 
-#: inc/Admin.php:174
+#: inc/Admin.php:352
+msgid "Menu Open Speed"
+msgstr "メニュー開閉速度"
+
+#: inc/Admin.php:356
+msgid "Menu opening/closing animation duration (100-2000ms, default: 600ms)"
+msgstr "メニュー開閉アニメーション時間（100-2000ms、デフォルト：600ms）"
+
+#: inc/Admin.php:362
 msgid "Z-Index"
 msgstr "Z-index"
 
-#: inc/Admin.php:177
+#: inc/Admin.php:365
 msgid "Adjust if the menu appears behind other elements"
 msgstr "メニューが他の要素の後ろに表示される場合は調整"
 
