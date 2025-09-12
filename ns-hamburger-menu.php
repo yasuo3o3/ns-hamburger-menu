@@ -12,7 +12,6 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       ns-hamburger-menu
  * Domain Path:       /languages
- * Network:           false
  */
 
 // Prevent direct access
