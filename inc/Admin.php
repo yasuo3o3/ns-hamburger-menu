@@ -104,6 +104,9 @@ class NSHM_Admin {
             $output['grad_pos'] = $defaults['grad_pos'];
         }
         
+        // Open speed (100-2000ms)
+        $output['open_speed_ms'] = max(100, min(2000, intval($input['open_speed_ms'] ?? $defaults['open_speed_ms'])));
+        
         // Z-index
         $output['z_index'] = max(1000, intval($input['z_index'] ?? $defaults['z_index']));
         
@@ -342,6 +345,16 @@ class NSHM_Admin {
                                     <?php esc_html_e('seconds per cycle', 'ns-hamburger-menu'); ?>
                                 </label>
                             </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <th scope="row"><?php esc_html_e('Menu Open Speed', 'ns-hamburger-menu'); ?></th>
+                        <td>
+                            <input type="number" min="100" max="2000" step="50" name="<?php echo esc_attr($option_name . '[open_speed_ms]'); ?>" value="<?php echo esc_attr($options['open_speed_ms']); ?>" style="width:120px;"> ms
+                            <p class="description">
+                                <?php esc_html_e('Menu opening/closing animation duration (100-2000ms, default: 600ms)', 'ns-hamburger-menu'); ?>
+                            </p>
                         </td>
                     </tr>
                     

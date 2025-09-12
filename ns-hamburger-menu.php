@@ -60,17 +60,18 @@ class NS_Hamburger_Menu {
 
     private function defaults() {
         return [
-            'auto_inject'   => 1,
-            'columns'       => 2,
-            'top_font_px'   => 24,
-            'sub_font_px'   => 16,
-            'scheme'        => 'custom',
-            'color_start'   => '#0ea5e9',
-            'color_end'     => '#a78bfa',
-            'hue_anim'      => 1,
-            'hue_speed_sec' => 12,
-            'hue_range_deg' => 24,
-            'z_index'       => 9999,
+            'auto_inject'    => 1,
+            'columns'        => 2,
+            'top_font_px'    => 24,
+            'sub_font_px'    => 16,
+            'scheme'         => 'custom',
+            'color_start'    => '#0ea5e9',
+            'color_end'      => '#a78bfa',
+            'hue_anim'       => 1,
+            'hue_speed_sec'  => 12,
+            'hue_range_deg'  => 24,
+            'open_speed_ms'  => 600,
+            'z_index'        => 9999,
         ];
     }
     private function get_options() {
@@ -93,6 +94,7 @@ class NS_Hamburger_Menu {
             $out['hue_anim']      = empty($input['hue_anim']) ? 0 : 1;
             $out['hue_speed_sec'] = max(3, intval($input['hue_speed_sec'] ?? $d['hue_speed_sec']));
             $out['hue_range_deg'] = max(0, min(360, intval($input['hue_range_deg'] ?? $d['hue_range_deg'])));
+            $out['open_speed_ms'] = max(100, min(2000, intval($input['open_speed_ms'] ?? $d['open_speed_ms'])));
             $out['z_index']       = max(1000, intval($input['z_index'] ?? $d['z_index']));
             return $out;
         });
@@ -116,10 +118,10 @@ class NS_Hamburger_Menu {
 
         wp_enqueue_style('ns-hmb-style', plugin_dir_url(__FILE__) . 'assets/ns-hamburger.css', [], self::VER);
         $inline = sprintf(
-            ':root{--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-hue-range:%7$s;--ns-z:%8$d;}',
+            ':root{--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-hue-range:%7$s;--ns-open-speed:%8$sms;--ns-z:%9$d;}',
             esc_html($c_start), esc_html($c_end),
             intval($opt['columns']), intval($opt['top_font_px']), intval($opt['sub_font_px']),
-            intval($opt['hue_speed_sec']), intval($opt['hue_range_deg']).'deg', intval($opt['z_index'])
+            intval($opt['hue_speed_sec']), intval($opt['hue_range_deg']).'deg', intval($opt['open_speed_ms']), intval($opt['z_index'])
         );
         wp_add_inline_style('ns-hmb-style', $inline);
 
@@ -183,6 +185,10 @@ class NS_Hamburger_Menu {
             <div style="margin-top:8px">
               速度：<input type="number" min="3" name="<?php echo esc_attr($name.'[hue_speed_sec]');?>" value="<?php echo esc_attr($opt['hue_speed_sec']);?>" style="width:90px"> 秒/周
             </div>
+          </td></tr>
+          <tr><th><?php esc_html_e('Menu Open Speed', 'ns-hamburger-menu'); ?></th><td>
+            <input type="number" min="100" max="2000" step="50" name="<?php echo esc_attr($name.'[open_speed_ms]');?>" value="<?php echo esc_attr($opt['open_speed_ms']);?>" style="width:120px"> ms
+            <p class="description"><?php esc_html_e('Menu opening/closing animation duration (100-2000ms, default: 600ms)', 'ns-hamburger-menu'); ?></p>
           </td></tr>
           <tr><th>Z-index</th><td><input type="number" min="1000" name="<?php echo esc_attr($name.'[z_index]');?>" value="<?php echo esc_attr($opt['z_index']);?>"></td></tr>
         </table><?php submit_button(); ?></form></div><?php
@@ -257,8 +263,9 @@ class NS_Hamburger_Menu {
             [$slot_before,$slot_after] = $this->split_slots_from_content($content);
         }
 
-        $style_vars = sprintf('--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-z:%7$d;',
-            esc_attr($c_start), esc_attr($c_end), $columns, $top_fz, $sub_fz, $hue_spd, $z_index
+        $open_spd = isset($attrs['openSpeedMs']) ? max(100, min(2000, intval($attrs['openSpeedMs']))) : $opt['open_speed_ms'];
+        $style_vars = sprintf('--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-open-speed:%7$sms;--ns-z:%8$d;',
+            esc_attr($c_start), esc_attr($c_end), $columns, $top_fz, $sub_fz, $hue_spd, $open_spd, $z_index
         );
 
         $overlay_id = function_exists('wp_unique_id') ? wp_unique_id('ns-overlay-') : 'ns-overlay-'.uniqid();

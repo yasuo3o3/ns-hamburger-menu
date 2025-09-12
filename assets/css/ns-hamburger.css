@@ -6,6 +6,7 @@
   --ns-sub-fz:16px;
   --ns-hue-speed:12s;
   --ns-hue-range:24deg;
+  --ns-open-speed:600ms;
   --ns-z:9999;
 }
 
@@ -44,7 +45,7 @@
   overflow:auto;
   clip-path: circle(0% at 100% 0);
   -webkit-clip-path: circle(0% at 100% 0);
-  transition: clip-path .6s ease-in-out;
+  transition: clip-path var(--ns-open-speed) ease-in-out;
   will-change: clip-path;
 }
 .ns-overlay[hidden]{ display:block; visibility:hidden; }
