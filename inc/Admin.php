@@ -252,10 +252,11 @@ class NSHM_Admin {
                                     <?php
                                     for ($i = 1; $i <= 6; $i++) {
                                         printf(
-                                            '<option value="%1$d" %2$s>%1$d %3$s</option>',
-                                            $i,
+                                            '<option value="%1$s" %2$s>%3$s %4$s</option>',
+                                            esc_attr( (int) $i ),
                                             selected($options['columns'], $i, false),
-                                            _n('column', 'columns', $i, 'ns-hamburger-menu')
+                                            esc_html( (int) $i ),
+                                            esc_html( _n('column', 'columns', $i, 'ns-hamburger-menu') )
                                         );
                                     }
                                     ?>
