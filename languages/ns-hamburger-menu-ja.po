@@ -172,6 +172,22 @@ msgstr "メニュー開閉速度"
 msgid "Menu opening/closing animation duration (100-2000ms, default: 600ms)"
 msgstr "メニュー開閉アニメーション時間（100-2000ms、デフォルト：600ms）"
 
+#: inc/Admin.php:316
+msgid "Open Shape"
+msgstr "開閉形状"
+
+#: inc/Admin.php:319
+msgid "Open Shape Selection"
+msgstr "開閉形状選択"
+
+#: inc/Admin.php:322
+msgid "Circle"
+msgstr "円形"
+
+#: inc/Admin.php:340
+msgid "Choose how the menu appears when opening"
+msgstr "メニューが開くときの表示方法を選択"
+
 #: inc/Admin.php:362
 msgid "Z-Index"
 msgstr "Z-index"

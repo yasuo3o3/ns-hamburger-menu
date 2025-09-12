@@ -38,6 +38,7 @@ class NSHM_Defaults {
             'hue_speed_sec'  => 12,
             'hue_range_deg'  => 24,
             'open_speed_ms'  => 600,
+            'open_shape'     => 'circle',
             'z_index'        => 9999,
         );
     }

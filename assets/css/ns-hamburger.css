@@ -43,23 +43,40 @@
   display:block;
   color:#fff;
   overflow:auto;
-  -webkit-clip-path: circle(0% at 100% 0);
-  clip-path: circle(0% at 100% 0);
   transition: clip-path var(--ns-open-speed) ease-in-out;
   will-change: clip-path;
 }
 .ns-overlay[hidden]{ display:block; visibility:hidden; }
 
-/* 背景：右上→左下のグラデーション、色相が“少しだけ”往復で変化 */
+/* 形状別のクリップパス */
+/* 円形：閉じた状態 */
+[data-open-shape="circle"] .ns-overlay {
+  -webkit-clip-path: circle(0% at 100% 0);
+  clip-path: circle(0% at 100% 0);
+}
+/* 円形：開いた状態 */
+[data-open-shape="circle"].ns-open .ns-overlay {
+  -webkit-clip-path: circle(150vmax at 100% 0);
+  clip-path: circle(150vmax at 100% 0);
+}
+
+/* 線形：閉じた状態 */
+[data-open-shape="linear"] .ns-overlay {
+  -webkit-clip-path: polygon(100% 0, 100% 0, 100% 0, 100% 0);
+  clip-path: polygon(100% 0, 100% 0, 100% 0, 100% 0);
+}
+/* 線形：開いた状態 */
+[data-open-shape="linear"].ns-open .ns-overlay {
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* 背景：右上→左下のグラデーション、色相が"少しだけ"往復で変化 */
 .ns-overlay::before{
   content:"";
   position:absolute; inset:0; z-index:-1;
   background: linear-gradient(to bottom left, var(--ns-start), var(--ns-end));
   animation: none; /* ns-hue-off でOFF。ON時は下の指定が適用 */
-}
-.ns-open .ns-overlay{
-  -webkit-clip-path: circle(150vmax at 100% 0);
-  clip-path: circle(150vmax at 100% 0);
 }
 .ns-open .ns-overlay::before{
   animation: ns-hue var(--ns-hue-speed) ease-in-out infinite alternate;

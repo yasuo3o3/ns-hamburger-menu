@@ -107,6 +107,11 @@ class NSHM_Admin {
         // Open speed (100-2000ms)
         $output['open_speed_ms'] = max(100, min(2000, intval($input['open_speed_ms'] ?? $defaults['open_speed_ms'])));
         
+        // Open shape validation
+        $allowed_shapes = array('circle', 'linear');
+        $shape = $input['open_shape'] ?? $defaults['open_shape'];
+        $output['open_shape'] = in_array($shape, $allowed_shapes, true) ? $shape : 'circle';
+        
         // Z-index
         $output['z_index'] = max(1000, intval($input['z_index'] ?? $defaults['z_index']));
         
@@ -303,6 +308,36 @@ class NSHM_Admin {
                             <input type="number" min="100" max="2000" step="50" name="<?php echo esc_attr($option_name . '[open_speed_ms]'); ?>" value="<?php echo esc_attr($options['open_speed_ms']); ?>" style="width:120px;"> ms
                             <p class="description">
                                 <?php esc_html_e('Menu opening/closing animation duration (100-2000ms, default: 600ms)', 'ns-hamburger-menu'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <th scope="row"><?php esc_html_e('Open Shape', 'ns-hamburger-menu'); ?></th>
+                        <td>
+                            <fieldset>
+                                <legend class="screen-reader-text"><?php esc_html_e('Open Shape Selection', 'ns-hamburger-menu'); ?></legend>
+                                <?php
+                                $shapes = array(
+                                    'circle' => esc_html__('Circle', 'ns-hamburger-menu'),
+                                    'linear' => esc_html__('Linear', 'ns-hamburger-menu'),
+                                );
+                                
+                                $current_shape = $options['open_shape'] ?? 'circle';
+                                
+                                foreach ($shapes as $value => $label) {
+                                    printf(
+                                        '<label><input type="radio" name="%s" value="%s" %s> %s</label><br>',
+                                        esc_attr($option_name . '[open_shape]'),
+                                        esc_attr($value),
+                                        checked($current_shape, $value, false),
+                                        esc_html($label)
+                                    );
+                                }
+                                ?>
+                            </fieldset>
+                            <p class="description">
+                                <?php esc_html_e('Choose how the menu appears when opening', 'ns-hamburger-menu'); ?>
                             </p>
                         </td>
                     </tr>

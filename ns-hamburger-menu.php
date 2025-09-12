@@ -71,6 +71,7 @@ class NS_Hamburger_Menu {
             'hue_speed_sec'  => 12,
             'hue_range_deg'  => 24,
             'open_speed_ms'  => 600,
+            'open_shape'     => 'circle',
             'z_index'        => 9999,
         ];
     }
@@ -95,6 +96,9 @@ class NS_Hamburger_Menu {
             $out['hue_speed_sec'] = max(3, intval($input['hue_speed_sec'] ?? $d['hue_speed_sec']));
             $out['hue_range_deg'] = max(0, min(360, intval($input['hue_range_deg'] ?? $d['hue_range_deg'])));
             $out['open_speed_ms'] = max(100, min(2000, intval($input['open_speed_ms'] ?? $d['open_speed_ms'])));
+            $allowed_shapes = ['circle', 'linear'];
+            $shape = $input['open_shape'] ?? $d['open_shape'];
+            $out['open_shape'] = in_array($shape, $allowed_shapes, true) ? $shape : 'circle';
             $out['z_index']       = max(1000, intval($input['z_index'] ?? $d['z_index']));
             return $out;
         });
@@ -264,6 +268,7 @@ class NS_Hamburger_Menu {
         }
 
         $open_spd = isset($attrs['openSpeedMs']) ? max(100, min(2000, intval($attrs['openSpeedMs']))) : $opt['open_speed_ms'];
+        $open_shape = isset($attrs['openShape']) && in_array($attrs['openShape'], ['circle', 'linear'], true) ? $attrs['openShape'] : ($opt['open_shape'] ?? 'circle');
         $style_vars = sprintf('--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-open-speed:%7$sms;--ns-z:%8$d;',
             esc_attr($c_start), esc_attr($c_end), $columns, $top_fz, $sub_fz, $hue_spd, $open_spd, $z_index
         );
@@ -271,6 +276,7 @@ class NS_Hamburger_Menu {
         $overlay_id = function_exists('wp_unique_id') ? wp_unique_id('ns-overlay-') : 'ns-overlay-'.uniqid();
 
         ob_start(); ?>
+        <div data-open-shape="<?php echo esc_attr($open_shape); ?>">
         <button class="ns-hb" aria-controls="<?php echo esc_attr($overlay_id); ?>" aria-expanded="false" aria-label="<?php echo esc_attr(__('Open menu', 'ns-hamburger-menu')); ?>">
             <span class="ns-hb-box"><span class="ns-hb-bar"></span></span>
         </button>
@@ -290,6 +296,7 @@ class NS_Hamburger_Menu {
                     ?>
                 </nav>
             </div>
+        </div>
         </div>
         <?php
         $html = ob_get_clean();
