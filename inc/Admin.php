@@ -72,6 +72,19 @@ class NSHM_Admin {
         $output['hue_speed_sec'] = max(3, intval($input['hue_speed_sec'] ?? $defaults['hue_speed_sec']));
         $output['hue_range_deg'] = max(0, min(360, intval($input['hue_range_deg'] ?? $defaults['hue_range_deg'])));
         
+        // Mid color settings
+        $output['mid_enabled'] = !empty($input['mid_enabled']) ? 1 : 0;
+        $output['color_mid'] = sanitize_hex_color($input['color_mid'] ?? $defaults['color_mid']) ?: $defaults['color_mid'];
+        
+        // Gradient settings
+        $allowed_grad_types = array('linear', 'radial');
+        $grad_type = $input['grad_type'] ?? $defaults['grad_type'];
+        $output['grad_type'] = in_array($grad_type, $allowed_grad_types, true) ? $grad_type : 'linear';
+        
+        $allowed_grad_pos = array('right top', 'left top', 'left bottom', 'right bottom', 'top', 'bottom', 'left', 'right');
+        $grad_pos = $input['grad_pos'] ?? $defaults['grad_pos'];
+        $output['grad_pos'] = in_array($grad_pos, $allowed_grad_pos, true) ? $grad_pos : 'right top';
+        
         // Z-index
         $output['z_index'] = max(1000, intval($input['z_index'] ?? $defaults['z_index']));
         
@@ -192,6 +205,41 @@ class NSHM_Admin {
                                     <?php esc_html_e('Lower values create subtle color shifts', 'ns-hamburger-menu'); ?>
                                 </span>
                             </div>
+                            
+                            <div style="margin-top:8px;">
+                                <label>
+                                    <input type="checkbox" name="<?php echo esc_attr($option_name . '[mid_enabled]'); ?>" value="1" <?php checked($options['mid_enabled'], 1); ?>>
+                                    <?php esc_html_e('Use middle color', 'ns-hamburger-menu'); ?>
+                                </label>
+                                <label style="margin-left:12px;">
+                                    <?php esc_html_e('Middle Color:', 'ns-hamburger-menu'); ?>
+                                    <input type="text" class="ns-color" name="<?php echo esc_attr($option_name . '[color_mid]'); ?>" value="<?php echo esc_attr($options['color_mid']); ?>">
+                                </label>
+                            </div>
+                            
+                            <div style="margin-top:8px;">
+                                <label>
+                                    <?php esc_html_e('Gradient Type:', 'ns-hamburger-menu'); ?>
+                                    <select id="ns_grad_type" name="<?php echo esc_attr($option_name . '[grad_type]'); ?>">
+                                        <option value="linear" <?php selected($options['grad_type'], 'linear'); ?>><?php esc_html_e('Linear', 'ns-hamburger-menu'); ?></option>
+                                        <option value="radial" <?php selected($options['grad_type'], 'radial'); ?>><?php esc_html_e('Radial', 'ns-hamburger-menu'); ?></option>
+                                    </select>
+                                </label>
+                                
+                                <label style="margin-left:12px;">
+                                    <?php esc_html_e('Gradient Position:', 'ns-hamburger-menu'); ?>
+                                    <select name="<?php echo esc_attr($option_name . '[grad_pos]'); ?>">
+                                        <option value="right top" <?php selected($options['grad_pos'], 'right top'); ?>><?php esc_html_e('Right Top', 'ns-hamburger-menu'); ?></option>
+                                        <option value="left top" <?php selected($options['grad_pos'], 'left top'); ?>><?php esc_html_e('Left Top', 'ns-hamburger-menu'); ?></option>
+                                        <option value="left bottom" <?php selected($options['grad_pos'], 'left bottom'); ?>><?php esc_html_e('Left Bottom', 'ns-hamburger-menu'); ?></option>
+                                        <option value="right bottom" <?php selected($options['grad_pos'], 'right bottom'); ?>><?php esc_html_e('Right Bottom', 'ns-hamburger-menu'); ?></option>
+                                        <option value="top" <?php selected($options['grad_pos'], 'top'); ?>><?php esc_html_e('Top', 'ns-hamburger-menu'); ?></option>
+                                        <option value="bottom" <?php selected($options['grad_pos'], 'bottom'); ?>><?php esc_html_e('Bottom', 'ns-hamburger-menu'); ?></option>
+                                        <option value="left" <?php selected($options['grad_pos'], 'left'); ?>><?php esc_html_e('Left', 'ns-hamburger-menu'); ?></option>
+                                        <option value="right" <?php selected($options['grad_pos'], 'right'); ?>><?php esc_html_e('Right', 'ns-hamburger-menu'); ?></option>
+                                    </select>
+                                </label>
+                            </div>
                         </td>
                     </tr>
                     
@@ -276,6 +324,10 @@ class NSHM_Admin {
             'scheme'        => 'custom',
             'color_start'   => '#0ea5e9',
             'color_end'     => '#a78bfa',
+            'mid_enabled'   => 0,
+            'color_mid'     => '#ffffff',
+            'grad_type'     => 'linear',
+            'grad_pos'      => 'right top',
             'hue_anim'      => 1,
             'hue_speed_sec' => 12,
             'hue_range_deg' => 24,

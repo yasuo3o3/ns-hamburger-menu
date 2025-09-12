@@ -22,4 +22,6 @@ jQuery(function($){
       }
     });
   }
+
+  // No longer needed - grad_pos is always enabled
 });

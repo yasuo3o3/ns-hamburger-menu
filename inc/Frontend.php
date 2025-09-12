@@ -67,6 +67,36 @@ class NSHM_Frontend {
             wp_script_add_data('ns-hmb-script', 'strategy', 'defer');
         }
         
+        // Add gradient background override
+        $c_mid = null;
+        if ($options['mid_enabled']) {
+            $c_mid = $preset ? null : $options['color_mid'];
+        }
+        
+        $colors = $c_mid ? "$c_start, $c_mid, $c_end" : "$c_start, $c_end";
+        
+        // Convert grad_pos for linear gradients
+        $linear_directions = array(
+            'right top'    => 'to bottom left',
+            'left top'     => 'to bottom right', 
+            'left bottom'  => 'to top right',
+            'right bottom' => 'to top left',
+            'top'          => 'to bottom',
+            'bottom'       => 'to top',
+            'left'         => 'to right',
+            'right'        => 'to left'
+        );
+        
+        if ($options['grad_type'] === 'radial') {
+            $bg = "radial-gradient(circle at {$options['grad_pos']}, $colors)";
+        } else {
+            $direction = isset($linear_directions[$options['grad_pos']]) ? $linear_directions[$options['grad_pos']] : 'to bottom left';
+            $bg = "linear-gradient($direction, $colors)";
+        }
+        
+        $gradient_css = ".ns-overlay::before{background: {$bg}!important;}";
+        wp_add_inline_style('ns-hmb-style', $gradient_css);
+        
         // Localize script
         wp_localize_script('ns-hmb-script', 'NS_HMB', array(
             'hueAnimDefault' => (int) $options['hue_anim'],
@@ -91,6 +121,10 @@ class NSHM_Frontend {
             'scheme'        => 'custom',
             'color_start'   => '#0ea5e9',
             'color_end'     => '#a78bfa',
+            'mid_enabled'   => 0,
+            'color_mid'     => '#ffffff',
+            'grad_type'     => 'linear',
+            'grad_pos'      => 'right top',
             'hue_anim'      => 1,
             'hue_speed_sec' => 12,
             'hue_range_deg' => 24,

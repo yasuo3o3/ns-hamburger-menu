@@ -1,3 +1,4 @@
+# Japanese translations for NS Hamburger Overlay Menu package.
 # Copyright (C) 2024 NS Hamburger Overlay Menu
 # This file is distributed under the GPL v2 or later.
 msgid ""
@@ -5,194 +6,193 @@ msgstr ""
 "Project-Id-Version: NS Hamburger Overlay Menu 0.10.0\n"
 "Report-Msgid-Bugs-To: https://github.com/netservice/ns-hamburger-menu/issues\n"
 "POT-Creation-Date: 2024-01-01 00:00:00+00:00\n"
+"PO-Revision-Date: 2024-01-01 12:00+0900\n"
+"Last-Translator: Netservice <fujiwara@netservice.jp>\n"
+"Language-Team: Japanese\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: inc/Admin.php:78
 msgid "Auto Insert"
-msgstr ""
+msgstr "自動挿入"
 
 #: inc/Admin.php:82
 msgid "Automatically insert on all pages"
-msgstr ""
+msgstr "全ページに自動挿入"
 
 #: inc/Admin.php:87
 msgid "Color Preset"
-msgstr ""
+msgstr "色プリセット"
 
 #: inc/Admin.php:92
 msgid "Custom"
-msgstr ""
+msgstr "カスタム"
 
 #: inc/Admin.php:93
 msgid "Blue"
-msgstr ""
+msgstr "ブルー"
 
 #: inc/Admin.php:94
 msgid "Green"
-msgstr ""
+msgstr "グリーン"
 
 #: inc/Admin.php:95
 msgid "Red"
-msgstr ""
+msgstr "レッド"
 
 #: inc/Admin.php:96
 msgid "Orange"
-msgstr ""
+msgstr "オレンジ"
 
 #: inc/Admin.php:97
 msgid "Black"
-msgstr ""
+msgstr "ブラック"
 
 #: inc/Admin.php:107
 msgid "Start and end colors can be fine-tuned below."
-msgstr ""
+msgstr "開始/終了色は微調整できます。"
 
 #: inc/Admin.php:111
 msgid "Start Color:"
-msgstr ""
+msgstr "開始色："
 
 #: inc/Admin.php:115
 msgid "End Color:"
-msgstr ""
+msgstr "終了色："
 
 #: inc/Admin.php:120
 msgid "Hue Range (degrees):"
-msgstr ""
+msgstr "変化幅（度）："
 
 #: inc/Admin.php:123
 msgid "Lower values create subtle color shifts"
-msgstr ""
+msgstr "小さいほど「ほんのり」"
 
 #: inc/Admin.php:128
 msgid "Use middle color"
-msgstr ""
+msgstr "中間色を使う"
 
 #: inc/Admin.php:131
 msgid "Middle Color:"
-msgstr ""
+msgstr "中間色："
 
 #: inc/Admin.php:138
 msgid "Gradient Type:"
-msgstr ""
+msgstr "グラデーション種別："
 
 #: inc/Admin.php:140
 msgid "Linear"
-msgstr ""
+msgstr "線形"
 
 #: inc/Admin.php:141
 msgid "Radial"
-msgstr ""
+msgstr "円形"
 
 #: inc/Admin.php:146
 msgid "Gradient Position:"
-msgstr ""
+msgstr "グラデーション位置："
 
 #: inc/Admin.php:148
 msgid "Right Top"
-msgstr ""
+msgstr "右上"
 
 #: inc/Admin.php:149
 msgid "Left Top"
-msgstr ""
+msgstr "左上"
 
 #: inc/Admin.php:150
 msgid "Left Bottom"
-msgstr ""
+msgstr "左下"
 
 #: inc/Admin.php:151
 msgid "Right Bottom"
-msgstr ""
+msgstr "右下"
 
 #: inc/Admin.php:152
 msgid "Top"
-msgstr ""
+msgstr "上"
 
 #: inc/Admin.php:153
 msgid "Bottom"
-msgstr ""
+msgstr "下"
 
 #: inc/Admin.php:154
 msgid "Left"
-msgstr ""
+msgstr "左"
 
 #: inc/Admin.php:155
 msgid "Right"
-msgstr ""
+msgstr "右"
 
 #: inc/Admin.php:129
 msgid "Layout & Typography"
-msgstr ""
+msgstr "列数・フォント"
 
 #: inc/Admin.php:132
 msgid "Columns:"
-msgstr ""
+msgstr "列数："
 
 #: inc/Admin.php:139
 msgid "column"
 msgid_plural "columns"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "列"
 
 #: inc/Admin.php:146
 msgid "Parent font size:"
-msgstr ""
+msgstr "親フォントサイズ："
 
 #: inc/Admin.php:150
 msgid "Child font size:"
-msgstr ""
+msgstr "子フォントサイズ："
 
 #: inc/Admin.php:157
 msgid "Hue Animation"
-msgstr ""
+msgstr "色相アニメ"
 
 #: inc/Admin.php:161
 msgid "Enable hue animation"
-msgstr ""
+msgstr "ON"
 
 #: inc/Admin.php:166
 msgid "Animation speed:"
-msgstr ""
+msgstr "速度："
 
 #: inc/Admin.php:168
 msgid "seconds per cycle"
-msgstr ""
+msgstr "秒/周"
 
 #: inc/Admin.php:174
 msgid "Z-Index"
-msgstr ""
+msgstr "Z-index"
 
 #: inc/Admin.php:177
 msgid "Adjust if the menu appears behind other elements"
-msgstr ""
+msgstr "メニューが他の要素の後ろに表示される場合は調整"
 
 #: inc/Core.php:28
 msgid "Hamburger Overlay Menu"
-msgstr ""
+msgstr "ハンバーガーオーバーレイメニュー"
 
 #: inc/Core.php:231
 msgid "Open menu"
-msgstr ""
+msgstr "メニューを開く"
 
 #: inc/Core.php:235
 msgid "Hamburger menu"
-msgstr ""
+msgstr "ハンバーガーメニュー"
 
 #: inc/Core.php:248
 #, php-format
 msgid "Please assign a menu to the \"%s\" location in Appearance → Menus."
-msgstr ""
+msgstr "外観→メニューで「%s」位置にメニューを割り当ててください。"
 
 #: ns-hamburger-menu.php:48
 msgid "NS Hamburger Menu"
-msgstr ""
+msgstr "NS ハンバーガーメニュー"
 
 #: blocks/index.js:59
 msgid "Add top/bottom slots here to include custom blocks"
-msgstr ""
+msgstr "上/下スロットにカスタムブロックを追加"

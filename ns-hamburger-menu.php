@@ -150,15 +150,23 @@ class NS_Hamburger_Menu {
         <div class="wrap"><h1>NS Hamburger Menu</h1>
         <form method="post" action="options.php"><?php settings_fields(self::OPT_KEY); ?>
         <table class="form-table" role="presentation">
-          <tr><th>自動挿入</th><td>
-            <label><input type="checkbox" name="<?php echo esc_attr($name.'[auto_inject]');?>" value="1" <?php checked($opt['auto_inject'],1);?>> 全ページに自動挿入</label>
+          <tr><th><?php esc_html_e('Auto Insert', 'ns-hamburger-menu'); ?></th><td>
+            <label><input type="checkbox" name="<?php echo esc_attr($name.'[auto_inject]');?>" value="1" <?php checked($opt['auto_inject'],1);?>> <?php esc_html_e('Automatically insert on all pages', 'ns-hamburger-menu'); ?></label>
           </td></tr>
-          <tr><th>色プリセット</th><td>
+          <tr><th><?php esc_html_e('Color Preset', 'ns-hamburger-menu'); ?></th><td>
             <select id="ns_scheme" name="<?php echo esc_attr($name.'[scheme]');?>"><?php
-              foreach(['custom'=>'カスタム','blue'=>'ブルー','green'=>'グリーン','red'=>'レッド','orange'=>'オレンジ','black'=>'ブラック'] as $k=>$label){
+              $schemes = array(
+                  'custom' => __('Custom', 'ns-hamburger-menu'),
+                  'blue'   => __('Blue', 'ns-hamburger-menu'),
+                  'green'  => __('Green', 'ns-hamburger-menu'),
+                  'red'    => __('Red', 'ns-hamburger-menu'),
+                  'orange' => __('Orange', 'ns-hamburger-menu'),
+                  'black'  => __('Black', 'ns-hamburger-menu')
+              );
+              foreach($schemes as $k=>$label){
                 printf('<option value="%s" %s>%s</option>', esc_attr($k), selected($opt['scheme'],$k,false), esc_html($label));
               } ?></select>
-            <p class="description">開始/終了色は微調整できます。</p>
+            <p class="description"><?php esc_html_e('Start and end colors can be fine-tuned below.', 'ns-hamburger-menu'); ?></p>
             <div style="margin-top:8px">
               開始色：<input type="text" class="ns-color" name="<?php echo esc_attr($name.'[color_start]');?>" value="<?php echo esc_attr($opt['color_start']);?>">
               終了色：<input type="text" class="ns-color" name="<?php echo esc_attr($name.'[color_end]');?>" value="<?php echo esc_attr($opt['color_end']);?>">
@@ -261,7 +269,7 @@ class NS_Hamburger_Menu {
         $overlay_id = function_exists('wp_unique_id') ? wp_unique_id('ns-overlay-') : 'ns-overlay-'.uniqid();
 
         ob_start(); ?>
-        <button class="ns-hb" aria-controls="<?php echo esc_attr($overlay_id); ?>" aria-expanded="false" aria-label="<?php echo esc_attr('メニューを開く'); ?>">
+        <button class="ns-hb" aria-controls="<?php echo esc_attr($overlay_id); ?>" aria-expanded="false" aria-label="<?php echo esc_attr(__('Open menu', 'ns-hamburger-menu')); ?>">
             <span class="ns-hb-box"><span class="ns-hb-bar"></span></span>
         </button>
         <div id="<?php echo esc_attr($overlay_id); ?>" class="ns-overlay<?php echo $hue_on ? '' : ' ns-hue-off'; ?>" hidden style="<?php echo esc_attr($style_vars); ?>">
