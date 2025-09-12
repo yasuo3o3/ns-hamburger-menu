@@ -298,6 +298,34 @@ class NSHM_Admin {
                     </tr>
                     
                     <tr>
+                        <th scope="row"><?php esc_html_e('Menu Open Speed', 'ns-hamburger-menu'); ?></th>
+                        <td>
+                            <input type="number" min="100" max="2000" step="50" name="<?php echo esc_attr($option_name . '[open_speed_ms]'); ?>" value="<?php echo esc_attr($options['open_speed_ms']); ?>" style="width:120px;"> ms
+                            <p class="description">
+                                <?php esc_html_e('Menu opening/closing animation duration (100-2000ms, default: 600ms)', 'ns-hamburger-menu'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <th scope="row"><?php esc_html_e('Hue Animation', 'ns-hamburger-menu'); ?></th>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="<?php echo esc_attr($option_name . '[hue_anim]'); ?>" value="1" <?php checked($options['hue_anim'], 1); ?>>
+                                <?php esc_html_e('Enable hue animation', 'ns-hamburger-menu'); ?>
+                            </label>
+                            
+                            <div style="margin-top:8px;">
+                                <label>
+                                    <?php esc_html_e('Animation speed:', 'ns-hamburger-menu'); ?>
+                                    <input type="number" min="3" name="<?php echo esc_attr($option_name . '[hue_speed_sec]'); ?>" value="<?php echo esc_attr($options['hue_speed_sec']); ?>" style="width:90px;">
+                                    <?php esc_html_e('seconds per cycle', 'ns-hamburger-menu'); ?>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
                         <th scope="row"><?php esc_html_e('Layout & Typography', 'ns-hamburger-menu'); ?></th>
                         <td>
                             <label>
@@ -327,34 +355,6 @@ class NSHM_Admin {
                                     <input type="number" min="8" name="<?php echo esc_attr($option_name . '[sub_font_px]'); ?>" value="<?php echo esc_attr($options['sub_font_px']); ?>" style="width:90px;"> px
                                 </label>
                             </div>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <th scope="row"><?php esc_html_e('Hue Animation', 'ns-hamburger-menu'); ?></th>
-                        <td>
-                            <label>
-                                <input type="checkbox" name="<?php echo esc_attr($option_name . '[hue_anim]'); ?>" value="1" <?php checked($options['hue_anim'], 1); ?>>
-                                <?php esc_html_e('Enable hue animation', 'ns-hamburger-menu'); ?>
-                            </label>
-                            
-                            <div style="margin-top:8px;">
-                                <label>
-                                    <?php esc_html_e('Animation speed:', 'ns-hamburger-menu'); ?>
-                                    <input type="number" min="3" name="<?php echo esc_attr($option_name . '[hue_speed_sec]'); ?>" value="<?php echo esc_attr($options['hue_speed_sec']); ?>" style="width:90px;">
-                                    <?php esc_html_e('seconds per cycle', 'ns-hamburger-menu'); ?>
-                                </label>
-                            </div>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <th scope="row"><?php esc_html_e('Menu Open Speed', 'ns-hamburger-menu'); ?></th>
-                        <td>
-                            <input type="number" min="100" max="2000" step="50" name="<?php echo esc_attr($option_name . '[open_speed_ms]'); ?>" value="<?php echo esc_attr($options['open_speed_ms']); ?>" style="width:120px;"> ms
-                            <p class="description">
-                                <?php esc_html_e('Menu opening/closing animation duration (100-2000ms, default: 600ms)', 'ns-hamburger-menu'); ?>
-                            </p>
                         </td>
                     </tr>
                     
