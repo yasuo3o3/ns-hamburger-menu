@@ -26,11 +26,6 @@ define('NSHM_PLUGIN_FILE', __FILE__);
 define('NSHM_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('NSHM_PLUGIN_PATH', plugin_dir_path(__FILE__));
 
-// Load text domain
-function nshm_load_textdomain() {
-    load_plugin_textdomain('ns-hamburger-menu', false, dirname(plugin_basename(__FILE__)) . '/languages');
-}
-add_action('plugins_loaded', 'nshm_load_textdomain');
 
 // Require core files
 require_once NSHM_PLUGIN_PATH . 'inc/Core.php';
