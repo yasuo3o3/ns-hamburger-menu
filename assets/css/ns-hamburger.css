@@ -43,8 +43,8 @@
   display:block;
   color:#fff;
   overflow:auto;
-  clip-path: circle(0% at 100% 0);
   -webkit-clip-path: circle(0% at 100% 0);
+  clip-path: circle(0% at 100% 0);
   transition: clip-path var(--ns-open-speed) ease-in-out;
   will-change: clip-path;
 }
@@ -58,8 +58,8 @@
   animation: none; /* ns-hue-off でOFF。ON時は下の指定が適用 */
 }
 .ns-open .ns-overlay{
-  clip-path: circle(150vmax at 100% 0);
   -webkit-clip-path: circle(150vmax at 100% 0);
+  clip-path: circle(150vmax at 100% 0);
 }
 .ns-open .ns-overlay::before{
   animation: ns-hue var(--ns-hue-speed) ease-in-out infinite alternate;
