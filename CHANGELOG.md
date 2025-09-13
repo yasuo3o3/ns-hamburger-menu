@@ -39,8 +39,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Design presets system with 4 preset options (Normal, Pattern 1-3)
+- Custom CSS integration for advanced styling capabilities
+- Individual design preset CSS files with unique animations and effects:
+  - Pattern 1: Elegant rounded design with shadows and smooth transitions
+  - Pattern 2: Modern minimal design with accent lines and dot decorations
+  - Pattern 3: Playful animated design with color accents and floating effects
+- Enhanced custom color settings panel with responsive grid layout
+- Improved admin interface with better visual organization
+- Japanese localization for all new admin interface elements
+
+### Changed
+- Redesigned custom color management interface with grid-based layout
+- Enhanced admin UI responsiveness with mobile-friendly breakpoints
+- Improved CSS cascade order: base styles → preset styles → custom CSS
+- Updated color panel layout to accommodate larger screen sizes (max-width: 740px)
+- Refined admin form styling with better spacing and visual hierarchy
+
+### Technical
+- Added `design_preset` and `design_custom_css` to plugin options schema
+- Implemented conditional CSS enqueuing for design presets
+- Enhanced sanitization with CSS content validation (10KB limit)
+- Added proper nonce verification for new settings
+- Improved CSS custom property management for consistent theming
+
 ### Planned
-- Additional color scheme presets
 - Menu item icons support  
 - Advanced animation options
 - Performance optimization dashboard

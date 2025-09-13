@@ -31,7 +31,7 @@ NS Hamburger Overlay Menu is a modern, accessible hamburger menu plugin that pro
 
 = Customization =
 
-* **Color Schemes** - Choose from built-in presets (Blue, Green, Red, Orange, Black) or create custom gradients
+* **Color Schemes & Design Presets** - Choose from built-in color presets (Blue, Green, Red, Orange, Black), visual design presets (Normal, Pattern 1-3), or create custom gradients with additional CSS
 * **Layout Options** - 1-6 column grid layouts with separate font sizes for parent/child items
 * **Animation Effects** - Optional hue rotation animation with speed control
 * **Block Slots** - Add custom content above/below menu using slot blocks
@@ -78,7 +78,7 @@ Yes, the plugin follows WCAG guidelines with full keyboard navigation and screen
 
 = Can I customize the appearance? =
 
-Yes, you can choose from built-in color presets, adjust column layouts, typography, and even add custom CSS through the settings page.
+Yes, you can choose from built-in color presets, visual design presets with unique animations, adjust column layouts, typography, and even add custom CSS through the settings page for advanced customization.
 
 = Does it require jQuery? =
 
@@ -99,8 +99,11 @@ No, the plugin uses vanilla JavaScript for better performance and compatibility.
 * Accessible hamburger overlay menu implementation
 * Gutenberg block support
 * Multi-column layout options
-* Color scheme presets
-* Animation effects
+* Color scheme presets and visual design presets
+* Design preset patterns with unique animations and effects
+* Custom CSS integration for advanced styling
+* Animation effects with hue rotation
+* Responsive admin interface with improved color management
 * i18n support
 * Performance optimizations
 

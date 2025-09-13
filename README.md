@@ -45,8 +45,10 @@ if (function_exists('nshm_display_menu')) {
 
 ## Customization
 
-### Color Schemes
-Choose from built-in presets (Blue, Green, Red, Orange, Black) or set custom gradient colors.
+### Color Schemes & Design Presets
+- **Color Presets**: Choose from built-in color schemes (Blue, Green, Red, Orange, Black) or set custom gradient colors
+- **Design Presets**: Select from predefined visual styles (Normal, Pattern 1-3) with unique animations and effects
+- **Custom CSS**: Add additional styling for fine-tuned customization
 
 ### Layout Options
 - **Columns**: 1-6 column grid layout
@@ -155,8 +157,10 @@ if (function_exists('nshm_display_menu')) {
 
 ## カスタマイズ
 
-### カラースキーム
-内蔵プリセット（ブルー、グリーン、レッド、オレンジ、ブラック）から選択するか、カスタムグラデーションカラーを設定できます。
+### カラースキーム・デザインプリセット
+- **カラープリセット**: 内蔵カラースキーム（ブルー、グリーン、レッド、オレンジ、ブラック）から選択するか、カスタムグラデーションカラーを設定
+- **デザインプリセット**: 定義済みビジュアルスタイル（ノーマル、パターン1〜3）から選択、独自のアニメーションや効果を適用
+- **カスタムCSS**: 細かなカスタマイズ用の追加スタイリング機能
 
 ### レイアウトオプション
 - **カラム数**: 1〜6カラムのグリッドレイアウト
