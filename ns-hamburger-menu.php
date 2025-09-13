@@ -120,7 +120,7 @@ class NS_Hamburger_Menu {
         $c_start = $preset ? $preset[0] : $opt['color_start'];
         $c_end   = $preset ? $preset[1] : $opt['color_end'];
 
-        wp_enqueue_style('ns-hmb-style', plugin_dir_url(__FILE__) . 'assets/ns-hamburger.css', [], self::VER);
+        wp_enqueue_style('ns-hmb-style', plugin_dir_url(__FILE__) . 'assets/css/ns-hamburger.css', [], self::VER);
         $inline = sprintf(
             ':root{--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-hue-range:%7$s;--ns-open-speed:%8$sms;--ns-z:%9$d;}',
             esc_html($c_start), esc_html($c_end),
@@ -129,7 +129,7 @@ class NS_Hamburger_Menu {
         );
         wp_add_inline_style('ns-hmb-style', $inline);
 
-        wp_enqueue_script('ns-hmb-script', plugin_dir_url(__FILE__) . 'assets/ns-hamburger.js', [], self::VER, false);
+        wp_enqueue_script('ns-hmb-script', plugin_dir_url(__FILE__) . 'assets/js/ns-hamburger.js', [], self::VER, false);
         if (function_exists('wp_script_add_data')) wp_script_add_data('ns-hmb-script','strategy','defer');
         wp_localize_script('ns-hmb-script','NS_HMB',[ 'hueAnimDefault'=>(int)$opt['hue_anim'] ]);
     }
