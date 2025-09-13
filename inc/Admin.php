@@ -179,17 +179,20 @@ class NSHM_Admin {
             }
             .nshm-color-row {
                 display: flex;
-                gap: 16px;
                 align-items: center;
                 flex-wrap: wrap;
+                gap: 12px 16px;
+                justify-content: flex-start;
             }
             .nshm-color-group {
                 display: flex;
-                gap: 8px;
                 align-items: center;
+                gap: 8px;
+                flex: 0 0 auto;
             }
             .nshm-color-row .spacer {
-                flex: 1 1 auto;
+                display: none !important;
+                flex: 0 0 auto !important;
             }
             .nshm-color-group label {
                 min-width: 56px;
@@ -334,23 +337,21 @@ class NSHM_Admin {
                                 </p>
                                 
                                 <div class="nshm-color-row" aria-describedby="nshm-custom-desc">
-                                    <div class="nshm-color-group">
+                                    <div class="nshm-color-group nshm-start">
                                         <label for="nshm-color-start" style="min-width:56px;">
                                             <?php esc_html_e('開始色:', 'ns-hamburger-menu'); ?>
                                         </label>
                                         <input type="text" class="nshm-color" id="nshm-color-start" name="<?php echo esc_attr($option_name . '[color_start]'); ?>" value="<?php echo esc_attr($options['color_start']); ?>" data-default-color="<?php echo esc_attr($options['color_start']); ?>">
                                     </div>
                                     
-                                    <div class="nshm-color-group">
+                                    <div class="nshm-color-group nshm-end">
                                         <label for="nshm-color-end" style="min-width:56px;">
                                             <?php esc_html_e('終了色:', 'ns-hamburger-menu'); ?>
                                         </label>
                                         <input type="text" class="nshm-color" id="nshm-color-end" name="<?php echo esc_attr($option_name . '[color_end]'); ?>" value="<?php echo esc_attr($options['color_end']); ?>" data-default-color="<?php echo esc_attr($options['color_end']); ?>">
                                     </div>
                                     
-                                    <div class="spacer"></div>
-                                    
-                                    <div class="nshm-color-group">
+                                    <div class="nshm-color-group nshm-mid">
                                         <label for="nshm-mid-enabled">
                                             <input type="checkbox" name="<?php echo esc_attr($option_name . '[mid_enabled]'); ?>" value="1" <?php checked($options['mid_enabled'], 1); ?> id="nshm-mid-enabled">
                                             <?php esc_html_e('中間色を使う', 'ns-hamburger-menu'); ?>
