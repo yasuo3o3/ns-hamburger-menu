@@ -1,7 +1,7 @@
 /**
  * NS Hamburger Menu JavaScript
  * Accessible hamburger menu with keyboard navigation and focus management
- * @version 0.10.0
+ * @version 0.11.0
  */
 document.addEventListener('DOMContentLoaded', function(){
   const focusablesSelector = 'a, button, input, textarea, select, details,[tabindex]:not([tabindex="-1"])';

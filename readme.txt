@@ -4,7 +4,7 @@ Tags: hamburger menu, overlay menu, responsive menu, accessibility, mobile menu
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.10.0
+Stable tag: 0.11.0
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,13 @@ No, the plugin uses vanilla JavaScript for better performance and compatibility.
 5. Mobile responsive menu display
 
 == Changelog ==
+
+= 0.11.0 =
+* Added: デザインプリセット（Pattern 1-3）でメニューの視覚効果を選択可能
+* Added: 開閉形状設定（円形/線形）によるアニメーション制御
+* Added: 追加CSS欄でカスタムスタイリングが可能
+* Changed: 管理UIのレイアウト最適化とカラー設定UIの統一
+* Fixed: 一部の出力エスケープ不足とオープンアニメーションが発火しないケースを修正
 
 = 0.10.0 =
 * Initial release

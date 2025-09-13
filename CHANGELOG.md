@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive PHPDoc documentation
 - Unit test ready structure
 
-## [Unreleased]
+## [0.11.0] - 2024-09-13
 
 ### Added
 - Design presets system with 4 preset options (Normal, Pattern 1-3)
@@ -63,6 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced sanitization with CSS content validation (10KB limit)
 - Added proper nonce verification for new settings
 - Improved CSS custom property management for consistent theming
+
+## [Unreleased]
 
 ### Planned
 - Menu item icons support  
