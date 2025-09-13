@@ -195,6 +195,23 @@ class NSHM_Admin {
                 min-width: 56px;
                 white-space: nowrap;
             }
+            .nshm-font-sizes {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 8px;
+            }
+            .nshm-font-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .nshm-font-item label {
+                min-width: 9em;
+            }
+            .nshm-font-item .unit {
+                opacity: .7;
+            }
             fieldset input[type="radio"] {
                 margin-right: 6px;
             }
@@ -463,15 +480,18 @@ class NSHM_Admin {
                                 </select>
                             </label>
                             
-                            <div style="margin-top:8px;">
-                                <label>
-                                    <?php esc_html_e('Parent font size:', 'ns-hamburger-menu'); ?>
-                                    <input type="number" min="10" name="<?php echo esc_attr($option_name . '[top_font_px]'); ?>" value="<?php echo esc_attr($options['top_font_px']); ?>" style="width:90px;"> px
-                                </label>
-                                <label style="margin-left:12px;">
-                                    <?php esc_html_e('Child font size:', 'ns-hamburger-menu'); ?>
-                                    <input type="number" min="8" name="<?php echo esc_attr($option_name . '[sub_font_px]'); ?>" value="<?php echo esc_attr($options['sub_font_px']); ?>" style="width:90px;"> px
-                                </label>
+                            <div class="nshm-font-sizes">
+                                <div class="nshm-font-item">
+                                    <label for="top_font_px"><?php esc_html_e('親フォントサイズ', 'ns-hamburger-menu'); ?></label>
+                                    <input type="number" min="10" id="top_font_px" name="<?php echo esc_attr($option_name . '[top_font_px]'); ?>" value="<?php echo esc_attr($options['top_font_px']); ?>" style="width:90px;">
+                                    <span class="unit">px</span>
+                                </div>
+                                <div class="nshm-font-item">
+                                    <?php /* translators: The leading "┗" indicates this is a child value in the UI. */ ?>
+                                    <label for="sub_font_px"><?php esc_html_e('┗子フォントサイズ', 'ns-hamburger-menu'); ?></label>
+                                    <input type="number" min="8" id="sub_font_px" name="<?php echo esc_attr($option_name . '[sub_font_px]'); ?>" value="<?php echo esc_attr($options['sub_font_px']); ?>" style="width:90px;">
+                                    <span class="unit">px</span>
+                                </div>
                             </div>
                         </td>
                     </tr>
