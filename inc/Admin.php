@@ -205,7 +205,7 @@ class NSHM_Admin {
             .nshm-color-group {
                 display: flex;
                 gap: 8px;
-                align-items: center;
+                align-items: start;
             }
             .nshm-color-group label {
                 white-space: nowrap;
