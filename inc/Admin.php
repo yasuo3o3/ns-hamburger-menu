@@ -189,6 +189,10 @@ class NSHM_Admin {
             .nshm-color-panel {
                 max-width: 740px;
                 margin-inline: auto;
+                background-color: #fafafb;
+                border-radius: 0.3rem;
+                padding: 1rem;
+                border: 1px solid #8c8f94;
             }
             .nshm-color-row {
                 display: grid;
