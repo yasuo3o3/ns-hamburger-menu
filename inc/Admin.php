@@ -542,7 +542,7 @@ class NSHM_Admin {
                                 </div>
                                 <div class="nshm-font-item">
                                     <?php /* translators: The leading "┗" indicates this is a child value in the UI. */ ?>
-                                    <label for="sub_font_px"><?php esc_html_e('┗子フォントサイズ', 'ns-hamburger-menu'); ?></label>
+                                    <label for="sub_font_px"><?php esc_html_e('┗ 子フォントサイズ', 'ns-hamburger-menu'); ?></label>
                                     <input type="number" min="8" id="sub_font_px" name="<?php echo esc_attr($option_name . '[sub_font_px]'); ?>" value="<?php echo esc_attr($options['sub_font_px']); ?>" style="width:90px;">
                                     <span class="unit">px</span>
                                 </div>
