@@ -224,6 +224,7 @@ class NSHM_Core {
         $hue_on = isset($attrs['hueAnim']) ? (int) !empty($attrs['hueAnim']) : (int) $options['hue_anim'];
         $hue_spd = isset($attrs['hueSpeedSec']) ? max(3, intval($attrs['hueSpeedSec'])) : $options['hue_speed_sec'];
         $z_index = isset($attrs['zIndex']) ? max(1000, intval($attrs['zIndex'])) : $options['z_index'];
+        $open_shape = isset($attrs['openShape']) ? $attrs['openShape'] : $options['open_shape'];
         
         // Extract slots
         list($slot_before, $slot_after) = $this->split_slots_from_block($block);
@@ -249,6 +250,7 @@ class NSHM_Core {
         // Build markup
         ob_start();
         ?>
+        <div data-open-shape="<?php echo esc_attr($open_shape); ?>">
         <button class="ns-hb" aria-controls="<?php echo esc_attr($overlay_id); ?>" aria-expanded="false" aria-label="<?php esc_attr_e('Open menu', 'ns-hamburger-menu'); ?>">
             <span class="ns-hb-box"><span class="ns-hb-bar"></span></span>
         </button>
@@ -282,6 +284,7 @@ class NSHM_Core {
                     ?>
                 </nav>
             </div>
+        </div>
         </div>
         <?php
         $html = ob_get_clean();
