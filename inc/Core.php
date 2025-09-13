@@ -250,7 +250,7 @@ class NSHM_Core {
         // Build markup
         ob_start();
         ?>
-        <div data-open-shape="<?php echo esc_attr($open_shape); ?>">
+        <div data-open-shape="<?php echo esc_attr($open_shape); ?>" data-preset="<?php echo esc_attr($options['design_preset'] ?? 'normal'); ?>">
         <button class="ns-hb" aria-controls="<?php echo esc_attr($overlay_id); ?>" aria-expanded="false" aria-label="<?php esc_attr_e('Open menu', 'ns-hamburger-menu'); ?>">
             <span class="ns-hb-box"><span class="ns-hb-bar"></span></span>
         </button>

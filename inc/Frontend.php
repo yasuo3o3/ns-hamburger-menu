@@ -103,6 +103,12 @@ class NSHM_Frontend {
         $gradient_css = ".ns-overlay::before{background: {$bg}!important;}";
         wp_add_inline_style('ns-hmb-style', $gradient_css);
         
+        // Enqueue design preset CSS
+        $this->enqueue_design_preset($options);
+        
+        // Add custom CSS if provided
+        $this->add_custom_css($options);
+        
         // Localize script
         wp_localize_script('ns-hmb-script', 'NS_HMB', array(
             'hueAnimDefault' => (int) $options['hue_anim'],
@@ -160,5 +166,58 @@ class NSHM_Frontend {
         );
         
         return isset($schemes[$scheme]) ? $schemes[$scheme] : null;
+    }
+    
+    /**
+     * Enqueue design preset CSS
+     *
+     * @param array $options Plugin options
+     */
+    private function enqueue_design_preset($options) {
+        $preset = $options['design_preset'] ?? 'normal';
+        
+        // Skip if normal (no preset CSS)
+        if ($preset === 'normal') {
+            return;
+        }
+        
+        // Allow external override via filter
+        $preset_urls = apply_filters('nshm_menu_presets', array(
+            'p1' => NSHM_PLUGIN_URL . 'assets/css/presets/p1.css',
+            'p2' => NSHM_PLUGIN_URL . 'assets/css/presets/p2.css',
+            'p3' => NSHM_PLUGIN_URL . 'assets/css/presets/p3.css',
+        ));
+        
+        if (isset($preset_urls[$preset])) {
+            wp_enqueue_style(
+                'ns-hmb-preset',
+                $preset_urls[$preset],
+                array('ns-hmb-style'), // Depend on base CSS
+                NSHM_VERSION
+            );
+        }
+    }
+    
+    /**
+     * Add custom CSS inline
+     *
+     * @param array $options Plugin options
+     */
+    private function add_custom_css($options) {
+        $custom_css = trim($options['design_custom_css'] ?? '');
+        
+        if (empty($custom_css)) {
+            return;
+        }
+        
+        // Basic sanitization: remove </style> tags to prevent CSS escape
+        $custom_css = str_replace(array('</style>', '</STYLE>'), '', $custom_css);
+        
+        // Wrap with CDATA comments
+        $safe_css = "/*<![CDATA[*/\n" . $custom_css . "\n/*]]>*/";
+        
+        // Add inline to preset CSS if exists, otherwise to base CSS
+        $target_handle = wp_style_is('ns-hmb-preset', 'enqueued') ? 'ns-hmb-preset' : 'ns-hmb-style';
+        wp_add_inline_style($target_handle, $safe_css);
     }
 }

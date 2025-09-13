@@ -1,0 +1,102 @@
+/**
+ * NS Hamburger Menu - Design Preset P3
+ * Playful animated design with color accents
+ */
+
+/* ハンバーガーボタン - 回転アニメーション */
+[data-preset="p3"] .ns-hb {
+    background: linear-gradient(45deg, var(--ns-start), var(--ns-end));
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-preset="p3"] .ns-hb:hover {
+    transform: rotate(5deg) scale(1.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* メニューアイテム - カラフルなホバー */
+[data-preset="p3"] .ns-menu > li > a {
+    padding: 12px 20px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+[data-preset="p3"] .ns-menu > li > a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+[data-preset="p3"] .ns-menu > li > a:hover::before {
+    left: 100%;
+}
+
+[data-preset="p3"] .ns-menu > li > a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+/* サブメニュー - バウンス効果 */
+[data-preset="p3"] .ns-menu .sub-menu li a {
+    transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-radius: 8px;
+    padding: 6px 12px;
+}
+
+[data-preset="p3"] .ns-menu .sub-menu li a:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* メニューグリッド - ステッカー風 */
+[data-preset="p3"] .ns-menu > li {
+    transform: rotate(-1deg);
+    transition: transform 0.3s ease;
+}
+
+[data-preset="p3"] .ns-menu > li:nth-child(even) {
+    transform: rotate(1deg);
+}
+
+[data-preset="p3"] .ns-menu > li:hover {
+    transform: rotate(0deg) scale(1.02);
+    z-index: 10;
+}
+
+/* オーバーレイ - パーティクル風装飾 */
+[data-preset="p3"] .ns-overlay::after {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, var(--ns-start) 2px, transparent 2px);
+    background-size: 20px 20px;
+    opacity: 0.1;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+/* ナビゲーション - ふわふわ効果 */
+[data-preset="p3"] .ns-overlay__nav {
+    animation: gentle-float 4s ease-in-out infinite;
+}
+
+@keyframes gentle-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}

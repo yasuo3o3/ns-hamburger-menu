@@ -1,0 +1,81 @@
+/**
+ * NS Hamburger Menu - Design Preset P2
+ * Modern minimal design with accent lines
+ */
+
+/* ハンバーガーボタン - シャープなデザイン */
+[data-preset="p2"] .ns-hb {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
+}
+
+[data-preset="p2"] .ns-hb:hover {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* メニューアイテム - アンダーライン効果 */
+[data-preset="p2"] .ns-menu > li > a {
+    position: relative;
+    padding-bottom: 4px;
+}
+
+[data-preset="p2"] .ns-menu > li > a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--ns-start);
+    transition: width 0.3s ease;
+}
+
+[data-preset="p2"] .ns-menu > li > a:hover::after {
+    width: 100%;
+}
+
+[data-preset="p2"] .ns-menu > li > a:hover {
+    text-decoration: none;
+    opacity: 1;
+}
+
+/* サブメニュー - ドット装飾 */
+[data-preset="p2"] .ns-menu .sub-menu li a {
+    position: relative;
+    padding-left: 16px;
+}
+
+[data-preset="p2"] .ns-menu .sub-menu li a::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--ns-end);
+    opacity: 0.7;
+}
+
+[data-preset="p2"] .ns-menu .sub-menu li a:hover::before {
+    opacity: 1;
+    transform: scale(1.2);
+    transition: all 0.2s ease;
+}
+
+/* グリッドレイアウト - 区切り線 */
+[data-preset="p2"] .ns-menu {
+    gap: clamp(16px, 3vw, 32px);
+}
+
+[data-preset="p2"] .ns-menu > li {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding-right: clamp(16px, 3vw, 32px);
+}
+
+[data-preset="p2"] .ns-menu > li:last-child {
+    border-right: none;
+}
+
+/* ナビゲーション - ミニマルデザイン */
+[data-preset="p2"] .ns-overlay__nav {
+    border-top: 3px solid var(--ns-start);
+    padding-top: clamp(64px, 10vh, 104px);
+}

@@ -115,6 +115,15 @@ class NSHM_Admin {
         // Z-index
         $output['z_index'] = max(1000, intval($input['z_index'] ?? $defaults['z_index']));
         
+        // Design preset (whitelist validation)
+        $allowed_presets = array('normal', 'p1', 'p2', 'p3');
+        $output['design_preset'] = in_array($input['design_preset'] ?? $defaults['design_preset'], $allowed_presets, true) 
+            ? $input['design_preset'] : $defaults['design_preset'];
+        
+        // Custom CSS (truncate to 10KB)
+        $custom_css = $input['design_custom_css'] ?? $defaults['design_custom_css'];
+        $output['design_custom_css'] = substr($custom_css, 0, 10240); // 10KB limit
+        
         return $output;
     }
     
@@ -457,6 +466,50 @@ class NSHM_Admin {
                                     <input type="number" min="3" name="<?php echo esc_attr($option_name . '[hue_speed_sec]'); ?>" value="<?php echo esc_attr($options['hue_speed_sec']); ?>" style="width:90px;" id="nshm-hue-speed">
                                     <?php esc_html_e('seconds per cycle', 'ns-hamburger-menu'); ?>
                                 </label>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <th scope="row"><?php esc_html_e('デザインプリセット', 'ns-hamburger-menu'); ?></th>
+                        <td>
+                            <fieldset>
+                                <legend class="screen-reader-text"><?php esc_html_e('デザインプリセット選択', 'ns-hamburger-menu'); ?></legend>
+                                
+                                <div class="nshm-radios-inline nshm-design-presets">
+                                <?php
+                                $design_presets = array(
+                                    'normal' => esc_html__('ノーマル（装飾なし）', 'ns-hamburger-menu'),
+                                    'p1'     => esc_html__('パターン1', 'ns-hamburger-menu'),
+                                    'p2'     => esc_html__('パターン2', 'ns-hamburger-menu'),
+                                    'p3'     => esc_html__('パターン3', 'ns-hamburger-menu'),
+                                );
+                                
+                                $current_preset = $options['design_preset'] ?? 'normal';
+                                
+                                foreach ($design_presets as $value => $label) {
+                                    printf(
+                                        '<label style="display:flex; gap:6px; align-items:center;"><input type="radio" name="%s" value="%s" %s> %s</label>',
+                                        esc_attr($option_name . '[design_preset]'),
+                                        esc_attr($value),
+                                        checked($current_preset, $value, false),
+                                        esc_html($label)
+                                    );
+                                }
+                                ?>
+                                </div>
+                            </fieldset>
+                            
+                            <div style="margin-top:12px;">
+                                <label for="nshm-custom-css">
+                                    <?php esc_html_e('追加CSS（任意）', 'ns-hamburger-menu'); ?>
+                                </label>
+                                <textarea id="nshm-custom-css" name="<?php echo esc_attr($option_name . '[design_custom_css]'); ?>" 
+                                          rows="6" cols="50" style="width:100%; max-width:600px; font-family:monospace; font-size:12px;"
+                                          placeholder="/* カスタムCSSをここに入力 */"><?php echo esc_textarea($options['design_custom_css'] ?? ''); ?></textarea>
+                                <p class="description">
+                                    <?php esc_html_e('小規模な上書きに使用。outputはプラグインCSSの後、プリセットCSSの後に差し込み', 'ns-hamburger-menu'); ?>
+                                </p>
                             </div>
                         </td>
                     </tr>

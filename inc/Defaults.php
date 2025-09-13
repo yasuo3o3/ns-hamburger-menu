@@ -40,6 +40,8 @@ class NSHM_Defaults {
             'open_speed_ms'  => 600,
             'open_shape'     => 'circle',
             'z_index'        => 9999,
+            'design_preset'  => 'normal',
+            'design_custom_css' => '',
         );
     }
     

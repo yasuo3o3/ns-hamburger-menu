@@ -1,0 +1,64 @@
+/**
+ * NS Hamburger Menu - Design Preset P1
+ * Elegant rounded design with subtle shadows
+ */
+
+/* ハンバーガーボタン - 角丸とシャドウ */
+[data-preset="p1"] .ns-hb {
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+[data-preset="p1"] .ns-hb:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}
+
+/* メニューアイテム - エレガントなホバー効果 */
+[data-preset="p1"] .ns-menu > li > a {
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+[data-preset="p1"] .ns-menu > li > a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(8px);
+    text-decoration: none;
+}
+
+/* サブメニュー - インデント強調 */
+[data-preset="p1"] .ns-menu .sub-menu {
+    margin-left: 16px;
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    padding-left: 16px;
+}
+
+[data-preset="p1"] .ns-menu .sub-menu li a {
+    border-radius: 4px;
+    padding: 6px 12px;
+    transition: all 0.2s ease;
+}
+
+[data-preset="p1"] .ns-menu .sub-menu li a:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(4px);
+}
+
+/* オーバーレイ - ソフトなエッジ */
+[data-preset="p1"] .ns-overlay {
+    border-radius: 0 0 24px 24px;
+}
+
+/* ナビゲーション領域 - カード風デザイン */
+[data-preset="p1"] .ns-overlay__nav {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 24px;
+    backdrop-filter: blur(5px);
+}
