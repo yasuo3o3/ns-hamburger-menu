@@ -52,5 +52,5 @@
 /DEVELOPER.md   export-ignore
 /TESTING.md     export-ignore
 /README.md      export-ignore
-/CHANGELOG.md   export-ignore  # ← readme.txtのChangelogに統一するなら
-/composer.json  export-ignore  # ← ランタイム未使用なら
+/CHANGELOG.md   export-ignore
+/composer.json  export-ignore
