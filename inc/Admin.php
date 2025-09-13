@@ -196,10 +196,10 @@ class NSHM_Admin {
                 margin-left: 0;
             }
             .nshm-color-row {
-                display: grid;
+                display: block;
                 grid-template-columns: 180px 180px minmax(300px, 1fr);
                 gap: 12px 16px;
-                align-items: center;
+                align-items: start;
                 margin-top: 0.8rem;
             }
             .nshm-color-group {
