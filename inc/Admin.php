@@ -189,26 +189,22 @@ class NSHM_Admin {
             .nshm-color-panel {
                 max-width: 740px;
                 margin-inline: auto;
-                background-color: #fafafb;
-                border-radius: 0.3rem;
-                padding: 1rem;
-                border: 1px solid #8c8f94;
-                margin-left: 0;
             }
-            .nshm-color-row {
+            .nshm-color-panel .nshm-color-row {
                 display: block;
-                grid-template-columns: 180px 180px minmax(300px, 1fr);
-                gap: 12px 16px;
-                align-items: start;
-                margin-top: 0.8rem;
+            }
+            .nshm-field {
+                margin-block: 8px;
             }
             .nshm-color-group {
                 display: flex;
+                align-items: center;
                 gap: 8px;
-                align-items: start;
             }
-            .nshm-color-group label {
-                white-space: nowrap;
+            .nshm-grad-row {
+                display: flex;
+                gap: 16px;
+                flex-wrap: wrap;
             }
             @media (max-width: 782px) {
                 .nshm-color-panel {
@@ -370,62 +366,77 @@ class NSHM_Admin {
                                 </p>
                                 
                                 <div class="nshm-color-row" aria-describedby="nshm-custom-desc">
-                                    <div class="nshm-color-group">
-                                        <label for="nshm-color-start">
-                                            <?php esc_html_e('開始色:', 'ns-hamburger-menu'); ?>
-                                        </label>
-                                        <input type="text" class="nshm-color" id="nshm-color-start" name="<?php echo esc_attr($option_name . '[color_start]'); ?>" value="<?php echo esc_attr($options['color_start']); ?>" data-default-color="<?php echo esc_attr($options['color_start']); ?>">
+                                    <div class="nshm-field">
+                                        <div class="nshm-color-group">
+                                            <label for="nshm-color-start">
+                                                <?php esc_html_e('開始色:', 'ns-hamburger-menu'); ?>
+                                            </label>
+                                            <input type="text" class="nshm-color" id="nshm-color-start" name="<?php echo esc_attr($option_name . '[color_start]'); ?>" value="<?php echo esc_attr($options['color_start']); ?>" data-default-color="<?php echo esc_attr($options['color_start']); ?>">
+                                        </div>
                                     </div>
                                     
-                                    <div class="nshm-color-group">
-                                        <label for="nshm-color-end">
-                                            <?php esc_html_e('終了色:', 'ns-hamburger-menu'); ?>
-                                        </label>
-                                        <input type="text" class="nshm-color" id="nshm-color-end" name="<?php echo esc_attr($option_name . '[color_end]'); ?>" value="<?php echo esc_attr($options['color_end']); ?>" data-default-color="<?php echo esc_attr($options['color_end']); ?>">
+                                    <div class="nshm-field">
+                                        <div class="nshm-color-group">
+                                            <label for="nshm-color-end">
+                                                <?php esc_html_e('終了色:', 'ns-hamburger-menu'); ?>
+                                            </label>
+                                            <input type="text" class="nshm-color" id="nshm-color-end" name="<?php echo esc_attr($option_name . '[color_end]'); ?>" value="<?php echo esc_attr($options['color_end']); ?>" data-default-color="<?php echo esc_attr($options['color_end']); ?>">
+                                        </div>
                                     </div>
                                     
-                                    <div class="nshm-color-group">
-                                        <label for="nshm-mid-enabled">
-                                            <input type="checkbox" name="<?php echo esc_attr($option_name . '[mid_enabled]'); ?>" value="1" <?php checked($options['mid_enabled'], 1); ?> id="nshm-mid-enabled">
-                                            <?php esc_html_e('中間色を使う', 'ns-hamburger-menu'); ?>
-                                        </label>
-                                        <label for="nshm-color-mid">
-                                            <?php esc_html_e('中間色:', 'ns-hamburger-menu'); ?>
-                                        </label>
-                                        <input type="text" class="nshm-color" id="nshm-color-mid" name="<?php echo esc_attr($option_name . '[color_mid]'); ?>" value="<?php echo esc_attr($options['color_mid']); ?>" data-default-color="<?php echo esc_attr($options['color_mid']); ?>">
+                                    <div class="nshm-field">
+                                        <div class="nshm-color-group">
+                                            <label for="nshm-mid-enabled">
+                                                <input type="checkbox" name="<?php echo esc_attr($option_name . '[mid_enabled]'); ?>" value="1" <?php checked($options['mid_enabled'], 1); ?> id="nshm-mid-enabled">
+                                                <?php esc_html_e('中間色を使う', 'ns-hamburger-menu'); ?>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                
-                                <div style="margin-top:12px; display:flex; flex-wrap:wrap; gap:12px;">
-                                    <label>
-                                        <?php esc_html_e('変化幅 (度数):', 'ns-hamburger-menu'); ?>
-                                        <input type="number" min="0" max="360" step="1" name="<?php echo esc_attr($option_name . '[hue_range_deg]'); ?>" value="<?php echo esc_attr($options['hue_range_deg']); ?>" style="width:90px;">
-                                        <span class="description" style="display:block; font-size:12px; margin-top:2px;">
+                                    
+                                    <div class="nshm-field">
+                                        <div class="nshm-color-group">
+                                            <label for="nshm-color-mid">
+                                                <?php esc_html_e('中間色:', 'ns-hamburger-menu'); ?>
+                                            </label>
+                                            <input type="text" class="nshm-color" id="nshm-color-mid" name="<?php echo esc_attr($option_name . '[color_mid]'); ?>" value="<?php echo esc_attr($options['color_mid']); ?>" data-default-color="<?php echo esc_attr($options['color_mid']); ?>">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="nshm-field">
+                                        <label>
+                                            <?php esc_html_e('変化幅 (度数):', 'ns-hamburger-menu'); ?>
+                                            <input type="number" min="0" max="360" step="1" name="<?php echo esc_attr($option_name . '[hue_range_deg]'); ?>" value="<?php echo esc_attr($options['hue_range_deg']); ?>" style="width:90px;">
+                                        </label>
+                                        <span class="description" style="display:block; font-size:12px; margin-top:4px;">
                                             <?php esc_html_e('小さい値ほど微細な色変化になります', 'ns-hamburger-menu'); ?>
                                         </span>
-                                    </label>
+                                    </div>
                                     
-                                    <label>
-                                        <?php esc_html_e('グラデーション種別:', 'ns-hamburger-menu'); ?>
-                                        <select name="<?php echo esc_attr($option_name . '[grad_type]'); ?>">
-                                            <option value="linear" <?php selected($options['grad_type'], 'linear'); ?>><?php esc_html_e('線形', 'ns-hamburger-menu'); ?></option>
-                                            <option value="radial" <?php selected($options['grad_type'], 'radial'); ?>><?php esc_html_e('放射', 'ns-hamburger-menu'); ?></option>
-                                        </select>
-                                    </label>
-                                    
-                                    <label>
-                                        <?php esc_html_e('グラデーション位置:', 'ns-hamburger-menu'); ?>
-                                        <select name="<?php echo esc_attr($option_name . '[grad_pos]'); ?>">
-                                            <option value="right top" <?php selected($options['grad_pos'], 'right top'); ?>><?php esc_html_e('右上', 'ns-hamburger-menu'); ?></option>
-                                            <option value="left top" <?php selected($options['grad_pos'], 'left top'); ?>><?php esc_html_e('左上', 'ns-hamburger-menu'); ?></option>
-                                            <option value="left bottom" <?php selected($options['grad_pos'], 'left bottom'); ?>><?php esc_html_e('左下', 'ns-hamburger-menu'); ?></option>
-                                            <option value="right bottom" <?php selected($options['grad_pos'], 'right bottom'); ?>><?php esc_html_e('右下', 'ns-hamburger-menu'); ?></option>
-                                            <option value="top" <?php selected($options['grad_pos'], 'top'); ?>><?php esc_html_e('上', 'ns-hamburger-menu'); ?></option>
-                                            <option value="bottom" <?php selected($options['grad_pos'], 'bottom'); ?>><?php esc_html_e('下', 'ns-hamburger-menu'); ?></option>
-                                            <option value="left" <?php selected($options['grad_pos'], 'left'); ?>><?php esc_html_e('左', 'ns-hamburger-menu'); ?></option>
-                                            <option value="right" <?php selected($options['grad_pos'], 'right'); ?>><?php esc_html_e('右', 'ns-hamburger-menu'); ?></option>
-                                        </select>
-                                    </label>
+                                    <div class="nshm-field">
+                                        <div class="nshm-grad-row">
+                                            <label>
+                                                <?php esc_html_e('グラデーション種別:', 'ns-hamburger-menu'); ?>
+                                                <select name="<?php echo esc_attr($option_name . '[grad_type]'); ?>">
+                                                    <option value="linear" <?php selected($options['grad_type'], 'linear'); ?>><?php esc_html_e('線形', 'ns-hamburger-menu'); ?></option>
+                                                    <option value="radial" <?php selected($options['grad_type'], 'radial'); ?>><?php esc_html_e('放射', 'ns-hamburger-menu'); ?></option>
+                                                </select>
+                                            </label>
+                                            
+                                            <label>
+                                                <?php esc_html_e('グラデーション位置:', 'ns-hamburger-menu'); ?>
+                                                <select name="<?php echo esc_attr($option_name . '[grad_pos]'); ?>">
+                                                    <option value="right top" <?php selected($options['grad_pos'], 'right top'); ?>><?php esc_html_e('右上', 'ns-hamburger-menu'); ?></option>
+                                                    <option value="left top" <?php selected($options['grad_pos'], 'left top'); ?>><?php esc_html_e('左上', 'ns-hamburger-menu'); ?></option>
+                                                    <option value="left bottom" <?php selected($options['grad_pos'], 'left bottom'); ?>><?php esc_html_e('左下', 'ns-hamburger-menu'); ?></option>
+                                                    <option value="right bottom" <?php selected($options['grad_pos'], 'right bottom'); ?>><?php esc_html_e('右下', 'ns-hamburger-menu'); ?></option>
+                                                    <option value="top" <?php selected($options['grad_pos'], 'top'); ?>><?php esc_html_e('上', 'ns-hamburger-menu'); ?></option>
+                                                    <option value="bottom" <?php selected($options['grad_pos'], 'bottom'); ?>><?php esc_html_e('下', 'ns-hamburger-menu'); ?></option>
+                                                    <option value="left" <?php selected($options['grad_pos'], 'left'); ?>><?php esc_html_e('左', 'ns-hamburger-menu'); ?></option>
+                                                    <option value="right" <?php selected($options['grad_pos'], 'right'); ?>><?php esc_html_e('右', 'ns-hamburger-menu'); ?></option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </td>
