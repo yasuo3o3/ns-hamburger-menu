@@ -154,13 +154,28 @@ class NSHM_Admin {
             true
         );
         
-        // Add inline CSS for radio button styling
+        // Add inline CSS for horizontal radio buttons and inline controls
         $admin_css = '
             .nshm-custom-settings {
                 border: 1px solid #c3c4c7;
                 padding: 12px;
                 border-radius: 4px;
                 background: #f9f9f9;
+            }
+            .nshm-radios-inline {
+                display: flex;
+                gap: 16px;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+            .nshm-inline {
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+            .nshm-preset-custom {
+                margin-top: 8px;
             }
             fieldset input[type="radio"] {
                 margin-right: 6px;
@@ -172,6 +187,21 @@ class NSHM_Admin {
             }
         ';
         wp_add_inline_style('wp-color-picker', $admin_css);
+        
+        // Add inline JS for hue animation toggle
+        $admin_js = '
+            jQuery(document).ready(function($) {
+                function toggleHueSpeed() {
+                    const checkbox = $("#nshm-hue-toggle");
+                    const speedField = $("#nshm-hue-speed");
+                    speedField.prop("disabled", !checkbox.is(":checked"));
+                }
+                
+                $("#nshm-hue-toggle").on("change", toggleHueSpeed);
+                toggleHueSpeed(); // Initial state
+            });
+        ';
+        wp_add_inline_script('ns-hmb-admin', $admin_js);
     }
     
     /**
@@ -214,21 +244,22 @@ class NSHM_Admin {
                         <td>
                             <fieldset>
                                 <legend class="screen-reader-text"><?php esc_html_e('Color Preset Selection', 'ns-hamburger-menu'); ?></legend>
+                                
+                                <div class="nshm-radios-inline nshm-preset-fixed">
                                 <?php
-                                $presets = array(
+                                $fixed_presets = array(
                                     'blue'   => esc_html__('Blue', 'ns-hamburger-menu'),
                                     'green'  => esc_html__('Green', 'ns-hamburger-menu'),
                                     'red'    => esc_html__('Red', 'ns-hamburger-menu'),
                                     'orange' => esc_html__('Orange', 'ns-hamburger-menu'),
                                     'black'  => esc_html__('Black', 'ns-hamburger-menu'),
-                                    'custom' => esc_html__('Custom', 'ns-hamburger-menu'),
                                 );
                                 
                                 $current_preset = $options['color_preset'] ?? $options['scheme'] ?? 'custom';
                                 
-                                foreach ($presets as $value => $label) {
+                                foreach ($fixed_presets as $value => $label) {
                                     printf(
-                                        '<label><input type="radio" name="%s" value="%s" %s> %s</label><br>',
+                                        '<label style="display:flex; gap:6px; align-items:center;"><input type="radio" name="%s" value="%s" %s> %s</label>',
                                         esc_attr($option_name . '[color_preset]'),
                                         esc_attr($value),
                                         checked($current_preset, $value, false),
@@ -236,6 +267,14 @@ class NSHM_Admin {
                                     );
                                 }
                                 ?>
+                                </div>
+                                
+                                <div class="nshm-preset-custom">
+                                    <label style="display:flex; gap:6px; align-items:center;">
+                                        <input type="radio" name="<?php echo esc_attr($option_name . '[color_preset]'); ?>" value="custom" <?php checked($current_preset, 'custom'); ?>>
+                                        <?php esc_html_e('Custom', 'ns-hamburger-menu'); ?>
+                                    </label>
+                                </div>
                             </fieldset>
                             
                             <div class="nshm-custom-settings" style="margin-top:12px;">
@@ -317,6 +356,8 @@ class NSHM_Admin {
                         <td>
                             <fieldset>
                                 <legend class="screen-reader-text"><?php esc_html_e('Open Shape Selection', 'ns-hamburger-menu'); ?></legend>
+                                
+                                <div class="nshm-radios-inline nshm-open-shape">
                                 <?php
                                 $shapes = array(
                                     'circle' => esc_html__('Circle', 'ns-hamburger-menu'),
@@ -327,7 +368,7 @@ class NSHM_Admin {
                                 
                                 foreach ($shapes as $value => $label) {
                                     printf(
-                                        '<label><input type="radio" name="%s" value="%s" %s> %s</label><br>',
+                                        '<label style="display:flex; gap:6px; align-items:center;"><input type="radio" name="%s" value="%s" %s> %s</label>',
                                         esc_attr($option_name . '[open_shape]'),
                                         esc_attr($value),
                                         checked($current_shape, $value, false),
@@ -335,6 +376,7 @@ class NSHM_Admin {
                                     );
                                 }
                                 ?>
+                                </div>
                             </fieldset>
                             <p class="description">
                                 <?php esc_html_e('Choose how the menu appears when opening', 'ns-hamburger-menu'); ?>
@@ -345,15 +387,15 @@ class NSHM_Admin {
                     <tr>
                         <th scope="row"><?php esc_html_e('Hue Animation', 'ns-hamburger-menu'); ?></th>
                         <td>
-                            <label>
-                                <input type="checkbox" name="<?php echo esc_attr($option_name . '[hue_anim]'); ?>" value="1" <?php checked($options['hue_anim'], 1); ?>>
-                                <?php esc_html_e('Enable hue animation', 'ns-hamburger-menu'); ?>
-                            </label>
-                            
-                            <div style="margin-top:8px;">
+                            <div class="nshm-inline nshm-hue">
+                                <label>
+                                    <input type="checkbox" name="<?php echo esc_attr($option_name . '[hue_anim]'); ?>" value="1" <?php checked($options['hue_anim'], 1); ?> id="nshm-hue-toggle">
+                                    <?php esc_html_e('Enable hue animation', 'ns-hamburger-menu'); ?>
+                                </label>
+                                
                                 <label>
                                     <?php esc_html_e('Animation speed:', 'ns-hamburger-menu'); ?>
-                                    <input type="number" min="3" name="<?php echo esc_attr($option_name . '[hue_speed_sec]'); ?>" value="<?php echo esc_attr($options['hue_speed_sec']); ?>" style="width:90px;">
+                                    <input type="number" min="3" name="<?php echo esc_attr($option_name . '[hue_speed_sec]'); ?>" value="<?php echo esc_attr($options['hue_speed_sec']); ?>" style="width:90px;" id="nshm-hue-speed">
                                     <?php esc_html_e('seconds per cycle', 'ns-hamburger-menu'); ?>
                                 </label>
                             </div>
