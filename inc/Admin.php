@@ -219,7 +219,7 @@ class NSHM_Admin {
                 gap: 8px;
             }
             .nshm-font-item label {
-                min-width: 9em;
+                min-width: 10em;
             }
             .nshm-font-item .unit {
                 opacity: .7;
@@ -231,6 +231,22 @@ class NSHM_Admin {
                 margin-right: 15px;
                 margin-bottom: 5px;
                 display: inline-block;
+            }
+            .nshm-custom-css-label {
+                display: block;
+                font-weight: 600;
+                margin-bottom: 6px;
+            }
+            .nshm-custom-css {
+                width: 100%;
+                max-width: 600px;
+                font-family: monospace;
+                font-size: 12px;
+                margin-bottom: 6px;
+            }
+            .nshm-custom-css-note {
+                margin-top: 0;
+                margin-bottom: 0;
             }
         ';
         wp_add_inline_style('wp-color-picker', $admin_css);
@@ -501,13 +517,13 @@ class NSHM_Admin {
                             </fieldset>
                             
                             <div style="margin-top:12px;">
-                                <label for="nshm-custom-css">
+                                <label for="nshm-custom-css" class="nshm-custom-css-label">
                                     <?php esc_html_e('追加CSS（任意）', 'ns-hamburger-menu'); ?>
                                 </label>
                                 <textarea id="nshm-custom-css" name="<?php echo esc_attr($option_name . '[design_custom_css]'); ?>" 
-                                          rows="6" cols="50" style="width:100%; max-width:600px; font-family:monospace; font-size:12px;"
+                                          class="nshm-custom-css" rows="6" cols="50"
                                           placeholder="/* カスタムCSSをここに入力 */"><?php echo esc_textarea($options['design_custom_css'] ?? ''); ?></textarea>
-                                <p class="description">
+                                <p class="description nshm-custom-css-note">
                                     <?php esc_html_e('小規模な上書きに使用。outputはプラグインCSSの後、プリセットCSSの後に差し込み', 'ns-hamburger-menu'); ?>
                                 </p>
                             </div>
