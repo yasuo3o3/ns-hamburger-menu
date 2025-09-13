@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function(){
     const overlay = document.getElementById(overlayId);
     if (!overlay) return;
 
+    // Find the wrapper element with data-open-shape attribute
+    const wrapper = btn.closest('[data-open-shape]');
+    if (!wrapper) return;
+
     const hueDefault = (typeof NS_HMB !== 'undefined' ? !!NS_HMB.hueAnimDefault : true);
     if (!hueDefault) overlay.classList.add('ns-hue-off');
 
@@ -25,7 +29,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
     const open = () => {
       lastFocused = document.activeElement;
-      document.body.classList.add('ns-open','ns-no-scroll');
+      wrapper.classList.add('ns-open');
+      document.body.classList.add('ns-no-scroll');
       btn.setAttribute('aria-expanded','true');
       btn.setAttribute('aria-label', (typeof NS_HMB !== 'undefined' && NS_HMB.i18n) ? NS_HMB.i18n.closeMenu : 'Close menu');
       overlay.removeAttribute('hidden');
@@ -34,7 +39,8 @@ document.addEventListener('DOMContentLoaded', function(){
     };
 
     const close = () => {
-      document.body.classList.remove('ns-open','ns-no-scroll');
+      wrapper.classList.remove('ns-open');
+      document.body.classList.remove('ns-no-scroll');
       btn.setAttribute('aria-expanded','false');
       btn.setAttribute('aria-label', (typeof NS_HMB !== 'undefined' && NS_HMB.i18n) ? NS_HMB.i18n.openMenu : 'Open menu');
       const wait = getTransitionMs() + 50;
@@ -55,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     // ESCで閉じる & フォーカストラップ
     document.addEventListener('keydown', (e)=>{
-      if(!document.body.classList.contains('ns-open')) return;
+      if(!wrapper.classList.contains('ns-open')) return;
 
       if(e.key === 'Escape') {
         e.preventDefault();
