@@ -55,7 +55,8 @@
   clip-path: circle(0% at 100% 0);
 }
 /* 円形：開いた状態 */
-[data-open-shape="circle"].ns-open .ns-overlay {
+[data-open-shape="circle"].ns-open .ns-overlay,
+.ns-open [data-open-shape="circle"] .ns-overlay {
   -webkit-clip-path: circle(150vmax at 100% 0);
   clip-path: circle(150vmax at 100% 0);
 }
@@ -66,7 +67,8 @@
   clip-path: polygon(100% 0, 100% 0, 100% 0, 100% 0);
 }
 /* 線形：開いた状態 */
-[data-open-shape="linear"].ns-open .ns-overlay {
+[data-open-shape="linear"].ns-open .ns-overlay,
+.ns-open [data-open-shape="linear"] .ns-overlay {
   -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
