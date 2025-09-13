@@ -28,32 +28,48 @@ document.addEventListener('DOMContentLoaded', function(){
 
     const open = () => {
       lastFocused = document.activeElement;
+      
+      // 1. First show the overlay
+      overlay.removeAttribute('hidden');
+      
+      // 2. Force a reflow to ensure the overlay is rendered
+      void overlay.offsetWidth;
+      
+      // 3. Then add the open class to trigger animation
       if (wrapper) {
         wrapper.classList.add('ns-open');
       } else {
         // Fallback: add to body for backward compatibility
         document.body.classList.add('ns-open');
       }
+      
       document.body.classList.add('ns-no-scroll');
       btn.setAttribute('aria-expanded','true');
       btn.setAttribute('aria-label', (typeof NS_HMB !== 'undefined' && NS_HMB.i18n) ? NS_HMB.i18n.closeMenu : 'Close menu');
-      overlay.removeAttribute('hidden');
+      
       const first = overlay.querySelector(focusablesSelector);
       if (first) setTimeout(()=>first.focus(), 50);
     };
 
     const close = () => {
+      // 1. Remove open class to start closing animation
       if (wrapper) {
         wrapper.classList.remove('ns-open');
       } else {
         // Fallback: remove from body for backward compatibility
         document.body.classList.remove('ns-open');
       }
-      document.body.classList.remove('ns-no-scroll');
+      
       btn.setAttribute('aria-expanded','false');
       btn.setAttribute('aria-label', (typeof NS_HMB !== 'undefined' && NS_HMB.i18n) ? NS_HMB.i18n.openMenu : 'Open menu');
+      
+      // 2. Wait for transition to complete, then hide overlay and remove scroll lock
       const wait = getTransitionMs() + 50;
-      setTimeout(()=>overlay.setAttribute('hidden',''), wait);
+      setTimeout(() => {
+        overlay.setAttribute('hidden','');
+        document.body.classList.remove('ns-no-scroll');
+      }, wait);
+      
       if (lastFocused && typeof lastFocused.focus === 'function') {
         setTimeout(()=>lastFocused.focus(), wait + 10);
       } else {
