@@ -21,6 +21,13 @@ document.addEventListener('DOMContentLoaded', function(){
     let lastFocused = null;
 
     const getTransitionMs = () => {
+      // Try to get CSS variable first
+      const cssVar = getComputedStyle(document.documentElement).getPropertyValue('--ns-open-speed').trim();
+      if (cssVar) {
+        return cssVar.includes('ms') ? parseFloat(cssVar) : parseFloat(cssVar) * 1000;
+      }
+      
+      // Fallback to computed transitionDuration
       const dur = getComputedStyle(overlay).transitionDuration; // "0.6s" or "200ms"
       if (!dur) return 600;
       return dur.includes('ms') ? parseFloat(dur) : parseFloat(dur) * 1000;

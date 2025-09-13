@@ -46,7 +46,7 @@ class NSHM_Frontend {
         
         // Add inline CSS variables
         $inline_css = sprintf(
-            ':root{--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-hue-range:%7$sdeg;--ns-z:%8$d;}',
+            ':root{--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-hue-range:%7$sdeg;--ns-open-speed:%8$sms;--ns-z:%9$d;}',
             esc_html($c_start),
             esc_html($c_end),
             intval($options['columns']),
@@ -54,6 +54,7 @@ class NSHM_Frontend {
             intval($options['sub_font_px']),
             intval($options['hue_speed_sec']),
             intval($options['hue_range_deg']),
+            max(0, min(3000, absint($options['open_speed_ms']))),
             intval($options['z_index'])
         );
         wp_add_inline_style('ns-hmb-style', $inline_css);
