@@ -24,58 +24,62 @@
 @media (min-width:783px){ .admin-bar .ns-hb{ top: calc(16px + 32px); } }
 
 /* レスポンシブ位置制御 */
-@media screen {
-  /* Center Constrained: 画面幅がブレークポイント以上の時、中央から半分の幅以上右に行かない */
-  :root[style*="--ns-resp-mode:center"] .ns-hb {
-    right: max(16px, calc(50% - calc(var(--ns-resp-width) / 2)));
-  }
-
-  /* Left Edge Limit: 左端からの距離を制限 */
-  :root[style*="--ns-resp-mode:left_limit"] .ns-hb {
-    left: 16px;
-    right: auto;
-    max-width: calc(var(--ns-resp-width) - 32px);
-  }
-
-  /* Right Edge Limit: 右端からの距離を制限、ただし設定幅以上右に行かない */
-  :root[style*="--ns-resp-mode:right_limit"] .ns-hb {
-    right: max(16px, calc(100% - var(--ns-resp-width)));
-  }
+/* Center Constrained: 中央基準で画面幅以上右に行かない */
+[style*="--ns-resp-mode:center"] .ns-hb {
+  right: max(16px, calc(50% - calc(var(--ns-resp-width) / 2)));
 }
 
-/* メディアクエリによるブレークポイント制御 */
-[style*="--ns-resp-mode:center"] .ns-hb,
-[style*="--ns-resp-mode:left_limit"] .ns-hb,
+/* Left Edge Limit: 左端から開始、右に行き過ぎない */
+[style*="--ns-resp-mode:left_limit"] .ns-hb {
+  left: 16px;
+  right: auto;
+}
+
+/* Right Edge Limit: 右端制限、設定幅以上右に行かない */
 [style*="--ns-resp-mode:right_limit"] .ns-hb {
-  /* デフォルトは通常位置のまま、メディアクエリで上書き */
+  right: max(16px, calc(100% - var(--ns-resp-width)));
 }
 
-/* より具体的なメディアクエリでCSS変数を参照 */
-@supports (right: max(16px, calc(50% - 210px))) {
-  @media (min-width: 420px) {
-    [style*="--ns-resp-mode:center"] .ns-hb {
-      right: max(16px, calc(50% - 210px)); /* 420pxの半分 */
-    }
+/* ブレークポイント以下では通常の右上固定に戻す */
+@media (max-width: 419px) {
+  [style*="--ns-resp-mode:center"] .ns-hb,
+  [style*="--ns-resp-mode:left_limit"] .ns-hb,
+  [style*="--ns-resp-mode:right_limit"] .ns-hb {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    left: auto;
   }
-  @media (min-width: 480px) {
-    [style*="--ns-resp-width:480px"][style*="--ns-resp-mode:center"] .ns-hb {
-      right: max(16px, calc(50% - 240px));
-    }
+}
+
+/* カスタムブレークポイント対応 */
+@media (min-width: 420px) and (max-width: 479px) {
+  [style*="--ns-resp-width:420px"][style*="--ns-resp-mode:center"] .ns-hb {
+    right: max(16px, calc(50% - 210px));
   }
-  @media (min-width: 600px) {
-    [style*="--ns-resp-width:600px"][style*="--ns-resp-mode:center"] .ns-hb {
-      right: max(16px, calc(50% - 300px));
-    }
+}
+
+@media (min-width: 480px) and (max-width: 599px) {
+  [style*="--ns-resp-width:480px"][style*="--ns-resp-mode:center"] .ns-hb {
+    right: max(16px, calc(50% - 240px));
   }
-  @media (min-width: 768px) {
-    [style*="--ns-resp-width:768px"][style*="--ns-resp-mode:center"] .ns-hb {
-      right: max(16px, calc(50% - 384px));
-    }
+}
+
+@media (min-width: 600px) and (max-width: 767px) {
+  [style*="--ns-resp-width:600px"][style*="--ns-resp-mode:center"] .ns-hb {
+    right: max(16px, calc(50% - 300px));
   }
-  @media (min-width: 1024px) {
-    [style*="--ns-resp-width:1024px"][style*="--ns-resp-mode:center"] .ns-hb {
-      right: max(16px, calc(50% - 512px));
-    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  [style*="--ns-resp-width:768px"][style*="--ns-resp-mode:center"] .ns-hb {
+    right: max(16px, calc(50% - 384px));
+  }
+}
+
+@media (min-width: 1024px) {
+  [style*="--ns-resp-width:1024px"][style*="--ns-resp-mode:center"] .ns-hb {
+    right: max(16px, calc(50% - 512px));
   }
 }
 

@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.1] - 2024-09-18
+
+### Added
+- Add responsive position clamp for desktop
+- New responsive position modes: Center Constrained, Left Edge Limit, Right Edge Limit
+- Configurable breakpoint width (320-1200px) for responsive behavior
+- CSS variables for responsive positioning (--ns-resp-mode, --ns-resp-width)
+
+### Improved
+- Enhanced CSS logic with better browser compatibility
+- More precise position calculations for different screen sizes
+- Optimized media queries for responsive breakpoints
+
 ## [0.10.0] - 2024-09-05
 
 ### Added
