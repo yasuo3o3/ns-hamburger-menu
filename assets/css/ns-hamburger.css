@@ -8,6 +8,8 @@
   --ns-hue-range:24deg;
   --ns-open-speed:600ms;
   --ns-z:9999;
+  --ns-resp-mode:off;
+  --ns-resp-width:420px;
 }
 
 /* ハンバーガー（右上固定） */
@@ -20,6 +22,62 @@
 }
 @media (max-width:782px){ .admin-bar .ns-hb{ top: calc(16px + 46px); } }
 @media (min-width:783px){ .admin-bar .ns-hb{ top: calc(16px + 32px); } }
+
+/* レスポンシブ位置制御 */
+@media screen {
+  /* Center Constrained: 画面幅がブレークポイント以上の時、中央から半分の幅以上右に行かない */
+  :root[style*="--ns-resp-mode:center"] .ns-hb {
+    right: max(16px, calc(50% - calc(var(--ns-resp-width) / 2)));
+  }
+
+  /* Left Edge Limit: 左端からの距離を制限 */
+  :root[style*="--ns-resp-mode:left_limit"] .ns-hb {
+    left: 16px;
+    right: auto;
+    max-width: calc(var(--ns-resp-width) - 32px);
+  }
+
+  /* Right Edge Limit: 右端からの距離を制限、ただし設定幅以上右に行かない */
+  :root[style*="--ns-resp-mode:right_limit"] .ns-hb {
+    right: max(16px, calc(100% - var(--ns-resp-width)));
+  }
+}
+
+/* メディアクエリによるブレークポイント制御 */
+[style*="--ns-resp-mode:center"] .ns-hb,
+[style*="--ns-resp-mode:left_limit"] .ns-hb,
+[style*="--ns-resp-mode:right_limit"] .ns-hb {
+  /* デフォルトは通常位置のまま、メディアクエリで上書き */
+}
+
+/* より具体的なメディアクエリでCSS変数を参照 */
+@supports (right: max(16px, calc(50% - 210px))) {
+  @media (min-width: 420px) {
+    [style*="--ns-resp-mode:center"] .ns-hb {
+      right: max(16px, calc(50% - 210px)); /* 420pxの半分 */
+    }
+  }
+  @media (min-width: 480px) {
+    [style*="--ns-resp-width:480px"][style*="--ns-resp-mode:center"] .ns-hb {
+      right: max(16px, calc(50% - 240px));
+    }
+  }
+  @media (min-width: 600px) {
+    [style*="--ns-resp-width:600px"][style*="--ns-resp-mode:center"] .ns-hb {
+      right: max(16px, calc(50% - 300px));
+    }
+  }
+  @media (min-width: 768px) {
+    [style*="--ns-resp-width:768px"][style*="--ns-resp-mode:center"] .ns-hb {
+      right: max(16px, calc(50% - 384px));
+    }
+  }
+  @media (min-width: 1024px) {
+    [style*="--ns-resp-width:1024px"][style*="--ns-resp-mode:center"] .ns-hb {
+      right: max(16px, calc(50% - 512px));
+    }
+  }
+}
 
 .ns-hb-box{ position:relative;width:28px;height:20px; }
 .ns-hb-bar, .ns-hb-bar::before, .ns-hb-bar::after{

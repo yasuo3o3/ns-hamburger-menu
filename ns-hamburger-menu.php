@@ -60,19 +60,21 @@ class NS_Hamburger_Menu {
 
     private function defaults() {
         return [
-            'auto_inject'    => 1,
-            'columns'        => 2,
-            'top_font_px'    => 24,
-            'sub_font_px'    => 16,
-            'scheme'         => 'custom',
-            'color_start'    => '#0ea5e9',
-            'color_end'      => '#a78bfa',
-            'hue_anim'       => 1,
-            'hue_speed_sec'  => 12,
-            'hue_range_deg'  => 24,
-            'open_speed_ms'  => 600,
-            'open_shape'     => 'circle',
-            'z_index'        => 9999,
+            'auto_inject'      => 1,
+            'columns'          => 2,
+            'top_font_px'      => 24,
+            'sub_font_px'      => 16,
+            'scheme'           => 'custom',
+            'color_start'      => '#0ea5e9',
+            'color_end'        => '#a78bfa',
+            'hue_anim'         => 1,
+            'hue_speed_sec'    => 12,
+            'hue_range_deg'    => 24,
+            'open_speed_ms'    => 600,
+            'open_shape'       => 'circle',
+            'z_index'          => 9999,
+            'responsive_mode'  => 'off',
+            'responsive_width' => 420,
         ];
     }
     private function get_options() {
@@ -100,6 +102,10 @@ class NS_Hamburger_Menu {
             $shape = $input['open_shape'] ?? $d['open_shape'];
             $out['open_shape'] = in_array($shape, $allowed_shapes, true) ? $shape : 'circle';
             $out['z_index']       = max(1000, intval($input['z_index'] ?? $d['z_index']));
+            $allowed_modes = ['off', 'center', 'left_limit', 'right_limit'];
+            $mode = $input['responsive_mode'] ?? $d['responsive_mode'];
+            $out['responsive_mode'] = in_array($mode, $allowed_modes, true) ? $mode : 'off';
+            $out['responsive_width'] = max(320, min(1200, intval($input['responsive_width'] ?? $d['responsive_width'])));
             return $out;
         });
     }
@@ -122,10 +128,11 @@ class NS_Hamburger_Menu {
 
         wp_enqueue_style('ns-hmb-style', plugin_dir_url(__FILE__) . 'assets/css/ns-hamburger.css', [], self::VER);
         $inline = sprintf(
-            ':root{--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-hue-range:%7$s;--ns-open-speed:%8$sms;--ns-z:%9$d;}',
+            ':root{--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-hue-range:%7$s;--ns-open-speed:%8$sms;--ns-z:%9$d;--ns-resp-mode:%10$s;--ns-resp-width:%11$dpx;}',
             esc_html($c_start), esc_html($c_end),
             intval($opt['columns']), intval($opt['top_font_px']), intval($opt['sub_font_px']),
-            intval($opt['hue_speed_sec']), intval($opt['hue_range_deg']).'deg', intval($opt['open_speed_ms']), intval($opt['z_index'])
+            intval($opt['hue_speed_sec']), intval($opt['hue_range_deg']).'deg', intval($opt['open_speed_ms']), intval($opt['z_index']),
+            esc_html($opt['responsive_mode']), intval($opt['responsive_width'])
         );
         wp_add_inline_style('ns-hmb-style', $inline);
 
@@ -195,6 +202,18 @@ class NS_Hamburger_Menu {
             <p class="description"><?php esc_html_e('Menu opening/closing animation duration (100-2000ms, default: 600ms)', 'ns-hamburger-menu'); ?></p>
           </td></tr>
           <tr><th>Z-index</th><td><input type="number" min="1000" name="<?php echo esc_attr($name.'[z_index]');?>" value="<?php echo esc_attr($opt['z_index']);?>"></td></tr>
+          <tr><th><?php esc_html_e('Responsive Position', 'ns-hamburger-menu'); ?></th><td>
+            <select name="<?php echo esc_attr($name.'[responsive_mode]');?>">
+              <option value="off" <?php selected($opt['responsive_mode'], 'off'); ?>><?php esc_html_e('Off (Default: Right Top)', 'ns-hamburger-menu'); ?></option>
+              <option value="center" <?php selected($opt['responsive_mode'], 'center'); ?>><?php esc_html_e('Center Constrained', 'ns-hamburger-menu'); ?></option>
+              <option value="left_limit" <?php selected($opt['responsive_mode'], 'left_limit'); ?>><?php esc_html_e('Left Edge Limit', 'ns-hamburger-menu'); ?></option>
+              <option value="right_limit" <?php selected($opt['responsive_mode'], 'right_limit'); ?>><?php esc_html_e('Right Edge Limit', 'ns-hamburger-menu'); ?></option>
+            </select>
+            <div style="margin-top:8px">
+              <?php esc_html_e('Breakpoint Width:', 'ns-hamburger-menu'); ?> <input type="number" min="320" max="1200" name="<?php echo esc_attr($name.'[responsive_width]');?>" value="<?php echo esc_attr($opt['responsive_width']);?>" style="width:90px"> px
+            </div>
+            <p class="description"><?php esc_html_e('Controls hamburger position on wider screens. Center Constrained prevents going beyond half the breakpoint width from center.', 'ns-hamburger-menu'); ?></p>
+          </td></tr>
         </table><?php submit_button(); ?></form></div><?php
     }
 
@@ -269,8 +288,9 @@ class NS_Hamburger_Menu {
 
         $open_spd = isset($attrs['openSpeedMs']) ? max(100, min(2000, intval($attrs['openSpeedMs']))) : $opt['open_speed_ms'];
         $open_shape = isset($attrs['openShape']) && in_array($attrs['openShape'], ['circle', 'linear'], true) ? $attrs['openShape'] : ($opt['open_shape'] ?? 'circle');
-        $style_vars = sprintf('--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-open-speed:%7$sms;--ns-z:%8$d;',
-            esc_attr($c_start), esc_attr($c_end), $columns, $top_fz, $sub_fz, $hue_spd, $open_spd, $z_index
+        $style_vars = sprintf('--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-open-speed:%7$sms;--ns-z:%8$d;--ns-resp-mode:%9$s;--ns-resp-width:%10$dpx;',
+            esc_attr($c_start), esc_attr($c_end), $columns, $top_fz, $sub_fz, $hue_spd, $open_spd, $z_index,
+            esc_attr($opt['responsive_mode']), intval($opt['responsive_width'])
         );
 
         $overlay_id = function_exists('wp_unique_id') ? wp_unique_id('ns-overlay-') : 'ns-overlay-'.uniqid();
