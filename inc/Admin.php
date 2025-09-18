@@ -601,20 +601,24 @@ class NSHM_Admin {
                     </tr>
 
                     <tr>
-                        <th scope="row"><?php esc_html_e('Responsive Position', 'ns-hamburger-menu'); ?></th>
+                        <th scope="row">レスポンシブ位置制御</th>
                         <td>
                             <select name="<?php echo esc_attr($option_name . '[responsive_mode]'); ?>">
-                                <option value="off" <?php selected($options['responsive_mode'], 'off'); ?>><?php esc_html_e('Off (Default: Right Top)', 'ns-hamburger-menu'); ?></option>
-                                <option value="center" <?php selected($options['responsive_mode'], 'center'); ?>><?php esc_html_e('Center Constrained', 'ns-hamburger-menu'); ?></option>
-                                <option value="left_limit" <?php selected($options['responsive_mode'], 'left_limit'); ?>><?php esc_html_e('Left Edge Limit', 'ns-hamburger-menu'); ?></option>
-                                <option value="right_limit" <?php selected($options['responsive_mode'], 'right_limit'); ?>><?php esc_html_e('Right Edge Limit', 'ns-hamburger-menu'); ?></option>
+                                <option value="off" <?php selected($options['responsive_mode'], 'off'); ?>>オフ（通常の右上固定）</option>
+                                <option value="center" <?php selected($options['responsive_mode'], 'center'); ?>>中央寄せ制限（設定幅の中央から外に出ない）</option>
+                                <option value="left_limit" <?php selected($options['responsive_mode'], 'left_limit'); ?>>左端制限（左端から開始）</option>
+                                <option value="right_limit" <?php selected($options['responsive_mode'], 'right_limit'); ?>>右端制限（設定幅以上右に行かない）</option>
                             </select>
                             <div style="margin-top:8px">
-                                <?php esc_html_e('Breakpoint Width:', 'ns-hamburger-menu'); ?>
-                                <input type="number" min="320" max="1200" name="<?php echo esc_attr($option_name . '[responsive_width]'); ?>" value="<?php echo esc_attr($options['responsive_width']); ?>" style="width:90px"> px
+                                基準幅：<input type="number" min="320" max="1200" name="<?php echo esc_attr($option_name . '[responsive_width]'); ?>" value="<?php echo esc_attr($options['responsive_width']); ?>" style="width:90px"> px
                             </div>
                             <p class="description">
-                                <?php esc_html_e('Controls hamburger position on wider screens. Center Constrained prevents going beyond half the breakpoint width from center.', 'ns-hamburger-menu'); ?>
+                                <strong>PC・タブレット表示時のハンバーガーメニュー位置を制御します</strong><br>
+                                • <strong>オフ</strong>: 通常通り画面右上に固定表示<br>
+                                • <strong>中央寄せ制限</strong>: 画面中央を基準に、設定した基準幅の半分以上右に行かないよう制限（例：420px設定時、中央から210px以上右に出ない）<br>
+                                • <strong>左端制限</strong>: 画面左端から16px位置に固定（スマートフォン専用サイトを大きな画面で見る場合に有効）<br>
+                                • <strong>右端制限</strong>: 設定した基準幅以上右に行かないよう制限<br>
+                                ※419px以下のスマートフォンでは、設定に関係なく通常の右上固定となります
                             </p>
                         </td>
                     </tr>
