@@ -123,7 +123,13 @@ class NSHM_Admin {
         // Custom CSS (truncate to 10KB)
         $custom_css = $input['design_custom_css'] ?? $defaults['design_custom_css'];
         $output['design_custom_css'] = substr($custom_css, 0, 10240); // 10KB limit
-        
+
+        // Responsive position settings
+        $allowed_modes = array('off', 'center', 'left_limit', 'right_limit');
+        $responsive_mode = $input['responsive_mode'] ?? $defaults['responsive_mode'];
+        $output['responsive_mode'] = in_array($responsive_mode, $allowed_modes, true) ? $responsive_mode : 'off';
+        $output['responsive_width'] = max(320, min(1200, intval($input['responsive_width'] ?? $defaults['responsive_width'])));
+
         return $output;
     }
     
@@ -590,6 +596,25 @@ class NSHM_Admin {
                             <input type="number" min="1000" name="<?php echo esc_attr($option_name . '[z_index]'); ?>" value="<?php echo esc_attr($options['z_index']); ?>">
                             <p class="description">
                                 <?php esc_html_e('Adjust if the menu appears behind other elements', 'ns-hamburger-menu'); ?>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row"><?php esc_html_e('Responsive Position', 'ns-hamburger-menu'); ?></th>
+                        <td>
+                            <select name="<?php echo esc_attr($option_name . '[responsive_mode]'); ?>">
+                                <option value="off" <?php selected($options['responsive_mode'], 'off'); ?>><?php esc_html_e('Off (Default: Right Top)', 'ns-hamburger-menu'); ?></option>
+                                <option value="center" <?php selected($options['responsive_mode'], 'center'); ?>><?php esc_html_e('Center Constrained', 'ns-hamburger-menu'); ?></option>
+                                <option value="left_limit" <?php selected($options['responsive_mode'], 'left_limit'); ?>><?php esc_html_e('Left Edge Limit', 'ns-hamburger-menu'); ?></option>
+                                <option value="right_limit" <?php selected($options['responsive_mode'], 'right_limit'); ?>><?php esc_html_e('Right Edge Limit', 'ns-hamburger-menu'); ?></option>
+                            </select>
+                            <div style="margin-top:8px">
+                                <?php esc_html_e('Breakpoint Width:', 'ns-hamburger-menu'); ?>
+                                <input type="number" min="320" max="1200" name="<?php echo esc_attr($option_name . '[responsive_width]'); ?>" value="<?php echo esc_attr($options['responsive_width']); ?>" style="width:90px"> px
+                            </div>
+                            <p class="description">
+                                <?php esc_html_e('Controls hamburger position on wider screens. Center Constrained prevents going beyond half the breakpoint width from center.', 'ns-hamburger-menu'); ?>
                             </p>
                         </td>
                     </tr>

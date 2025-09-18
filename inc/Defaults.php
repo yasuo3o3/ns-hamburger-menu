@@ -42,6 +42,8 @@ class NSHM_Defaults {
             'z_index'        => 9999,
             'design_preset'  => 'normal',
             'design_custom_css' => '',
+            'responsive_mode'  => 'off',
+            'responsive_width' => 420,
         );
     }
     
