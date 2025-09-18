@@ -324,7 +324,18 @@ class NS_Hamburger_Menu {
     }
 }
 
-// Maintain backward compatibility
-if (!class_exists('NSHM_Core')) {
-    new NS_Hamburger_Menu();
+// Initialize legacy class for backward compatibility and admin functionality
+$ns_hamburger_menu = new NS_Hamburger_Menu();
+
+// Register hooks for admin functionality
+if (is_admin()) {
+    add_action('admin_init', [$ns_hamburger_menu, 'register_settings']);
+    add_action('admin_menu', [$ns_hamburger_menu, 'add_settings_page']);
+    add_action('admin_enqueue_scripts', [$ns_hamburger_menu, 'admin_assets']);
 }
+
+// Register hooks for frontend functionality
+add_action('wp_enqueue_scripts', [$ns_hamburger_menu, 'front_assets']);
+add_action('init', [$ns_hamburger_menu, 'register_menu_location']);
+add_shortcode('ns_hamburger', [$ns_hamburger_menu, 'shortcode']);
+add_action('init', [$ns_hamburger_menu, 'register_block']);
