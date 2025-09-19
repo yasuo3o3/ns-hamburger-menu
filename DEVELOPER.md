@@ -31,6 +31,8 @@ ns-hamburger-menu/
 - Block registration
 - Shortcode handling
 - Auto-inject functionality
+- Navigation block detection (block theme support)
+- Fallback menu generation
 
 #### NSHM_Admin  
 - Settings page
@@ -77,6 +79,8 @@ add_filter('nshm_overlay_attributes', function($attrs) {
 - `nshm_enqueue_assets` - Before assets are enqueued
 - `nshm_render_menu` - Before menu markup is rendered
 - `nshm_menu_args` - Filter wp_nav_menu arguments
+- `nshm_navigation_menu` - Filter final navigation menu HTML
+- `nshm_navigation_fallback` - Filter fallback menu generation
 - `nshm_css_vars` - Filter CSS custom properties
 - `nshm_js_config` - Filter JavaScript configuration
 - `nshm_button_markup` - Filter hamburger button HTML
@@ -237,13 +241,48 @@ The `ns/hamburger-slot` block allows content insertion:
 - `current_user_can('manage_options')` for admin
 - `current_user_can('edit_theme_options')` for menu hints
 
+## Block Theme Support
+
+### Navigation Detection
+The plugin automatically detects navigation content from multiple sources:
+
+1. **Traditional menus** (priority): Uses `wp_nav_menu` with location `ns_hamburger_menu`
+2. **Navigation blocks**: Automatically detects `wp_navigation` post types
+3. **Fallback generation**: Creates menu from published pages
+
+### Navigation Block Integration
+```php
+// Get navigation content
+$navigation = $this->get_navigation_menu();
+
+// Hook into navigation detection
+add_filter('nshm_navigation_menu', function($menu) {
+    // Customize detected navigation
+    return $menu;
+});
+
+// Hook into fallback generation
+add_filter('nshm_navigation_fallback', function($pages) {
+    // Modify page list for fallback menu
+    return $pages;
+});
+```
+
+### Block Theme Compatibility
+- Automatically detects block themes
+- Works without traditional menu management
+- Supports hierarchical navigation blocks
+- Preserves menu styling and structure
+
 ## Troubleshooting
 
 ### Common Issues
 1. **Menu not appearing**: Check auto-insert setting or block placement
-2. **JavaScript errors**: Ensure proper asset loading order
-3. **Styling conflicts**: Check z-index and CSS specificity
-4. **Focus issues**: Verify ARIA attributes are properly set
+2. **Block theme menus**: Plugin automatically detects Navigation blocks
+3. **JavaScript errors**: Ensure proper asset loading order
+4. **Animation issues**: Check for CSS conflicts with hamburger button
+5. **Styling conflicts**: Check z-index and CSS specificity
+6. **Focus issues**: Verify ARIA attributes are properly set
 
 ### Debug Mode
 ```php

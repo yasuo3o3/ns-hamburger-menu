@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.1] - 2024-09-19
+
+### Added
+- Block theme support with automatic Navigation block detection
+- Automatic fallback menu generation from published pages
+- Multi-source navigation priority system (traditional menu → navigation blocks → page list)
+- Enhanced hamburger button animation with improved visual clarity
+
+### Fixed
+- Hamburger button animation glitch where three lines remained visible when opened
+- Improved CSS positioning for hamburger button transformation
+- Better opacity control for menu state transitions
+
+### Changed
+- Enhanced navigation detection to work seamlessly with block themes
+- Updated documentation for block theme compatibility
+- Improved error handling for navigation menu generation
+
+### Removed
+- Removed obsolete responsive position test file from debug tools
+
+## [0.11.0] - 2024-09-18
+
+### Added
+- Improved animation performance
+- Enhanced accessibility features
+- Better mobile responsiveness
+
 ## [0.10.0] - 2024-09-05
 
 ### Added

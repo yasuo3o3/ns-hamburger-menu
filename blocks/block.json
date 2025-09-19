@@ -2,7 +2,7 @@
   "apiVersion": 2,
   "name": "ns/hamburger",
   "title": "NS Hamburger Menu",
-  "category": "design",
+  "category": "widgets",
   "icon": "menu",
   "description": "全画面オーバーレイのハンバーガーメニュー。親子で文字サイズ差・2〜3列・色相アニメ。",
   "keywords": ["menu", "hamburger", "overlay", "ナビ"],
@@ -18,5 +18,6 @@
     "hueSpeedSec": { "type": "number", "default": null },
     "zIndex": { "type": "number", "default": null }
   },
-  "editorScript": "file:./index.js"
+  "editorScript": "file:./index.js",
+  "dependencies": ["wp-blocks", "wp-components", "wp-element", "wp-block-editor", "wp-i18n"]
 }

@@ -3,7 +3,7 @@
  * Plugin Name:       NS Hamburger Overlay Menu
  * Plugin URI:        https://github.com/netservice/ns-hamburger-menu
  * Description:       Accessible hamburger overlay menu with gradient animations, multi-column layout, and full keyboard navigation support.
- * Version:           0.11.0
+ * Version:           0.11.1
  * Requires at least: 6.5
  * Requires PHP:      7.4
  * Author:            Netservice
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('NSHM_VERSION', '0.11.0');
+define('NSHM_VERSION', '0.11.1');
 define('NSHM_PLUGIN_FILE', __FILE__);
 define('NSHM_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('NSHM_PLUGIN_PATH', plugin_dir_path(__FILE__));
@@ -45,7 +45,7 @@ add_action('init', 'nshm_init');
 // Legacy compatibility
 class NS_Hamburger_Menu {
     const OPT_KEY = 'ns_hamburger_options';
-    const VER     = NSHM_VERSION;
+    const VER     = '0.11.1';
 
     public function __construct() {
         // Deprecated: This class is kept for backward compatibility only
@@ -276,7 +276,9 @@ class NS_Hamburger_Menu {
         $overlay_id = function_exists('wp_unique_id') ? wp_unique_id('ns-overlay-') : 'ns-overlay-'.uniqid();
 
         ob_start(); ?>
+        <!-- 【初期状態：閉じている】data-open-shapeでアニメーション形状を指定 -->
         <div data-open-shape="<?php echo esc_attr($open_shape); ?>" data-preset="<?php echo esc_attr($opt['design_preset'] ?? 'normal'); ?>">
+        <!-- 【ハンバーガーボタン】初期：3本線表示、.ns-openクラス追加で×マークに変形 -->
         <button class="ns-hb" aria-controls="<?php echo esc_attr($overlay_id); ?>" aria-expanded="false" aria-label="<?php echo esc_attr(__('Open menu', 'ns-hamburger-menu')); ?>">
             <span class="ns-hb-box"><span class="ns-hb-bar"></span></span>
         </button>

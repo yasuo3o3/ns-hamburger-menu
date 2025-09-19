@@ -35,40 +35,40 @@ document.addEventListener('DOMContentLoaded', function(){
 
     const open = () => {
       lastFocused = document.activeElement;
-      
+
       // 1. First show the overlay
       overlay.removeAttribute('hidden');
-      
+
       // 2. Force a reflow to ensure the overlay is rendered
       void overlay.offsetWidth;
-      
-      // 3. Then add the open class to trigger animation
+
+      // 3. 【メニューを開く】ns-openクラスを追加してハンバーガーボタンを×マークに変形
       if (wrapper) {
         wrapper.classList.add('ns-open');
       } else {
         // Fallback: add to body for backward compatibility
         document.body.classList.add('ns-open');
       }
-      
+
       document.body.classList.add('ns-no-scroll');
       btn.setAttribute('aria-expanded','true');
-      btn.setAttribute('aria-label', (typeof NS_HMB !== 'undefined' && NS_HMB.i18n) ? NS_HMB.i18n.closeMenu : 'Close menu');
-      
+      btn.setAttribute('aria-label', (typeof NS_HMB !== 'undefined' && NS_HMB.i18n) ? NS_HMB.i18n.closeMenu : 'メニューを閉じる');
+
       const first = overlay.querySelector(focusablesSelector);
       if (first) setTimeout(()=>first.focus(), 50);
     };
 
     const close = () => {
-      // 1. Remove open class to start closing animation
+      // 1. 【メニューを閉じる】ns-openクラスを削除してハンバーガーボタンを3本線に戻す
       if (wrapper) {
         wrapper.classList.remove('ns-open');
       } else {
         // Fallback: remove from body for backward compatibility
         document.body.classList.remove('ns-open');
       }
-      
+
       btn.setAttribute('aria-expanded','false');
-      btn.setAttribute('aria-label', (typeof NS_HMB !== 'undefined' && NS_HMB.i18n) ? NS_HMB.i18n.openMenu : 'Open menu');
+      btn.setAttribute('aria-label', (typeof NS_HMB !== 'undefined' && NS_HMB.i18n) ? NS_HMB.i18n.openMenu : 'メニューを開く');
       
       // 2. Wait for transition to complete, then hide overlay and remove scroll lock
       const wait = getTransitionMs() + 50;

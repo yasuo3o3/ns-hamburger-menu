@@ -20,11 +20,10 @@ class NSHM_Core {
      */
     public function __construct() {
         add_action('init', array($this, 'register_menu_location'));
-        add_action('init', array($this, 'register_block'));
+        add_action('init', array($this, 'register_block'), 20); // Higher priority for block registration
         add_shortcode('ns_hamburger_menu', array($this, 'shortcode'));
         
         // Auto-inject functionality
-        add_action('wp_footer', array($this, 'auto_inject_footer'), 99);
         add_action('wp_body_open', array($this, 'auto_inject_body'), 1);
     }
     
@@ -41,20 +40,44 @@ class NSHM_Core {
      * Register block
      */
     public function register_block() {
-        register_block_type(NSHM_PLUGIN_PATH . 'blocks', array(
+        // Ensure the block directory exists and has block.json
+        $block_path = NSHM_PLUGIN_PATH . 'blocks';
+        if (!file_exists($block_path . '/block.json')) {
+            error_log('NS Hamburger Menu: block.json not found at ' . $block_path);
+            return;
+        }
+
+        $result = register_block_type($block_path, array(
             'render_callback' => array($this, 'render_block')
+        ));
+
+        if (!$result) {
+            error_log('NS Hamburger Menu: Failed to register block type');
+        }
+
+        // Register child block for slots
+        register_block_type('ns/hamburger-slot', array(
+            'attributes' => array(
+                'position' => array(
+                    'type' => 'string',
+                    'default' => 'before'
+                )
+            ),
+            'render_callback' => array($this, 'render_slot_block')
         ));
     }
     
     /**
-     * Auto-inject in footer
+     * Auto-inject in footer (DISABLED - using wp_body_open instead)
      */
+    /*
     public function auto_inject_footer() {
         $options = NSHM_Defaults::get_options();
         if (!empty($options['auto_inject'])) {
             echo wp_kses_post( $this->render_markup(false, array(), null, '') );
         }
     }
+    */
     
     /**
      * Auto-inject after body open
@@ -62,6 +85,16 @@ class NSHM_Core {
     public function auto_inject_body() {
         $options = NSHM_Defaults::get_options();
         if (!empty($options['auto_inject'])) {
+            // Check if page has ns/hamburger block
+            global $post;
+            if ($post && has_block('ns/hamburger', $post)) {
+                // Skip auto-inject if block exists
+                echo '<!-- NS Hamburger Menu: Auto-inject skipped - block found -->';
+                return;
+            }
+
+            // Add debug comment to identify auto-inject source
+            echo '<!-- NS Hamburger Menu: Auto-injected via wp_body_open -->';
             echo wp_kses_post( $this->render_markup(false, array(), null, '') );
         }
     }
@@ -73,7 +106,7 @@ class NSHM_Core {
      * @return string
      */
     public function shortcode($atts = array()) {
-        return $this->render_markup(true, array(), null, '');
+        return '<!-- NS Hamburger Menu: Shortcode [ns_hamburger_menu] -->' . $this->render_markup(true, array(), null, '');
     }
     
     /**
@@ -94,7 +127,24 @@ class NSHM_Core {
             }
         }
         
-        return $this->render_markup(true, $attrs, $block, $content);
+        return '<!-- NS Hamburger Menu: Block render -->' . $this->render_markup(true, $attrs, $block, $content);
+    }
+
+    /**
+     * Slot block render callback
+     *
+     * @param array  $attributes Block attributes
+     * @param string $content    Block content
+     * @return string
+     */
+    public function render_slot_block($attributes = array(), $content = '') {
+        // Wrap slot content with position attribute for parent block processing
+        $position = isset($attributes['position']) ? $attributes['position'] : 'before';
+        return sprintf(
+            '<!-- slot-start position="%s" -->%s<!-- slot-end -->',
+            esc_attr($position),
+            $content
+        );
     }
     
     
@@ -351,18 +401,34 @@ class NSHM_Core {
     private function split_slots_from_content($content) {
         $before = '';
         $after = '';
-        
+
         if (!$content) {
             return array($before, $after);
         }
-        
+
+        // Try to extract from HTML comments first (for rendered content)
+        if (preg_match_all('/<!-- slot-start position="([^"]+)" -->(.*?)<!-- slot-end -->/s', $content, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $match) {
+                $position = $match[1];
+                $slot_content = $match[2];
+
+                if ($position === 'after') {
+                    $after .= $slot_content;
+                } else {
+                    $before .= $slot_content;
+                }
+            }
+            return array($before, $after);
+        }
+
+        // Fallback to block parsing
         $blocks = parse_blocks($content);
-        
+
         foreach ($blocks as $block) {
             if (empty($block['blockName']) || $block['blockName'] !== 'ns/hamburger-slot') {
                 continue;
             }
-            
+
             $position = isset($block['attrs']['position']) ? $block['attrs']['position'] : 'before';
             $html = '';
             
@@ -393,7 +459,7 @@ class NSHM_Core {
      * @param string $content       Block content
      * @return string|void
      */
-    private function render_markup($return_string = true, $attrs = array(), $block = null, $content = '') {
+    public function render_markup($return_string = true, $attrs = array(), $block = null, $content = '') {
         $options = NSHM_Defaults::get_options();
         
         // Process attributes with validation
@@ -417,6 +483,11 @@ class NSHM_Core {
         if ($slot_before === '' && $slot_after === '') {
             list($slot_before, $slot_after) = $this->split_slots_from_content($content);
         }
+
+        // Debug output
+        error_log('NS Hamburger: slot_before = ' . $slot_before);
+        error_log('NS Hamburger: slot_after = ' . $slot_after);
+        error_log('NS Hamburger: content = ' . $content);
         
         // Generate unique ID
         $overlay_id = function_exists('wp_unique_id') ? wp_unique_id('ns-overlay-') : 'ns-overlay-' . uniqid();
