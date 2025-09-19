@@ -3,7 +3,7 @@
  * Plugin Name:       NS Hamburger Overlay Menu
  * Plugin URI:        https://github.com/netservice/ns-hamburger-menu
  * Description:       Accessible hamburger overlay menu with gradient animations, multi-column layout, and full keyboard navigation support.
- * Version:           0.11.1
+ * Version:           0.12.0
  * Requires at least: 6.5
  * Requires PHP:      7.4
  * Author:            Netservice
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('NSHM_VERSION', '0.11.1');
+define('NSHM_VERSION', '0.12.0');
 define('NSHM_PLUGIN_FILE', __FILE__);
 define('NSHM_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('NSHM_PLUGIN_PATH', plugin_dir_path(__FILE__));
@@ -45,7 +45,7 @@ add_action('init', 'nshm_init');
 // Legacy compatibility
 class NS_Hamburger_Menu {
     const OPT_KEY = 'ns_hamburger_options';
-    const VER     = '0.11.1';
+    const VER     = '0.12.0';
 
     public function __construct() {
         // Deprecated: This class is kept for backward compatibility only

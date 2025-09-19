@@ -9,8 +9,10 @@ An accessible hamburger overlay menu plugin for WordPress with gradient animatio
 ## Features
 
 - ✅ **Accessible**: Full ARIA support, keyboard navigation, focus management
-- ✅ **Responsive**: Works on all screen sizes with optimized mobile experience  
-- ✅ **Customizable**: Color schemes, column layouts, typography settings
+- ✅ **Responsive**: Works on all screen sizes with optimized mobile experience
+- ✅ **Customizable**: Color schemes, column layouts, typography settings, positioning
+- ✅ **Individual Colors**: 5 separate color controls for hamburger icon lines
+- ✅ **Smart Positioning**: Custom positioning with browser-width responsive adjustments
 - ✅ **Block Editor**: Native Gutenberg block with live preview
 - ✅ **Performance**: Lightweight CSS/JS, no jQuery dependency
 - ✅ **i18n Ready**: Full translation support with included POT file
@@ -57,6 +59,16 @@ if (function_exists('nshm_display_menu')) {
 - **Columns**: 1-6 column grid layout
 - **Typography**: Separate font sizes for parent/child menu items
 - **Animation**: Optional hue rotation animation with speed control
+
+### Position & Icon Customization
+- **Position Modes**:
+  - Default positions (top-left, top-right)
+  - Custom positioning with screen-based coordinates
+- **Responsive Positioning**: Automatic adjustment to prevent off-screen display
+- **Individual Icon Colors**: 5 separate color controls
+  - Closed state: top, middle, bottom lines
+  - Open state: two diagonal lines of × mark
+- **WordPress Color Picker**: Consistent UI with color presets and custom hex values
 
 ### Block Slots
 Add custom content above/below the menu using slot blocks within the Gutenberg block.

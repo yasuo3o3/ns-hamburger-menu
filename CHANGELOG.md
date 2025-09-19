@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0] - 2024-12-22
+
+### Added
+- Custom position settings for hamburger menu with default (top-left/top-right) and custom positioning modes
+- Browser width-responsive X-axis positioning to prevent menu from going off-screen
+- Individual color customization for all hamburger icon lines (5 separate colors)
+  - Closed state: top line, middle line, bottom line
+  - Open state (× mark): left-to-right diagonal, right-to-left diagonal
+- WordPress color picker integration for consistent UI experience
+- Horizontal layout for hamburger icon color settings to reduce vertical space
+
+### Changed
+- Y-axis positioning changed from screen center to screen top reference for more intuitive positioning
+- Improved admin UI with compact horizontal layout for color pickers
+- Enhanced CSS variable system to support individual line colors
+- Updated validation system to handle new position and color settings
+
+### Technical
+- Added CSS min/max functions for responsive positioning
+- Implemented 5-color CSS variable system for individual line control
+- Enhanced settings sanitization and validation for all new options
+
 ## [0.11.1] - 2024-09-19
 
 ### Added
