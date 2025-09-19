@@ -73,6 +73,15 @@ class NS_Hamburger_Menu {
             'open_speed_ms'  => 600,
             'open_shape'     => 'circle',
             'z_index'        => 9999,
+            'position_mode'  => 'default',
+            'position_default' => 'top-right',
+            'position_x'     => 0,
+            'position_y'     => 16,
+            'hamburger_top_line'     => '#111111',
+            'hamburger_middle_line'  => '#111111',
+            'hamburger_bottom_line'  => '#111111',
+            'hamburger_cross_line1'  => '#ffffff',
+            'hamburger_cross_line2'  => '#ffffff',
         ];
     }
     private function get_options() {
@@ -100,6 +109,26 @@ class NS_Hamburger_Menu {
             $shape = $input['open_shape'] ?? $d['open_shape'];
             $out['open_shape'] = in_array($shape, $allowed_shapes, true) ? $shape : 'circle';
             $out['z_index']       = max(1000, intval($input['z_index'] ?? $d['z_index']));
+
+            // Position settings validation
+            $allowed_modes = ['default', 'custom'];
+            $position_mode = $input['position_mode'] ?? $d['position_mode'];
+            $out['position_mode'] = in_array($position_mode, $allowed_modes, true) ? $position_mode : 'default';
+
+            $allowed_defaults = ['top-left', 'top-right'];
+            $position_default = $input['position_default'] ?? $d['position_default'];
+            $out['position_default'] = in_array($position_default, $allowed_defaults, true) ? $position_default : 'top-right';
+
+            $out['position_x'] = max(-960, min(960, intval($input['position_x'] ?? $d['position_x'])));
+            $out['position_y'] = max(0, min(1080, intval($input['position_y'] ?? $d['position_y'])));
+
+            // Hamburger icon colors validation (5 individual colors)
+            $out['hamburger_top_line'] = sanitize_hex_color($input['hamburger_top_line'] ?? $d['hamburger_top_line']) ?: $d['hamburger_top_line'];
+            $out['hamburger_middle_line'] = sanitize_hex_color($input['hamburger_middle_line'] ?? $d['hamburger_middle_line']) ?: $d['hamburger_middle_line'];
+            $out['hamburger_bottom_line'] = sanitize_hex_color($input['hamburger_bottom_line'] ?? $d['hamburger_bottom_line']) ?: $d['hamburger_bottom_line'];
+            $out['hamburger_cross_line1'] = sanitize_hex_color($input['hamburger_cross_line1'] ?? $d['hamburger_cross_line1']) ?: $d['hamburger_cross_line1'];
+            $out['hamburger_cross_line2'] = sanitize_hex_color($input['hamburger_cross_line2'] ?? $d['hamburger_cross_line2']) ?: $d['hamburger_cross_line2'];
+
             return $out;
         });
     }

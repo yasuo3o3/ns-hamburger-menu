@@ -8,6 +8,11 @@
   --ns-hue-range:24deg;
   --ns-open-speed:600ms;
   --ns-z:9999;
+  --ns-hamburger-top:#111111;
+  --ns-hamburger-middle:#111111;
+  --ns-hamburger-bottom:#111111;
+  --ns-hamburger-cross1:#ffffff;
+  --ns-hamburger-cross2:#ffffff;
 }
 
 /* ハンバーガー（右上固定） */
@@ -24,12 +29,12 @@
 /* 【閉じている状態】3本線のハンバーガーアイコン */
 .ns-hb-box{ position:relative;width:28px;height:20px; }
 .ns-hb-bar, .ns-hb-bar::before, .ns-hb-bar::after{
-  position:absolute; left:0; right:0; height:2px; background:#111; border-radius:1px;
+  position:absolute; left:0; right:0; height:2px; border-radius:1px;
   transition:transform .28s ease, top .28s ease, opacity .28s ease, background-color .28s ease, height .28s ease, width .28s ease;
 }
-.ns-hb-bar{ top:9px; } /* 真ん中の線 */
-.ns-hb-bar::before{ content:""; top:-8px; } /* 上の線 */
-.ns-hb-bar::after{  content:""; top: 8px; } /* 下の線 */
+.ns-hb-bar{ top:9px; background:var(--ns-hamburger-middle); } /* 真ん中の線 */
+.ns-hb-bar::before{ content:""; top:-8px; background:var(--ns-hamburger-top); } /* 上の線 */
+.ns-hb-bar::after{  content:""; top: 8px; background:var(--ns-hamburger-bottom); } /* 下の線 */
 
 /* 【開いている状態】×マークに変形（白） */
 .ns-open .ns-hb,
@@ -61,7 +66,7 @@ body.ns-open .ns-hb .ns-hb-bar::before{
   left:0;
   right:0;
   transform:rotate(45deg); /* 45度回転で×の一部 */
-  background:#fff !important; /* 白色に変更（重要） */
+  background:var(--ns-hamburger-cross1) !important; /* 左上→右下の線色（重要） */
   height:3px;
   opacity:1; /* 表示 */
 }
@@ -71,7 +76,7 @@ body.ns-open .ns-hb .ns-hb-bar::after{
   left:0;
   right:0;
   transform:rotate(-45deg); /* -45度回転で×の一部 */
-  background:#fff !important; /* 白色に変更（重要） */
+  background:var(--ns-hamburger-cross2) !important; /* 右上→左下の線色（重要） */
   height:3px;
   opacity:1; /* 表示 */
 }
