@@ -23,7 +23,10 @@ An accessible hamburger overlay menu plugin for WordPress with gradient animatio
 ## Quick Start
 
 1. **Install the plugin**: Upload and activate through WordPress admin
-2. **Assign a menu**: Go to Appearance → Menus, assign menu to "Hamburger Overlay Menu" location
+2. **Set up navigation**:
+   - **Classic themes**: Go to Appearance → Menus, assign menu to "Hamburger Overlay Menu" location
+   - **Block themes**: Create a Navigation block in the block editor (auto-detected)
+   - **No setup needed**: Plugin will automatically use existing navigation or generate page list
 3. **Configure settings**: Visit Settings → NS Hamburger Menu to customize appearance
 4. **Add to pages**: Use auto-insert or add the block manually in Gutenberg
 
@@ -88,16 +91,19 @@ Copy `/templates/hamburger-menu.php` to your theme's `/ns-hamburger-menu/` folde
 
 ## FAQ
 
-**Q: Can I use this with any theme?**  
-A: Yes, works with both classic and block themes.
+**Q: Can I use this with any theme?**
+A: Yes, works with both classic and block themes. Block themes are fully supported with automatic navigation detection.
 
-**Q: Does it work on mobile?**  
-A: Yes, optimized for touch devices with proper spacing.
+**Q: Does it work on mobile?**
+A: Yes, optimized for touch devices with proper spacing and improved animations.
 
-**Q: Can I translate the interface?**  
+**Q: How does it work with block themes?**
+A: Automatically detects Navigation blocks from your site. If no traditional menu is assigned, it will use existing Navigation blocks or generate a page list.
+
+**Q: Can I translate the interface?**
 A: Yes, uses standard WordPress i18n with included POT file.
 
-**Q: Is it accessible?**  
+**Q: Is it accessible?**
 A: Yes, follows WCAG guidelines with full keyboard and screen reader support.
 
 ## Support

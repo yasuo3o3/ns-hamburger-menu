@@ -99,6 +99,192 @@ class NSHM_Core {
     
     
     /**
+     * Get navigation menu from various sources (block theme compatible)
+     *
+     * @return string
+     */
+    private function get_navigation_menu() {
+        // 1. 従来のwp_nav_menu（優先）
+        $traditional_menu = wp_nav_menu(array(
+            'theme_location' => 'ns_hamburger_menu',
+            'container'      => false,
+            'menu_class'     => 'ns-menu',
+            'depth'          => 2,
+            'echo'           => false,
+        ));
+
+        if ($traditional_menu) {
+            return $traditional_menu;
+        }
+
+        // 2. ナビゲーションブロックから取得
+        $navigation_content = $this->get_navigation_from_blocks();
+        if ($navigation_content) {
+            return $navigation_content;
+        }
+
+        // 3. フォールバック：ページ一覧の自動生成
+        return $this->generate_fallback_menu();
+    }
+
+    /**
+     * Get navigation content from navigation blocks
+     *
+     * @return string|null
+     */
+    private function get_navigation_from_blocks() {
+        global $wpdb;
+
+        // Navigation blocks from wp_posts
+        $nav_blocks = $wpdb->get_results($wpdb->prepare("
+            SELECT post_content
+            FROM {$wpdb->posts}
+            WHERE post_type = 'wp_navigation'
+            AND post_status = 'publish'
+            ORDER BY post_date DESC
+            LIMIT 5
+        "));
+
+        if (empty($nav_blocks)) {
+            return null;
+        }
+
+        // 最初に見つかったナビゲーションブロックを使用
+        foreach ($nav_blocks as $nav_block) {
+            $content = $this->parse_navigation_block($nav_block->post_content);
+            if ($content) {
+                return '<ul class="ns-menu">' . $content . '</ul>';
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Parse navigation block content to extract menu items
+     *
+     * @param string $content Navigation block content
+     * @return string
+     */
+    private function parse_navigation_block($content) {
+        if (empty($content)) {
+            return '';
+        }
+
+        $blocks = parse_blocks($content);
+        $menu_items = array();
+
+        foreach ($blocks as $block) {
+            if ($block['blockName'] === 'core/navigation') {
+                $menu_items = array_merge($menu_items, $this->extract_nav_items($block));
+            }
+        }
+
+        if (empty($menu_items)) {
+            return '';
+        }
+
+        $output = '';
+        foreach ($menu_items as $item) {
+            $output .= $this->format_nav_item($item);
+        }
+
+        return $output;
+    }
+
+    /**
+     * Extract navigation items from navigation block
+     *
+     * @param array $block Navigation block
+     * @return array
+     */
+    private function extract_nav_items($block) {
+        $items = array();
+
+        if (!empty($block['innerBlocks'])) {
+            foreach ($block['innerBlocks'] as $inner_block) {
+                if ($inner_block['blockName'] === 'core/navigation-link') {
+                    $attrs = $inner_block['attrs'] ?? array();
+                    $items[] = array(
+                        'title' => $attrs['label'] ?? '',
+                        'url'   => $attrs['url'] ?? '',
+                        'children' => $this->extract_nav_items($inner_block)
+                    );
+                }
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * Format navigation item as HTML
+     *
+     * @param array $item Navigation item
+     * @return string
+     */
+    private function format_nav_item($item) {
+        $title = esc_html($item['title']);
+        $url = esc_url($item['url']);
+
+        $output = '<li>';
+        $output .= '<a href="' . $url . '">' . $title . '</a>';
+
+        if (!empty($item['children'])) {
+            $output .= '<ul class="sub-menu">';
+            foreach ($item['children'] as $child) {
+                $output .= $this->format_nav_item($child);
+            }
+            $output .= '</ul>';
+        }
+
+        $output .= '</li>';
+        return $output;
+    }
+
+    /**
+     * Generate fallback menu from pages
+     *
+     * @return string
+     */
+    private function generate_fallback_menu() {
+        $pages = get_pages(array(
+            'sort_order' => 'ASC',
+            'sort_column' => 'menu_order',
+            'hierarchical' => 1,
+            'exclude' => '',
+            'include' => '',
+            'meta_key' => '',
+            'meta_value' => '',
+            'authors' => '',
+            'child_of' => 0,
+            'parent' => -1,
+            'exclude_tree' => '',
+            'number' => 10,
+            'offset' => 0,
+            'post_type' => 'page',
+            'post_status' => 'publish'
+        ));
+
+        if (empty($pages)) {
+            if (current_user_can('edit_theme_options')) {
+                return '<p style="color:#fff;opacity:.9">' .
+                       esc_html__('No navigation found. Please set up a menu in Appearance → Menus or create a Navigation block.', 'ns-hamburger-menu') .
+                       '</p>';
+            }
+            return '';
+        }
+
+        $output = '<ul class="ns-menu">';
+        foreach ($pages as $page) {
+            $output .= '<li><a href="' . esc_url(get_permalink($page->ID)) . '">' . esc_html($page->post_title) . '</a></li>';
+        }
+        $output .= '</ul>';
+
+        return $output;
+    }
+
+    /**
      * Get scheme colors
      *
      * @param string $scheme Color scheme name
@@ -259,27 +445,11 @@ class NSHM_Core {
                 <nav class="ns-overlay__nav" aria-label="<?php esc_attr_e('Hamburger menu', 'ns-hamburger-menu'); ?>">
                     <?php
                     echo wp_kses_post( $slot_before );
-                    
-                    $menu = wp_nav_menu(array(
-                        'theme_location' => 'ns_hamburger_menu',
-                        'container'      => false,
-                        'menu_class'     => 'ns-menu',
-                        'depth'          => 2,
-                        'echo'           => false,
-                    ));
-                    
-                    if ($menu) {
-                        echo wp_kses_post( $menu );
-                    } elseif (current_user_can('edit_theme_options')) {
-                        echo '<p style="color:#fff;opacity:.9">';
-                        printf(
-                            /* translators: %s: Menu location name */
-                            esc_html__('Please assign a menu to the "%s" location in Appearance → Menus.', 'ns-hamburger-menu'),
-                            esc_html__('Hamburger Overlay Menu', 'ns-hamburger-menu')
-                        );
-                        echo '</p>';
-                    }
-                    
+
+                    // Use new navigation method that supports block themes
+                    $menu_content = $this->get_navigation_menu();
+                    echo wp_kses_post( $menu_content );
+
                     echo wp_kses_post( $slot_after );
                     ?>
                 </nav>

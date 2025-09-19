@@ -33,9 +33,26 @@
 /* オープン時は大きなXに変形（白） */
 .ns-open .ns-hb{ width:64px;height:64px; }
 .ns-open .ns-hb-box{ width:36px;height:36px; }
-.ns-open .ns-hb .ns-hb-bar{ background:transparent; }
-.ns-open .ns-hb .ns-hb-bar::before{ top:0; transform:rotate(45deg); background:#fff; height:3px; }
-.ns-open .ns-hb .ns-hb-bar::after{  top:0; transform:rotate(-45deg); background:#fff; height:3px; }
+.ns-open .ns-hb .ns-hb-bar{
+  background:transparent;
+  opacity:0;
+}
+.ns-open .ns-hb .ns-hb-bar::before{
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%) rotate(45deg);
+  background:#fff;
+  height:3px;
+  opacity:1;
+}
+.ns-open .ns-hb .ns-hb-bar::after{
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%) rotate(-45deg);
+  background:#fff;
+  height:3px;
+  opacity:1;
+}
 
 /* オーバーレイ（右上→左下に広がる） */
 .ns-overlay{
