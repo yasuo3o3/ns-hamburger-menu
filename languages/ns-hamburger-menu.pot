@@ -268,3 +268,40 @@ msgstr ""
 #: inc/Admin.php:707
 msgid "ハンバーガーメニューの各線の色を個別に設定できます。同じ色にしたい場合は同じ色を選択してください。"
 msgstr ""
+
+#: inc/Admin.php:714
+msgid "ナビゲーション設定"
+msgstr ""
+
+#: inc/Admin.php:721
+msgid "自動選択"
+msgstr ""
+
+#: inc/Admin.php:726
+msgid "手動選択"
+msgstr ""
+
+#: inc/Admin.php:730
+msgid "使用するナビゲーション："
+msgstr ""
+
+#: inc/Admin.php:732
+msgid "ページ一覧（フォールバック）"
+msgstr ""
+
+#: inc/Admin.php:737
+msgid "クラシックメニュー"
+msgstr ""
+
+#: inc/Admin.php:755
+msgid "ナビゲーションブロック"
+msgstr ""
+
+#: inc/Admin.php:758
+#, php-format
+msgid "ナビゲーション #%d"
+msgstr ""
+
+#: inc/Admin.php:769
+msgid "自動選択：テーマタイプに応じて最適なナビゲーションを自動選択します。手動選択：特定のメニューまたはナビゲーションブロックを指定できます。"
+msgstr ""

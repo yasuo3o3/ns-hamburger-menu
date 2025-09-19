@@ -142,7 +142,25 @@ class NSHM_Admin {
         // Custom CSS (truncate to 10KB)
         $custom_css = $input['design_custom_css'] ?? $defaults['design_custom_css'];
         $output['design_custom_css'] = substr($custom_css, 0, 10240); // 10KB limit
-        
+
+        // ナビゲーション設定
+        $allowed_nav_sources = array('auto', 'manual');
+        $nav_source = $input['navigation_source'] ?? $defaults['navigation_source'];
+        $output['navigation_source'] = in_array($nav_source, $allowed_nav_sources, true) ? $nav_source : 'auto';
+
+        // 選択されたナビゲーションID（manual時のみ有効）
+        if ($output['navigation_source'] === 'manual') {
+            $nav_id = $input['selected_navigation_id'] ?? $defaults['selected_navigation_id'];
+            // IDの形式を検証（数値または "classic_数値" または "block_数値"）
+            if (is_numeric($nav_id) || preg_match('/^(classic|block)_\d+$/', $nav_id)) {
+                $output['selected_navigation_id'] = $nav_id;
+            } else {
+                $output['selected_navigation_id'] = $defaults['selected_navigation_id'];
+            }
+        } else {
+            $output['selected_navigation_id'] = $defaults['selected_navigation_id'];
+        }
+
         return $output;
     }
     
@@ -708,6 +726,68 @@ class NSHM_Admin {
                             </p>
                         </td>
                     </tr>
+
+                    <!-- ナビゲーション設定 -->
+                    <tr>
+                        <th scope="row"><?php esc_html_e('ナビゲーション設定', 'ns-hamburger-menu'); ?></th>
+                        <td>
+                            <fieldset>
+                                <legend class="screen-reader-text"><?php esc_html_e('ナビゲーション設定', 'ns-hamburger-menu'); ?></legend>
+
+                                <label for="navigation_source">
+                                    <input type="radio" id="navigation_source_auto" name="<?php echo esc_attr($option_name . '[navigation_source]'); ?>" value="auto" <?php checked($options['navigation_source'], 'auto'); ?>>
+                                    <?php esc_html_e('自動選択', 'ns-hamburger-menu'); ?>
+                                </label><br>
+
+                                <label for="navigation_source_manual">
+                                    <input type="radio" id="navigation_source_manual" name="<?php echo esc_attr($option_name . '[navigation_source]'); ?>" value="manual" <?php checked($options['navigation_source'], 'manual'); ?>>
+                                    <?php esc_html_e('手動選択', 'ns-hamburger-menu'); ?>
+                                </label><br>
+
+                                <div id="navigation_manual_selection" style="margin-top: 10px; <?php echo $options['navigation_source'] === 'manual' ? '' : 'display: none;'; ?>">
+                                    <label for="selected_navigation_id"><?php esc_html_e('使用するナビゲーション：', 'ns-hamburger-menu'); ?></label><br>
+                                    <select id="selected_navigation_id" name="<?php echo esc_attr($option_name . '[selected_navigation_id]'); ?>">
+                                        <option value="0"><?php esc_html_e('ページ一覧（フォールバック）', 'ns-hamburger-menu'); ?></option>
+                                        <?php
+                                        // クラシックテーマのメニュー
+                                        $menus = wp_get_nav_menus();
+                                        if (!empty($menus)) {
+                                            echo '<optgroup label="' . esc_attr__('クラシックメニュー', 'ns-hamburger-menu') . '">';
+                                            foreach ($menus as $menu) {
+                                                $selected = ($options['selected_navigation_id'] == 'classic_' . $menu->term_id) ? 'selected' : '';
+                                                echo '<option value="classic_' . esc_attr($menu->term_id) . '" ' . $selected . '>' . esc_html($menu->name) . '</option>';
+                                            }
+                                            echo '</optgroup>';
+                                        }
+
+                                        // ナビゲーションブロック
+                                        global $wpdb;
+                                        $nav_blocks = $wpdb->get_results("
+                                            SELECT ID, post_title
+                                            FROM {$wpdb->posts}
+                                            WHERE post_type = 'wp_navigation'
+                                            AND post_status = 'publish'
+                                            ORDER BY post_title ASC
+                                        ");
+                                        if (!empty($nav_blocks)) {
+                                            echo '<optgroup label="' . esc_attr__('ナビゲーションブロック', 'ns-hamburger-menu') . '">';
+                                            foreach ($nav_blocks as $nav_block) {
+                                                $selected = ($options['selected_navigation_id'] == 'block_' . $nav_block->ID) ? 'selected' : '';
+                                                $title = $nav_block->post_title ? $nav_block->post_title : sprintf(__('ナビゲーション #%d', 'ns-hamburger-menu'), $nav_block->ID);
+                                                echo '<option value="block_' . esc_attr($nav_block->ID) . '" ' . $selected . '>' . esc_html($title) . '</option>';
+                                            }
+                                            echo '</optgroup>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </fieldset>
+
+                            <p class="description">
+                                <?php esc_html_e('自動選択：テーマタイプに応じて最適なナビゲーションを自動選択します。手動選択：特定のメニューまたはナビゲーションブロックを指定できます。', 'ns-hamburger-menu'); ?>
+                            </p>
+                        </td>
+                    </tr>
                 </table>
                 
                 <?php submit_button(); ?>
@@ -756,6 +836,27 @@ class NSHM_Admin {
             });
 
             updatePositionOptions();
+
+            // ナビゲーション選択の表示制御
+            const navigationSourceInputs = document.querySelectorAll('input[name$="[navigation_source]"]');
+            const navigationManualSelection = document.getElementById('navigation_manual_selection');
+
+            function updateNavigationOptions() {
+                const selectedSource = document.querySelector('input[name$="[navigation_source]"]:checked');
+                if (selectedSource && navigationManualSelection) {
+                    if (selectedSource.value === 'manual') {
+                        navigationManualSelection.style.display = 'block';
+                    } else {
+                        navigationManualSelection.style.display = 'none';
+                    }
+                }
+            }
+
+            navigationSourceInputs.forEach(function(input) {
+                input.addEventListener('change', updateNavigationOptions);
+            });
+
+            updateNavigationOptions();
         });
         </script>
         <?php

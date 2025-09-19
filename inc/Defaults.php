@@ -51,6 +51,8 @@ class NSHM_Defaults {
             'hamburger_cross_line2'  => '#ffffff',
             'design_preset'  => 'normal',
             'design_custom_css' => '',
+            'navigation_source' => 'auto',
+            'selected_navigation_id' => 0,
         );
     }
     

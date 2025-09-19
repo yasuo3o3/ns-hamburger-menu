@@ -187,27 +187,104 @@ class NSHM_Core {
      * @return string
      */
     private function get_navigation_menu() {
-        // 1. 従来のwp_nav_menu（優先）
-        $traditional_menu = wp_nav_menu(array(
-            'theme_location' => 'ns_hamburger_menu',
-            'container'      => false,
-            'menu_class'     => 'ns-menu',
-            'depth'          => 2,
-            'echo'           => false,
-        ));
+        $options = NSHM_Defaults::get_options();
 
-        if ($traditional_menu) {
-            return $traditional_menu;
+        // 手動選択の場合
+        if ($options['navigation_source'] === 'manual') {
+            return $this->get_manual_navigation($options['selected_navigation_id']);
         }
 
-        // 2. ナビゲーションブロックから取得
+        // 自動選択の場合（従来の動作）
+        $is_block_theme = function_exists('wp_is_block_theme') && wp_is_block_theme();
+
+        if (!$is_block_theme) {
+            // クラシックテーマ：従来のwp_nav_menuを優先
+            $traditional_menu = wp_nav_menu(array(
+                'theme_location' => 'ns_hamburger_menu',
+                'container'      => false,
+                'menu_class'     => 'ns-menu',
+                'depth'          => 2,
+                'echo'           => false,
+            ));
+
+            if ($traditional_menu) {
+                return $traditional_menu;
+            }
+        }
+
+        // ブロックテーマまたはクラシックテーマでメニュー未設定：ナビゲーションブロックから取得
         $navigation_content = $this->get_navigation_from_blocks();
         if ($navigation_content) {
             return $navigation_content;
         }
 
-        // 3. フォールバック：ページ一覧の自動生成
+        // フォールバック：ページ一覧の自動生成
         return $this->generate_fallback_menu();
+    }
+
+    /**
+     * Get manually selected navigation
+     *
+     * @param string|int $navigation_id Selected navigation ID
+     * @return string
+     */
+    private function get_manual_navigation($navigation_id) {
+        // フォールバック（ページ一覧）の場合
+        if ($navigation_id == 0) {
+            return $this->generate_fallback_menu();
+        }
+
+        // classic_数値の形式（クラシックメニュー）
+        if (is_string($navigation_id) && strpos($navigation_id, 'classic_') === 0) {
+            $menu_id = (int) str_replace('classic_', '', $navigation_id);
+            $menu = wp_nav_menu(array(
+                'menu'           => $menu_id,
+                'container'      => false,
+                'menu_class'     => 'ns-menu',
+                'depth'          => 2,
+                'echo'           => false,
+            ));
+            return $menu ?: $this->generate_fallback_menu();
+        }
+
+        // block_数値の形式（ナビゲーションブロック）
+        if (is_string($navigation_id) && strpos($navigation_id, 'block_') === 0) {
+            $block_id = (int) str_replace('block_', '', $navigation_id);
+            $content = $this->get_specific_navigation_block($block_id);
+            return $content ?: $this->generate_fallback_menu();
+        }
+
+        // その他の場合はフォールバックを返す
+        return $this->generate_fallback_menu();
+    }
+
+    /**
+     * Get specific navigation block by ID
+     *
+     * @param int $block_id Navigation block post ID
+     * @return string|null
+     */
+    private function get_specific_navigation_block($block_id) {
+        global $wpdb;
+
+        $nav_block = $wpdb->get_row($wpdb->prepare("
+            SELECT post_content
+            FROM {$wpdb->posts}
+            WHERE ID = %d
+            AND post_type = 'wp_navigation'
+            AND post_status = 'publish'
+        ", $block_id));
+
+        if (!$nav_block) {
+            return null;
+        }
+
+        $content = $this->parse_navigation_block($nav_block->post_content);
+        if ($content) {
+            return '<ul class="ns-menu">' . $content . '</ul>';
+        }
+
+        return null;
     }
 
     /**
