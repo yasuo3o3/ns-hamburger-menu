@@ -37,28 +37,24 @@ body.ns-open .ns-hb{ width:64px;height:64px; } /* ボタンサイズ拡大 */
 .ns-open .ns-hb-box,
 body.ns-open .ns-hb-box{ width:36px;height:36px; } /* アイコン領域拡大 */
 
-/* ×マークの基準位置を設定（疑似要素の親として機能） */
+/* 【開いている時】×マーク表示のため3本線を非表示にしてから×マークを作成 */
 .ns-open .ns-hb .ns-hb-bar,
 body.ns-open .ns-hb .ns-hb-bar{
-  background:transparent; /* 真ん中の線を透明に */
+  background:transparent !important; /* 真ん中の線を透明に */
   opacity:1; /* 疑似要素が表示されるように */
   top:50%;
   transform:translateY(-50%);
 }
 
-/* 【開いている時】通常の3本線を非表示にする */
-.ns-open .ns-hb-bar,
-body.ns-open .ns-hb-bar {
-  background:transparent !important; /* 真ん中の線を非表示 */
-}
-.ns-open .ns-hb-bar::before,
-body.ns-open .ns-hb-bar::before,
-.ns-open .ns-hb-bar::after,
-body.ns-open .ns-hb-bar::after {
-  background:transparent !important; /* 上下の線を非表示（×マーク表示前） */
+/* 通常の疑似要素（上下の線）も透明にする */
+.ns-open .ns-hb .ns-hb-bar::before,
+body.ns-open .ns-hb .ns-hb-bar::before,
+.ns-open .ns-hb .ns-hb-bar::after,
+body.ns-open .ns-hb .ns-hb-bar::after {
+  background:transparent !important; /* 最初に全て透明化 */
 }
 
-/* 疑似要素を×マークに変形（!importantで上書き） */
+/* その後、疑似要素を×マークに変形（後から来るので優先される） */
 .ns-open .ns-hb .ns-hb-bar::before,
 body.ns-open .ns-hb .ns-hb-bar::before{
   top:0;

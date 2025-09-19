@@ -14,7 +14,13 @@ if (!defined('ABSPATH')) {
  * Core plugin class
  */
 class NSHM_Core {
-    
+
+    /**
+     * Track if hamburger menu has been rendered to prevent duplicates
+     * @var bool
+     */
+    private static $menu_rendered = false;
+
     /**
      * Initialize core functionality
      */
@@ -87,11 +93,35 @@ class NSHM_Core {
         if (!empty($options['auto_inject'])) {
             // Check if page has ns/hamburger block
             global $post;
-            if ($post && has_block('ns/hamburger', $post)) {
-                // Skip auto-inject if block exists
-                echo '<!-- NS Hamburger Menu: Auto-inject skipped - block found -->';
+            $current_post = get_post();
+            $post_to_check = $post ?: $current_post;
+
+            $has_block = false;
+            if ($post_to_check) {
+                $has_block = has_block('ns/hamburger', $post_to_check);
+            }
+
+            // Also check queried object for archive pages
+            if (!$has_block) {
+                $queried_object = get_queried_object();
+                if ($queried_object && isset($queried_object->post_content)) {
+                    $has_block = has_block('ns/hamburger', $queried_object);
+                }
+            }
+
+            // Debug output
+            error_log('NS Hamburger: auto_inject_body called');
+            error_log('NS Hamburger: post_id = ' . ($post_to_check ? $post_to_check->ID : 'null'));
+            error_log('NS Hamburger: has_block = ' . ($has_block ? 'true' : 'false'));
+
+            if ($has_block || self::$menu_rendered) {
+                // Skip auto-inject if block exists or menu already rendered
+                echo '<!-- NS Hamburger Menu: Auto-inject skipped - block found or already rendered -->';
                 return;
             }
+
+            // Mark as rendered to prevent future duplicates
+            self::$menu_rendered = true;
 
             // Add debug comment to identify auto-inject source
             echo '<!-- NS Hamburger Menu: Auto-injected via wp_body_open -->';
@@ -127,6 +157,9 @@ class NSHM_Core {
             }
         }
         
+        // Mark as rendered to prevent auto-inject duplicates
+        self::$menu_rendered = true;
+
         return '<!-- NS Hamburger Menu: Block render -->' . $this->render_markup(true, $attrs, $block, $content);
     }
 
