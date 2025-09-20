@@ -773,20 +773,19 @@ class NSHM_Admin {
                                         }
 
                                         // ナビゲーションブロック
-                                        global $wpdb;
-                                        $nav_blocks = $wpdb->get_results("
-                                            SELECT ID, post_title
-                                            FROM {$wpdb->posts}
-                                            WHERE post_type = 'wp_navigation'
-                                            AND post_status = 'publish'
-                                            ORDER BY post_title ASC
-                                        ");
-                                        if (!empty($nav_blocks)) {
+                                        $nav_posts = get_posts(array(
+                                            'post_type' => 'wp_navigation',
+                                            'post_status' => 'publish',
+                                            'orderby' => 'title',
+                                            'order' => 'ASC',
+                                            'numberposts' => -1
+                                        ));
+                                        if (!empty($nav_posts)) {
                                             echo '<optgroup label="' . esc_attr__('ナビゲーションブロック', 'ns-hamburger-menu') . '">';
-                                            foreach ($nav_blocks as $nav_block) {
-                                                $selected = ($options['selected_navigation_id'] == 'block_' . $nav_block->ID) ? 'selected' : '';
-                                                $title = $nav_block->post_title ? $nav_block->post_title : sprintf(__('ナビゲーション #%d', 'ns-hamburger-menu'), $nav_block->ID);
-                                                echo '<option value="block_' . esc_attr($nav_block->ID) . '" ' . $selected . '>' . esc_html($title) . '</option>';
+                                            foreach ($nav_posts as $nav_post) {
+                                                $selected = ($options['selected_navigation_id'] == 'block_' . $nav_post->ID) ? 'selected' : '';
+                                                $title = $nav_post->post_title ? $nav_post->post_title : sprintf(__('ナビゲーション #%d', 'ns-hamburger-menu'), $nav_post->ID);
+                                                echo '<option value="block_' . esc_attr($nav_post->ID) . '" ' . $selected . '>' . esc_html($title) . '</option>';
                                             }
                                             echo '</optgroup>';
                                         }
