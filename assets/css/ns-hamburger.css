@@ -8,6 +8,7 @@
   --ns-hue-range:24deg;
   --ns-open-speed:600ms;
   --ns-z:9999;
+
   --ns-hamburger-top:#111111;
   --ns-hamburger-middle:#111111;
   --ns-hamburger-bottom:#111111;
@@ -26,7 +27,9 @@
 @media (max-width:782px){ .admin-bar .ns-hb{ top: calc(16px + 46px); } }
 @media (min-width:783px){ .admin-bar .ns-hb{ top: calc(16px + 32px); } }
 
+
 /* 【閉じている状態】3本線のハンバーガーアイコン */
+
 .ns-hb-box{ position:relative;width:28px;height:20px; }
 .ns-hb-bar, .ns-hb-bar::before, .ns-hb-bar::after{
   position:absolute; left:0; right:0; height:2px; border-radius:1px;
