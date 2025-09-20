@@ -12,10 +12,10 @@ if (!defined('ABSPATH')) {
 
 // コンソール出力でファイル読み込み確認
 add_action('wp_footer', function() {
-    echo '<script>console.log("NS Hamburger Menu Core.php loaded - Commit d9a60a9");</script>';
+    echo '<script>console.log("NS Hamburger Menu Core.php loaded - v0.13.0");</script>';
 });
 add_action('admin_footer', function() {
-    echo '<script>console.log("NS Hamburger Menu Core.php loaded - Commit d9a60a9");</script>';
+    echo '<script>console.log("NS Hamburger Menu Core.php loaded - v0.13.0");</script>';
 });
 
 

@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] - 2025-09-20
+
+### Added
+- Support for direct navigation block structure (core/navigation-link and core/navigation-submenu)
+- Enhanced manual navigation selection functionality for block themes
+- Improved navigation block parsing to handle various WordPress navigation structures
+
+### Fixed
+- Manual navigation selection now correctly displays selected navigation blocks instead of fallback page list
+- Navigation block parsing now supports both wrapped (core/navigation) and direct link structures
+- Resolved issue where navigation block content was not being extracted properly
+
 ## [0.12.0] - 2024-12-22
 
 ### Added
