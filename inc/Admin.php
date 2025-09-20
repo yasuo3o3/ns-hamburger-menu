@@ -756,8 +756,7 @@ class NSHM_Admin {
                                         if (!empty($menus)) {
                                             echo '<optgroup label="' . esc_attr__('クラシックメニュー', 'ns-hamburger-menu') . '">';
                                             foreach ($menus as $menu) {
-                                                $selected = ($options['selected_navigation_id'] == 'classic_' . $menu->term_id) ? 'selected' : '';
-                                                echo '<option value="classic_' . esc_attr($menu->term_id) . '" ' . $selected . '>' . esc_html($menu->name) . '</option>';
+                                                echo '<option value="classic_' . esc_attr($menu->term_id) . '" ' . selected($options['selected_navigation_id'], 'classic_' . $menu->term_id, false) . '>' . esc_html($menu->name) . '</option>';
                                             }
                                             echo '</optgroup>';
                                         }
@@ -773,9 +772,8 @@ class NSHM_Admin {
                                         if (!empty($nav_posts)) {
                                             echo '<optgroup label="' . esc_attr__('ナビゲーションブロック', 'ns-hamburger-menu') . '">';
                                             foreach ($nav_posts as $nav_post) {
-                                                $selected = ($options['selected_navigation_id'] == 'block_' . $nav_post->ID) ? 'selected' : '';
                                                 $title = $nav_post->post_title ? $nav_post->post_title : sprintf(__('ナビゲーション #%d', 'ns-hamburger-menu'), $nav_post->ID);
-                                                echo '<option value="block_' . esc_attr($nav_post->ID) . '" ' . $selected . '>' . esc_html($title) . '</option>';
+                                                echo '<option value="block_' . esc_attr($nav_post->ID) . '" ' . selected($options['selected_navigation_id'], 'block_' . $nav_post->ID, false) . '>' . esc_html($title) . '</option>';
                                             }
                                             echo '</optgroup>';
                                         }
