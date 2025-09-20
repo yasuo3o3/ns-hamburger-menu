@@ -597,7 +597,6 @@ class NSHM_Core {
             'exclude' => '',
             'include' => '',
             'meta_key' => '',
-            'meta_value' => '',
             'authors' => '',
             'child_of' => 0,
             'parent' => -1,
