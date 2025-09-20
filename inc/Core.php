@@ -116,10 +116,6 @@ class NSHM_Core {
                 }
             }
 
-            // Debug output
-            error_log('NS Hamburger: auto_inject_body called');
-            error_log('NS Hamburger: post_id = ' . ($post_to_check ? $post_to_check->ID : 'null'));
-            error_log('NS Hamburger: has_block = ' . ($has_block ? 'true' : 'false'));
 
             if ($has_block || self::$menu_rendered) {
                 // Skip auto-inject if block exists or menu already rendered
