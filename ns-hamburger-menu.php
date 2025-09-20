@@ -50,7 +50,8 @@ add_action('plugins_loaded', function() {
                 if (!$nshm_core_instance) {
                     $nshm_core_instance = new NSHM_Core();
                 }
-                echo $nshm_core_instance->shortcode();
+                $menu_markup = $nshm_core_instance->shortcode();
+                echo wp_kses_post($menu_markup);
             }
             // フォールバック：古いアーキテクチャは廃止されました
             // NSHM_Coreが利用できない場合のエラーメッセージ
