@@ -7,6 +7,10 @@
     TextControl, RadioControl
   } = wp.components;
   const { createElement: h, Fragment } = wp.element;
+  const { __ } = wp.i18n || { __: (text) => text };
+
+  // InnerBlocks.Content reference for save functions
+  const InnerBlocksContent = (wp.blockEditor || wp.editor).InnerBlocks.Content;
 
   /* ========== 親: ns/hamburger ========== */
   const Title = () => h('div', { style:{padding:'12px',border:'1px dashed #ccc',borderRadius:'8px',background:'#fafafa'} },
@@ -17,7 +21,7 @@
   registerBlockType('ns/hamburger', {
     title: 'NS Hamburger Menu',
     icon: 'menu',
-    category: 'design',
+    category: 'widgets',
     attributes: {
       columns: { type:'number', default: null },
       topFontPx: { type:'number', default: null },
@@ -62,14 +66,14 @@
       );
     },
     // 親は「子の内容」を保存する
-    save: () => h( (wp.blockEditor || wp.editor).InnerBlocks.Content )
+    save: () => h( InnerBlocksContent )
   });
 
   /* ========== 子: ns/hamburger-slot（ULの上/下） ========== */
   registerBlockType('ns/hamburger-slot', {
     title: 'NS Hamburger Slot',
     icon: 'insert',
-    category: 'design',
+    category: 'widgets',
     parent: ['ns/hamburger'],
     attributes: {
       position: { type:'string', default:'before' } // 'before' | 'after'
@@ -98,8 +102,8 @@
         )
       );
     },
-    // 子は“枠”を保存＝ position 属性をサーバー側に渡す
-    save: () => null
+    // 子は"枠"を保存＝ position 属性をサーバー側に渡す
+    save: () => h( InnerBlocksContent )
   });
 
 } )( window.wp );

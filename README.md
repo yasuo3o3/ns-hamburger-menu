@@ -9,8 +9,10 @@ An accessible hamburger overlay menu plugin for WordPress with gradient animatio
 ## Features
 
 - ✅ **Accessible**: Full ARIA support, keyboard navigation, focus management
-- ✅ **Responsive**: Works on all screen sizes with optimized mobile experience  
-- ✅ **Customizable**: Color schemes, column layouts, typography settings
+- ✅ **Responsive**: Works on all screen sizes with optimized mobile experience
+- ✅ **Customizable**: Color schemes, column layouts, typography settings, positioning
+- ✅ **Individual Colors**: 5 separate color controls for hamburger icon lines
+- ✅ **Smart Positioning**: Custom positioning with browser-width responsive adjustments
 - ✅ **Block Editor**: Native Gutenberg block with live preview
 - ✅ **Performance**: Lightweight CSS/JS, no jQuery dependency
 - ✅ **i18n Ready**: Full translation support with included POT file
@@ -23,7 +25,10 @@ An accessible hamburger overlay menu plugin for WordPress with gradient animatio
 ## Quick Start
 
 1. **Install the plugin**: Upload and activate through WordPress admin
-2. **Assign a menu**: Go to Appearance → Menus, assign menu to "Hamburger Overlay Menu" location
+2. **Set up navigation**:
+   - **Classic themes**: Go to Appearance → Menus, assign menu to "Hamburger Overlay Menu" location
+   - **Block themes**: Create a Navigation block in the block editor (auto-detected)
+   - **No setup needed**: Plugin will automatically use existing navigation or generate page list
 3. **Configure settings**: Visit Settings → NS Hamburger Menu to customize appearance
 4. **Add to pages**: Use auto-insert or add the block manually in Gutenberg
 
@@ -54,6 +59,16 @@ if (function_exists('nshm_display_menu')) {
 - **Columns**: 1-6 column grid layout
 - **Typography**: Separate font sizes for parent/child menu items
 - **Animation**: Optional hue rotation animation with speed control
+
+### Position & Icon Customization
+- **Position Modes**:
+  - Default positions (top-left, top-right)
+  - Custom positioning with screen-based coordinates
+- **Responsive Positioning**: Automatic adjustment to prevent off-screen display
+- **Individual Icon Colors**: 5 separate color controls
+  - Closed state: top, middle, bottom lines
+  - Open state: two diagonal lines of × mark
+- **WordPress Color Picker**: Consistent UI with color presets and custom hex values
 
 ### Block Slots
 Add custom content above/below the menu using slot blocks within the Gutenberg block.
@@ -88,16 +103,19 @@ Copy `/templates/hamburger-menu.php` to your theme's `/ns-hamburger-menu/` folde
 
 ## FAQ
 
-**Q: Can I use this with any theme?**  
-A: Yes, works with both classic and block themes.
+**Q: Can I use this with any theme?**
+A: Yes, works with both classic and block themes. Block themes are fully supported with automatic navigation detection.
 
-**Q: Does it work on mobile?**  
-A: Yes, optimized for touch devices with proper spacing.
+**Q: Does it work on mobile?**
+A: Yes, optimized for touch devices with proper spacing and improved animations.
 
-**Q: Can I translate the interface?**  
+**Q: How does it work with block themes?**
+A: Automatically detects Navigation blocks from your site. If no traditional menu is assigned, it will use existing Navigation blocks or generate a page list.
+
+**Q: Can I translate the interface?**
 A: Yes, uses standard WordPress i18n with included POT file.
 
-**Q: Is it accessible?**  
+**Q: Is it accessible?**
 A: Yes, follows WCAG guidelines with full keyboard and screen reader support.
 
 ## Support
@@ -135,11 +153,19 @@ GPL-2.0-or-later. See LICENSE file for details.
 ## クイックスタート
 
 1. **プラグインをインストール**: WordPress管理画面からアップロード・有効化
-2. **メニューを割り当て**: 外観→メニューで「Hamburger Overlay Menu」の場所にメニューを割り当て
+2. **ナビゲーション設定**:
+   - **クラシックテーマ**: 外観→メニューで「Hamburger Overlay Menu」の場所にメニューを割り当て
+   - **ブロックテーマ**: ナビゲーションブロックを作成（自動検出されます）
+   - **設定不要**: 既存のナビゲーションを自動使用、またはページ一覧を生成
 3. **設定を調整**: 設定→NS Hamburger Menuで外観をカスタマイズ
 4. **ページに追加**: 自動挿入を有効にするか、Gutenbergで手動配置
 
 ## 使用方法
+
+### ナビゲーション設定詳細
+- **クラシックテーマ**: 外観→メニューで「Hamburger Overlay Menu」の場所にメニューを割り当て
+- **ブロックテーマ**: ナビゲーションブロックを作成（自動検出されます）
+- **自動フォールバック**: ナビゲーションが未設定の場合、ページ一覧を自動生成
 
 ### 自動挿入モード
 設定で「自動挿入」を有効にすると、全ページに自動表示されます。

@@ -46,7 +46,7 @@ class NSHM_Frontend {
         
         // Add inline CSS variables
         $inline_css = sprintf(
-            ':root{--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-hue-range:%7$sdeg;--ns-open-speed:%8$sms;--ns-z:%9$d;}',
+            ':root{--ns-start:%1$s;--ns-end:%2$s;--ns-columns:%3$d;--ns-top-fz:%4$spx;--ns-sub-fz:%5$spx;--ns-hue-speed:%6$ss;--ns-hue-range:%7$sdeg;--ns-open-speed:%8$sms;--ns-z:%9$d;--ns-hamburger-top:%10$s;--ns-hamburger-middle:%11$s;--ns-hamburger-bottom:%12$s;--ns-hamburger-cross1:%13$s;--ns-hamburger-cross2:%14$s;}',
             esc_html($c_start),
             esc_html($c_end),
             intval($options['columns']),
@@ -55,10 +55,21 @@ class NSHM_Frontend {
             intval($options['hue_speed_sec']),
             intval($options['hue_range_deg']),
             max(0, min(3000, absint($options['open_speed_ms']))),
-            intval($options['z_index'])
+            intval($options['z_index']),
+            esc_html($options['hamburger_top_line']),
+            esc_html($options['hamburger_middle_line']),
+            esc_html($options['hamburger_bottom_line']),
+            esc_html($options['hamburger_cross_line1']),
+            esc_html($options['hamburger_cross_line2'])
         );
         wp_add_inline_style('ns-hmb-style', $inline_css);
-        
+
+        // Add position-specific CSS
+        $position_css = $this->get_position_css($options);
+        if ($position_css) {
+            wp_add_inline_style('ns-hmb-style', $position_css);
+        }
+
         // Enqueue JavaScript
         wp_enqueue_script(
             'ns-hmb-script',
@@ -219,5 +230,54 @@ class NSHM_Frontend {
         // Add inline to preset CSS if exists, otherwise to base CSS
         $target_handle = wp_style_is('ns-hmb-preset', 'enqueued') ? 'ns-hmb-preset' : 'ns-hmb-style';
         wp_add_inline_style($target_handle, $safe_css);
+    }
+
+    /**
+     * Get position-specific CSS
+     *
+     * @param array $options Plugin options
+     * @return string|null
+     */
+    private function get_position_css($options) {
+        $position_mode = $options['position_mode'] ?? 'default';
+
+        if ($position_mode === 'default') {
+            // Apply default position
+            $position_default = $options['position_default'] ?? 'top-right';
+
+            if ($position_default === 'top-left') {
+                return '.ns-hb { position: fixed; top: 16px; left: 16px; right: auto; }
+                        @media (max-width:782px) { .admin-bar .ns-hb { top: calc(16px + 46px); } }
+                        @media (min-width:783px) { .admin-bar .ns-hb { top: calc(16px + 32px); } }';
+            }
+            // top-right is already set in base CSS, no override needed
+            return null;
+
+        } elseif ($position_mode === 'custom') {
+            // Apply custom position
+            $position_x = intval($options['position_x'] ?? 0);
+            $position_y = intval($options['position_y'] ?? 0);
+
+            // Calculate responsive X position with browser width constraints
+            if ($position_x >= 0) {
+                // Right direction: ensure it doesn't go beyond right edge
+                $left_value = sprintf('min(calc(50vw + %dpx), calc(100vw - 60px))', $position_x);
+            } else {
+                // Left direction: ensure it doesn't go beyond left edge
+                $left_value = sprintf('max(calc(50vw + %dpx), 20px)', $position_x);
+            }
+
+            return sprintf(
+                '.ns-hb { position: fixed; top: %dpx; left: %s; right: auto; transform: none; }
+                @media (max-width:782px) { .admin-bar .ns-hb { top: calc(%dpx + 46px); } }
+                @media (min-width:783px) { .admin-bar .ns-hb { top: calc(%dpx + 32px); } }',
+                $position_y,
+                $left_value,
+                $position_y,
+                $position_y
+            );
+        }
+
+        return null;
     }
 }

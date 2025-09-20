@@ -3,7 +3,7 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: NS Hamburger Overlay Menu 0.11.0\n"
+"Project-Id-Version: NS Hamburger Overlay Menu 0.13.0\n"
 "Report-Msgid-Bugs-To: https://github.com/netservice/ns-hamburger-menu/issues\n"
 "POT-Creation-Date: 2024-01-01 00:00:00+00:00\n"
 "PO-Revision-Date: 2024-01-01 12:00+0900\n"
@@ -220,3 +220,112 @@ msgstr "NS ハンバーガーメニュー"
 #: blocks/index.js:59
 msgid "Add top/bottom slots here to include custom blocks"
 msgstr "上/下スロットにカスタムブロックを追加"
+
+#: inc/Admin.php:617
+msgid "位置設定"
+msgstr "位置設定"
+
+#: inc/Admin.php:621
+msgid "位置モード選択"
+msgstr "位置モード選択"
+
+#: inc/Admin.php:625
+msgid "デフォルト位置"
+msgstr "デフォルト位置"
+
+#: inc/Admin.php:631
+msgid "右上"
+msgstr "右上"
+
+#: inc/Admin.php:635
+msgid "左上"
+msgstr "左上"
+
+#: inc/Admin.php:642
+msgid "カスタム位置"
+msgstr "カスタム位置"
+
+#: inc/Admin.php:646
+msgid "X座標（画面中央基準）"
+msgstr "X座標（画面中央基準）"
+
+#: inc/Admin.php:651
+msgid "Y座標（画面上端基準）"
+msgstr "Y座標（画面上端基準）"
+
+#: inc/Admin.php:655
+msgid "X座標：負の値は左方向、正の値は右方向　Y座標：0は画面上端、値が大きいほど下方向"
+msgstr "X座標：負の値は左方向、正の値は右方向　Y座標：0は画面上端、値が大きいほど下方向"
+
+#: inc/Admin.php:667
+msgid "ハンバーガーアイコン色"
+msgstr "ハンバーガーアイコン色"
+
+#: inc/Admin.php:670
+msgid "閉じている時（3本線）"
+msgstr "閉じている時（3本線）"
+
+#: inc/Admin.php:674
+msgid "上の線"
+msgstr "上の線"
+
+#: inc/Admin.php:679
+msgid "中の線"
+msgstr "中の線"
+
+#: inc/Admin.php:684
+msgid "下の線"
+msgstr "下の線"
+
+#: inc/Admin.php:691
+msgid "開いている時（×マーク）"
+msgstr "開いている時（×マーク）"
+
+#: inc/Admin.php:695
+msgid "左上→右下の線"
+msgstr "左上→右下の線"
+
+#: inc/Admin.php:700
+msgid "右上→左下の線"
+msgstr "右上→左下の線"
+
+#: inc/Admin.php:707
+msgid "ハンバーガーメニューの各線の色を個別に設定できます。同じ色にしたい場合は同じ色を選択してください。"
+msgstr "ハンバーガーメニューの各線の色を個別に設定できます。同じ色にしたい場合は同じ色を選択してください。"
+
+#: inc/Admin.php:714
+msgid "ナビゲーション設定"
+msgstr "ナビゲーション設定"
+
+#: inc/Admin.php:721
+msgid "自動選択"
+msgstr "自動選択"
+
+#: inc/Admin.php:726
+msgid "手動選択"
+msgstr "手動選択"
+
+#: inc/Admin.php:730
+msgid "使用するナビゲーション："
+msgstr "使用するナビゲーション："
+
+#: inc/Admin.php:732
+msgid "ページ一覧（フォールバック）"
+msgstr "ページ一覧（フォールバック）"
+
+#: inc/Admin.php:737
+msgid "クラシックメニュー"
+msgstr "クラシックメニュー"
+
+#: inc/Admin.php:755
+msgid "ナビゲーションブロック"
+msgstr "ナビゲーションブロック"
+
+#: inc/Admin.php:758
+#, php-format
+msgid "ナビゲーション #%d"
+msgstr "ナビゲーション #%d"
+
+#: inc/Admin.php:769
+msgid "自動選択：テーマタイプに応じて最適なナビゲーションを自動選択します。手動選択：特定のメニューまたはナビゲーションブロックを指定できます。"
+msgstr "自動選択：テーマタイプに応じて最適なナビゲーションを自動選択します。手動選択：特定のメニューまたはナビゲーションブロックを指定できます。"

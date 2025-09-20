@@ -8,8 +8,12 @@
   --ns-hue-range:24deg;
   --ns-open-speed:600ms;
   --ns-z:9999;
-  --ns-resp-mode:off;
-  --ns-resp-width:420px;
+
+  --ns-hamburger-top:#111111;
+  --ns-hamburger-middle:#111111;
+  --ns-hamburger-bottom:#111111;
+  --ns-hamburger-cross1:#ffffff;
+  --ns-hamburger-cross2:#ffffff;
 }
 
 /* ハンバーガー（右上固定） */
@@ -23,77 +27,62 @@
 @media (max-width:782px){ .admin-bar .ns-hb{ top: calc(16px + 46px); } }
 @media (min-width:783px){ .admin-bar .ns-hb{ top: calc(16px + 32px); } }
 
-/* レスポンシブ位置制御 */
-@media screen {
-  /* Center Constrained: 画面幅がブレークポイント以上の時、中央から半分の幅以上右に行かない */
-  :root[style*="--ns-resp-mode:center"] .ns-hb {
-    right: max(16px, calc(50% - calc(var(--ns-resp-width) / 2)));
-  }
 
-  /* Left Edge Limit: 左端からの距離を制限 */
-  :root[style*="--ns-resp-mode:left_limit"] .ns-hb {
-    left: 16px;
-    right: auto;
-    max-width: calc(var(--ns-resp-width) - 32px);
-  }
-
-  /* Right Edge Limit: 右端からの距離を制限、ただし設定幅以上右に行かない */
-  :root[style*="--ns-resp-mode:right_limit"] .ns-hb {
-    right: max(16px, calc(100% - var(--ns-resp-width)));
-  }
-}
-
-/* メディアクエリによるブレークポイント制御 */
-[style*="--ns-resp-mode:center"] .ns-hb,
-[style*="--ns-resp-mode:left_limit"] .ns-hb,
-[style*="--ns-resp-mode:right_limit"] .ns-hb {
-  /* デフォルトは通常位置のまま、メディアクエリで上書き */
-}
-
-/* より具体的なメディアクエリでCSS変数を参照 */
-@supports (right: max(16px, calc(50% - 210px))) {
-  @media (min-width: 420px) {
-    [style*="--ns-resp-mode:center"] .ns-hb {
-      right: max(16px, calc(50% - 210px)); /* 420pxの半分 */
-    }
-  }
-  @media (min-width: 480px) {
-    [style*="--ns-resp-width:480px"][style*="--ns-resp-mode:center"] .ns-hb {
-      right: max(16px, calc(50% - 240px));
-    }
-  }
-  @media (min-width: 600px) {
-    [style*="--ns-resp-width:600px"][style*="--ns-resp-mode:center"] .ns-hb {
-      right: max(16px, calc(50% - 300px));
-    }
-  }
-  @media (min-width: 768px) {
-    [style*="--ns-resp-width:768px"][style*="--ns-resp-mode:center"] .ns-hb {
-      right: max(16px, calc(50% - 384px));
-    }
-  }
-  @media (min-width: 1024px) {
-    [style*="--ns-resp-width:1024px"][style*="--ns-resp-mode:center"] .ns-hb {
-      right: max(16px, calc(50% - 512px));
-    }
-  }
-}
+/* 【閉じている状態】3本線のハンバーガーアイコン */
 
 .ns-hb-box{ position:relative;width:28px;height:20px; }
 .ns-hb-bar, .ns-hb-bar::before, .ns-hb-bar::after{
-  position:absolute; left:0; right:0; height:2px; background:#111; border-radius:1px;
+  position:absolute; left:0; right:0; height:2px; border-radius:1px;
   transition:transform .28s ease, top .28s ease, opacity .28s ease, background-color .28s ease, height .28s ease, width .28s ease;
 }
-.ns-hb-bar{ top:9px; }
-.ns-hb-bar::before{ content:""; top:-8px; }
-.ns-hb-bar::after{  content:""; top: 8px; }
+.ns-hb-bar{ top:9px; background:var(--ns-hamburger-middle); } /* 真ん中の線 */
+.ns-hb-bar::before{ content:""; top:-8px; background:var(--ns-hamburger-top); } /* 上の線 */
+.ns-hb-bar::after{  content:""; top: 8px; background:var(--ns-hamburger-bottom); } /* 下の線 */
 
-/* オープン時は大きなXに変形（白） */
-.ns-open .ns-hb{ width:64px;height:64px; }
-.ns-open .ns-hb-box{ width:36px;height:36px; }
-.ns-open .ns-hb .ns-hb-bar{ background:transparent; }
-.ns-open .ns-hb .ns-hb-bar::before{ top:0; transform:rotate(45deg); background:#fff; height:3px; }
-.ns-open .ns-hb .ns-hb-bar::after{  top:0; transform:rotate(-45deg); background:#fff; height:3px; }
+/* 【開いている状態】×マークに変形（白） */
+.ns-open .ns-hb,
+body.ns-open .ns-hb{ width:64px;height:64px; } /* ボタンサイズ拡大 */
+.ns-open .ns-hb-box,
+body.ns-open .ns-hb-box{ width:36px;height:36px; } /* アイコン領域拡大 */
+
+/* 【開いている時】×マーク表示のため3本線を非表示にしてから×マークを作成 */
+.ns-open .ns-hb .ns-hb-bar,
+body.ns-open .ns-hb .ns-hb-bar{
+  background:transparent !important; /* 真ん中の線を透明に */
+  opacity:1; /* 疑似要素が表示されるように */
+  top:50%;
+  transform:translateY(-50%);
+}
+
+/* 通常の疑似要素（上下の線）も透明にする */
+.ns-open .ns-hb .ns-hb-bar::before,
+body.ns-open .ns-hb .ns-hb-bar::before,
+.ns-open .ns-hb .ns-hb-bar::after,
+body.ns-open .ns-hb .ns-hb-bar::after {
+  background:transparent !important; /* 最初に全て透明化 */
+}
+
+/* その後、疑似要素を×マークに変形（後から来るので優先される） */
+.ns-open .ns-hb .ns-hb-bar::before,
+body.ns-open .ns-hb .ns-hb-bar::before{
+  top:0;
+  left:0;
+  right:0;
+  transform:rotate(45deg); /* 45度回転で×の一部 */
+  background:var(--ns-hamburger-cross1) !important; /* 左上→右下の線色（重要） */
+  height:3px;
+  opacity:1; /* 表示 */
+}
+.ns-open .ns-hb .ns-hb-bar::after,
+body.ns-open .ns-hb .ns-hb-bar::after{
+  top:0;
+  left:0;
+  right:0;
+  transform:rotate(-45deg); /* -45度回転で×の一部 */
+  background:var(--ns-hamburger-cross2) !important; /* 右上→左下の線色（重要） */
+  height:3px;
+  opacity:1; /* 表示 */
+}
 
 /* オーバーレイ（右上→左下に広がる） */
 .ns-overlay{

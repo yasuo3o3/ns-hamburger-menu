@@ -4,7 +4,7 @@ Tags: hamburger menu, overlay menu, responsive menu, accessibility, mobile menu
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.11.0
+Stable tag: 0.13.0
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,9 @@ NS Hamburger Overlay Menu is a modern, accessible hamburger menu plugin that pro
 
 * **Fully Accessible** - Complete ARIA support, keyboard navigation, and focus management
 * **Responsive Design** - Optimized for all screen sizes with mobile-first approach
-* **Customizable** - Multiple color schemes, column layouts, and typography options
+* **Customizable** - Multiple color schemes, column layouts, typography options, and positioning
+* **Individual Icon Colors** - 5 separate color controls for hamburger icon lines
+* **Smart Positioning** - Custom positioning with browser-width responsive adjustments
 * **Block Editor Ready** - Native Gutenberg block with live preview
 * **Performance Optimized** - Lightweight CSS/JS with no jQuery dependency
 * **Translation Ready** - Full i18n support with included POT file
@@ -34,6 +36,7 @@ NS Hamburger Overlay Menu is a modern, accessible hamburger menu plugin that pro
 * **Color Schemes & Design Presets** - Choose from built-in color presets (Blue, Green, Red, Orange, Black), visual design presets (Normal, Pattern 1-3), or create custom gradients with additional CSS
 * **Layout Options** - 1-6 column grid layouts with separate font sizes for parent/child items
 * **Animation Effects** - Optional hue rotation animation with speed control
+* **Position & Icon Customization** - Default positions (top-left/right) or custom coordinates with responsive adjustments. Individual color controls for all 5 hamburger icon lines
 * **Block Slots** - Add custom content above/below menu using slot blocks
 
 = Accessibility Features =
@@ -93,6 +96,15 @@ No, the plugin uses vanilla JavaScript for better performance and compatibility.
 5. Mobile responsive menu display
 
 == Changelog ==
+
+= 0.12.0 =
+* Added: Custom position settings with default (top-left/top-right) and custom positioning modes
+* Added: Browser width-responsive X-axis positioning to prevent off-screen display
+* Added: Individual color customization for all 5 hamburger icon lines
+* Added: WordPress color picker integration for consistent UI experience
+* Changed: Y-axis positioning from screen center to screen top reference
+* Changed: Horizontal layout for hamburger icon color settings to reduce vertical space
+* Technical: Enhanced CSS variable system and validation for new features
 
 = 0.11.0 =
 * Added: デザインプリセット（Pattern 1-3）でメニューの視覚効果を選択可能

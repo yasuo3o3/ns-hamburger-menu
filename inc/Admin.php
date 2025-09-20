@@ -114,7 +114,26 @@ class NSHM_Admin {
         
         // Z-index
         $output['z_index'] = max(1000, intval($input['z_index'] ?? $defaults['z_index']));
-        
+
+        // Position settings validation
+        $allowed_modes = array('default', 'custom');
+        $position_mode = $input['position_mode'] ?? $defaults['position_mode'];
+        $output['position_mode'] = in_array($position_mode, $allowed_modes, true) ? $position_mode : 'default';
+
+        $allowed_defaults = array('top-left', 'top-right');
+        $position_default = $input['position_default'] ?? $defaults['position_default'];
+        $output['position_default'] = in_array($position_default, $allowed_defaults, true) ? $position_default : 'top-right';
+
+        $output['position_x'] = max(-960, min(960, intval($input['position_x'] ?? $defaults['position_x'])));
+        $output['position_y'] = max(0, min(1080, intval($input['position_y'] ?? $defaults['position_y'])));
+
+        // Hamburger icon colors validation (5 individual colors)
+        $output['hamburger_top_line'] = sanitize_hex_color($input['hamburger_top_line'] ?? $defaults['hamburger_top_line']) ?: $defaults['hamburger_top_line'];
+        $output['hamburger_middle_line'] = sanitize_hex_color($input['hamburger_middle_line'] ?? $defaults['hamburger_middle_line']) ?: $defaults['hamburger_middle_line'];
+        $output['hamburger_bottom_line'] = sanitize_hex_color($input['hamburger_bottom_line'] ?? $defaults['hamburger_bottom_line']) ?: $defaults['hamburger_bottom_line'];
+        $output['hamburger_cross_line1'] = sanitize_hex_color($input['hamburger_cross_line1'] ?? $defaults['hamburger_cross_line1']) ?: $defaults['hamburger_cross_line1'];
+        $output['hamburger_cross_line2'] = sanitize_hex_color($input['hamburger_cross_line2'] ?? $defaults['hamburger_cross_line2']) ?: $defaults['hamburger_cross_line2'];
+
         // Design preset (whitelist validation)
         $allowed_presets = array('normal', 'p1', 'p2', 'p3');
         $output['design_preset'] = in_array($input['design_preset'] ?? $defaults['design_preset'], $allowed_presets, true) 
@@ -123,7 +142,37 @@ class NSHM_Admin {
         // Custom CSS (truncate to 10KB)
         $custom_css = $input['design_custom_css'] ?? $defaults['design_custom_css'];
         $output['design_custom_css'] = substr($custom_css, 0, 10240); // 10KB limit
-        
+
+        // ナビゲーション設定
+        $allowed_nav_sources = array('auto', 'manual');
+        $nav_source = $input['navigation_source'] ?? $defaults['navigation_source'];
+        $output['navigation_source'] = in_array($nav_source, $allowed_nav_sources, true) ? $nav_source : 'auto';
+
+        // デバッグ情報
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('NS Hamburger Menu Admin: Saving navigation_source = ' . $output['navigation_source']);
+            error_log('NS Hamburger Menu Admin: Input navigation_source = ' . ($input['navigation_source'] ?? 'undefined'));
+        }
+
+        // 選択されたナビゲーションID（manual時のみ有効）
+        if ($output['navigation_source'] === 'manual') {
+            $nav_id = $input['selected_navigation_id'] ?? $defaults['selected_navigation_id'];
+            // IDの形式を検証（数値または "classic_数値" または "block_数値"）
+            if (is_numeric($nav_id) || preg_match('/^(classic|block)_\d+$/', $nav_id)) {
+                $output['selected_navigation_id'] = $nav_id;
+            } else {
+                $output['selected_navigation_id'] = $defaults['selected_navigation_id'];
+            }
+
+            // デバッグ情報
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('NS Hamburger Menu Admin: Saving selected_navigation_id = ' . $output['selected_navigation_id']);
+                error_log('NS Hamburger Menu Admin: Input selected_navigation_id = ' . ($input['selected_navigation_id'] ?? 'undefined'));
+            }
+        } else {
+            $output['selected_navigation_id'] = $defaults['selected_navigation_id'];
+        }
+
         return $output;
     }
     
@@ -593,11 +642,235 @@ class NSHM_Admin {
                             </p>
                         </td>
                     </tr>
+
+                    <tr>
+                        <th scope="row"><?php esc_html_e('位置設定', 'ns-hamburger-menu'); ?></th>
+                        <td>
+                            <fieldset>
+                                <legend class="screen-reader-text"><?php esc_html_e('位置モード選択', 'ns-hamburger-menu'); ?></legend>
+
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
+                                        <input type="radio" name="<?php echo esc_attr($option_name . '[position_mode]'); ?>" value="default" <?php checked($options['position_mode'], 'default'); ?>>
+                                        <?php esc_html_e('デフォルト位置', 'ns-hamburger-menu'); ?>
+                                    </label>
+
+                                    <div id="default-position-options" style="margin-left: 24px; margin-bottom: 12px;">
+                                        <label style="display:flex; gap:6px; align-items:center; margin-bottom:4px;">
+                                            <input type="radio" name="<?php echo esc_attr($option_name . '[position_default]'); ?>" value="top-right" <?php checked($options['position_default'], 'top-right'); ?>>
+                                            <?php esc_html_e('右上', 'ns-hamburger-menu'); ?>
+                                        </label>
+                                        <label style="display:flex; gap:6px; align-items:center;">
+                                            <input type="radio" name="<?php echo esc_attr($option_name . '[position_default]'); ?>" value="top-left" <?php checked($options['position_default'], 'top-left'); ?>>
+                                            <?php esc_html_e('左上', 'ns-hamburger-menu'); ?>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
+                                        <input type="radio" name="<?php echo esc_attr($option_name . '[position_mode]'); ?>" value="custom" <?php checked($options['position_mode'], 'custom'); ?>>
+                                        <?php esc_html_e('カスタム位置', 'ns-hamburger-menu'); ?>
+                                    </label>
+
+                                    <div id="custom-position-options" style="margin-left: 24px;">
+                                        <div style="margin-bottom: 8px;">
+                                            <label for="position_x"><?php esc_html_e('X座標（画面中央基準）', 'ns-hamburger-menu'); ?></label><br>
+                                            <input type="range" id="position_x" name="<?php echo esc_attr($option_name . '[position_x]'); ?>" min="-960" max="960" step="10" value="<?php echo esc_attr($options['position_x']); ?>" style="width: 300px;">
+                                            <span id="position_x_value"><?php echo esc_html($options['position_x']); ?>px</span>
+                                        </div>
+                                        <div style="margin-bottom: 8px;">
+                                            <label for="position_y"><?php esc_html_e('Y座標（画面上端基準）', 'ns-hamburger-menu'); ?></label><br>
+                                            <input type="range" id="position_y" name="<?php echo esc_attr($option_name . '[position_y]'); ?>" min="0" max="1080" step="10" value="<?php echo esc_attr($options['position_y']); ?>" style="width: 300px;">
+                                            <span id="position_y_value"><?php echo esc_html($options['position_y']); ?>px</span>
+                                        </div>
+                                        <p class="description">
+                                            <?php esc_html_e('X座標：負の値は左方向、正の値は右方向　Y座標：0は画面上端、値が大きいほど下方向', 'ns-hamburger-menu'); ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row"><?php esc_html_e('ハンバーガーアイコン色', 'ns-hamburger-menu'); ?></th>
+                        <td>
+                            <fieldset style="margin-bottom: 16px;">
+                                <legend style="font-weight: 600; margin-bottom: 8px;"><?php esc_html_e('閉じている時（3本線）', 'ns-hamburger-menu'); ?></legend>
+
+                                <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                                    <div style="min-width: 140px;">
+                                        <label for="hamburger_top_line"><?php esc_html_e('上の線', 'ns-hamburger-menu'); ?></label><br>
+                                        <input type="text" class="nshm-color" id="hamburger_top_line" name="<?php echo esc_attr($option_name . '[hamburger_top_line]'); ?>" value="<?php echo esc_attr($options['hamburger_top_line']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_top_line']); ?>">
+                                    </div>
+
+                                    <div style="min-width: 140px;">
+                                        <label for="hamburger_middle_line"><?php esc_html_e('中の線', 'ns-hamburger-menu'); ?></label><br>
+                                        <input type="text" class="nshm-color" id="hamburger_middle_line" name="<?php echo esc_attr($option_name . '[hamburger_middle_line]'); ?>" value="<?php echo esc_attr($options['hamburger_middle_line']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_middle_line']); ?>">
+                                    </div>
+
+                                    <div style="min-width: 140px;">
+                                        <label for="hamburger_bottom_line"><?php esc_html_e('下の線', 'ns-hamburger-menu'); ?></label><br>
+                                        <input type="text" class="nshm-color" id="hamburger_bottom_line" name="<?php echo esc_attr($option_name . '[hamburger_bottom_line]'); ?>" value="<?php echo esc_attr($options['hamburger_bottom_line']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_bottom_line']); ?>">
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset style="margin-bottom: 16px;">
+                                <legend style="font-weight: 600; margin-bottom: 8px;"><?php esc_html_e('開いている時（×マーク）', 'ns-hamburger-menu'); ?></legend>
+
+                                <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                                    <div style="min-width: 160px;">
+                                        <label for="hamburger_cross_line1"><?php esc_html_e('左上→右下の線', 'ns-hamburger-menu'); ?></label><br>
+                                        <input type="text" class="nshm-color" id="hamburger_cross_line1" name="<?php echo esc_attr($option_name . '[hamburger_cross_line1]'); ?>" value="<?php echo esc_attr($options['hamburger_cross_line1']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_cross_line1']); ?>">
+                                    </div>
+
+                                    <div style="min-width: 160px;">
+                                        <label for="hamburger_cross_line2"><?php esc_html_e('右上→左下の線', 'ns-hamburger-menu'); ?></label><br>
+                                        <input type="text" class="nshm-color" id="hamburger_cross_line2" name="<?php echo esc_attr($option_name . '[hamburger_cross_line2]'); ?>" value="<?php echo esc_attr($options['hamburger_cross_line2']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_cross_line2']); ?>">
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <p class="description">
+                                <?php esc_html_e('ハンバーガーメニューの各線の色を個別に設定できます。同じ色にしたい場合は同じ色を選択してください。', 'ns-hamburger-menu'); ?>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- ナビゲーション設定 -->
+                    <tr>
+                        <th scope="row"><?php esc_html_e('ナビゲーション設定', 'ns-hamburger-menu'); ?></th>
+                        <td>
+                            <fieldset>
+                                <legend class="screen-reader-text"><?php esc_html_e('ナビゲーション設定', 'ns-hamburger-menu'); ?></legend>
+
+                                <label for="navigation_source">
+                                    <input type="radio" id="navigation_source_auto" name="<?php echo esc_attr($option_name . '[navigation_source]'); ?>" value="auto" <?php checked($options['navigation_source'], 'auto'); ?>>
+                                    <?php esc_html_e('自動選択', 'ns-hamburger-menu'); ?>
+                                </label><br>
+
+                                <label for="navigation_source_manual">
+                                    <input type="radio" id="navigation_source_manual" name="<?php echo esc_attr($option_name . '[navigation_source]'); ?>" value="manual" <?php checked($options['navigation_source'], 'manual'); ?>>
+                                    <?php esc_html_e('手動選択', 'ns-hamburger-menu'); ?>
+                                </label><br>
+
+                                <div id="navigation_manual_selection" style="margin-top: 10px; <?php echo $options['navigation_source'] === 'manual' ? '' : 'display: none;'; ?>">
+                                    <label for="selected_navigation_id"><?php esc_html_e('使用するナビゲーション：', 'ns-hamburger-menu'); ?></label><br>
+                                    <select id="selected_navigation_id" name="<?php echo esc_attr($option_name . '[selected_navigation_id]'); ?>">
+                                        <option value="0"><?php esc_html_e('ページ一覧（フォールバック）', 'ns-hamburger-menu'); ?></option>
+                                        <?php
+                                        // クラシックテーマのメニュー
+                                        $menus = wp_get_nav_menus();
+                                        if (!empty($menus)) {
+                                            echo '<optgroup label="' . esc_attr__('クラシックメニュー', 'ns-hamburger-menu') . '">';
+                                            foreach ($menus as $menu) {
+                                                $selected = ($options['selected_navigation_id'] == 'classic_' . $menu->term_id) ? 'selected' : '';
+                                                echo '<option value="classic_' . esc_attr($menu->term_id) . '" ' . $selected . '>' . esc_html($menu->name) . '</option>';
+                                            }
+                                            echo '</optgroup>';
+                                        }
+
+                                        // ナビゲーションブロック
+                                        global $wpdb;
+                                        $nav_blocks = $wpdb->get_results("
+                                            SELECT ID, post_title
+                                            FROM {$wpdb->posts}
+                                            WHERE post_type = 'wp_navigation'
+                                            AND post_status = 'publish'
+                                            ORDER BY post_title ASC
+                                        ");
+                                        if (!empty($nav_blocks)) {
+                                            echo '<optgroup label="' . esc_attr__('ナビゲーションブロック', 'ns-hamburger-menu') . '">';
+                                            foreach ($nav_blocks as $nav_block) {
+                                                $selected = ($options['selected_navigation_id'] == 'block_' . $nav_block->ID) ? 'selected' : '';
+                                                $title = $nav_block->post_title ? $nav_block->post_title : sprintf(__('ナビゲーション #%d', 'ns-hamburger-menu'), $nav_block->ID);
+                                                echo '<option value="block_' . esc_attr($nav_block->ID) . '" ' . $selected . '>' . esc_html($title) . '</option>';
+                                            }
+                                            echo '</optgroup>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </fieldset>
+
+                            <p class="description">
+                                <?php esc_html_e('自動選択：テーマタイプに応じて最適なナビゲーションを自動選択します。手動選択：特定のメニューまたはナビゲーションブロックを指定できます。', 'ns-hamburger-menu'); ?>
+                            </p>
+                        </td>
+                    </tr>
                 </table>
                 
                 <?php submit_button(); ?>
             </form>
         </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const positionX = document.getElementById('position_x');
+            const positionY = document.getElementById('position_y');
+            const positionXValue = document.getElementById('position_x_value');
+            const positionYValue = document.getElementById('position_y_value');
+
+            if (positionX && positionXValue) {
+                positionX.addEventListener('input', function() {
+                    positionXValue.textContent = this.value + 'px';
+                });
+            }
+
+            if (positionY && positionYValue) {
+                positionY.addEventListener('input', function() {
+                    positionYValue.textContent = this.value + 'px';
+                });
+            }
+
+            // Enable/disable position options based on radio selection
+            const positionModeInputs = document.querySelectorAll('input[name$="[position_mode]"]');
+            const defaultOptions = document.getElementById('default-position-options');
+            const customOptions = document.getElementById('custom-position-options');
+
+            function updatePositionOptions() {
+                const selectedMode = document.querySelector('input[name$="[position_mode]"]:checked');
+                if (selectedMode) {
+                    if (selectedMode.value === 'default') {
+                        if (defaultOptions) defaultOptions.style.opacity = '1';
+                        if (customOptions) customOptions.style.opacity = '0.5';
+                    } else {
+                        if (defaultOptions) defaultOptions.style.opacity = '0.5';
+                        if (customOptions) customOptions.style.opacity = '1';
+                    }
+                }
+            }
+
+            positionModeInputs.forEach(function(input) {
+                input.addEventListener('change', updatePositionOptions);
+            });
+
+            updatePositionOptions();
+
+            // ナビゲーション選択の表示制御
+            const navigationSourceInputs = document.querySelectorAll('input[name$="[navigation_source]"]');
+            const navigationManualSelection = document.getElementById('navigation_manual_selection');
+
+            function updateNavigationOptions() {
+                const selectedSource = document.querySelector('input[name$="[navigation_source]"]:checked');
+                if (selectedSource && navigationManualSelection) {
+                    if (selectedSource.value === 'manual') {
+                        navigationManualSelection.style.display = 'block';
+                    } else {
+                        navigationManualSelection.style.display = 'none';
+                    }
+                }
+            }
+
+            navigationSourceInputs.forEach(function(input) {
+                input.addEventListener('change', updateNavigationOptions);
+            });
+
+            updateNavigationOptions();
+        });
+        </script>
         <?php
     }
     

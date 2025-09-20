@@ -5,6 +5,68 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] - 2025-09-20
+
+### Added
+- Support for direct navigation block structure (core/navigation-link and core/navigation-submenu)
+- Enhanced manual navigation selection functionality for block themes
+- Improved navigation block parsing to handle various WordPress navigation structures
+
+### Fixed
+- Manual navigation selection now correctly displays selected navigation blocks instead of fallback page list
+- Navigation block parsing now supports both wrapped (core/navigation) and direct link structures
+- Resolved issue where navigation block content was not being extracted properly
+
+## [0.12.0] - 2024-12-22
+
+### Added
+- Custom position settings for hamburger menu with default (top-left/top-right) and custom positioning modes
+- Browser width-responsive X-axis positioning to prevent menu from going off-screen
+- Individual color customization for all hamburger icon lines (5 separate colors)
+  - Closed state: top line, middle line, bottom line
+  - Open state (× mark): left-to-right diagonal, right-to-left diagonal
+- WordPress color picker integration for consistent UI experience
+- Horizontal layout for hamburger icon color settings to reduce vertical space
+
+### Changed
+- Y-axis positioning changed from screen center to screen top reference for more intuitive positioning
+- Improved admin UI with compact horizontal layout for color pickers
+- Enhanced CSS variable system to support individual line colors
+- Updated validation system to handle new position and color settings
+
+### Technical
+- Added CSS min/max functions for responsive positioning
+- Implemented 5-color CSS variable system for individual line control
+- Enhanced settings sanitization and validation for all new options
+
+## [0.11.1] - 2024-09-19
+
+### Added
+- Block theme support with automatic Navigation block detection
+- Automatic fallback menu generation from published pages
+- Multi-source navigation priority system (traditional menu → navigation blocks → page list)
+- Enhanced hamburger button animation with improved visual clarity
+
+### Fixed
+- Hamburger button animation glitch where three lines remained visible when opened
+- Improved CSS positioning for hamburger button transformation
+- Better opacity control for menu state transitions
+
+### Changed
+- Enhanced navigation detection to work seamlessly with block themes
+- Updated documentation for block theme compatibility
+- Improved error handling for navigation menu generation
+
+### Removed
+- Removed obsolete responsive position test file from debug tools
+
+## [0.11.0] - 2024-09-18
+
+### Added
+- Improved animation performance
+- Enhanced accessibility features
+- Better mobile responsiveness
+
 ## [0.10.0] - 2024-09-05
 
 ### Added

@@ -3,7 +3,7 @@
  * Plugin Name:       NS Hamburger Overlay Menu
  * Plugin URI:        https://github.com/netservice/ns-hamburger-menu
  * Description:       Accessible hamburger overlay menu with gradient animations, multi-column layout, and full keyboard navigation support.
- * Version:           0.11.0
+ * Version:           0.13.0
  * Requires at least: 6.5
  * Requires PHP:      7.4
  * Author:            Netservice
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('NSHM_VERSION', '0.11.0');
+define('NSHM_VERSION', '0.13.0');
 define('NSHM_PLUGIN_FILE', __FILE__);
 define('NSHM_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('NSHM_PLUGIN_PATH', plugin_dir_path(__FILE__));
@@ -28,12 +28,45 @@ define('NSHM_PLUGIN_PATH', plugin_dir_path(__FILE__));
 
 // Require core files
 require_once NSHM_PLUGIN_PATH . 'inc/Defaults.php';
+
 require_once NSHM_PLUGIN_PATH . 'inc/Core.php';
+
 require_once NSHM_PLUGIN_PATH . 'inc/Admin.php';
 require_once NSHM_PLUGIN_PATH . 'inc/Frontend.php';
 
+// Global function for theme integration
+add_action('plugins_loaded', function() {
+    if (!function_exists('nshm_display_menu')) {
+        /**
+         * Display hamburger menu (for theme integration)
+         *
+         * @return void
+         */
+        function nshm_display_menu() {
+            static $nshm_core_instance = null;
+
+            // NSHM_Coreのインスタンスが存在する場合は新しいアーキテクチャを使用
+            if (class_exists('NSHM_Core')) {
+                if (!$nshm_core_instance) {
+                    $nshm_core_instance = new NSHM_Core();
+                }
+                echo $nshm_core_instance->shortcode();
+            }
+            // フォールバック：古いアーキテクチャは廃止されました
+            // NSHM_Coreが利用できない場合のエラーメッセージ
+            else {
+                echo '<!-- NS Hamburger Menu: Classes not loaded -->';
+            }
+        }
+    }
+});
+
 // Initialize plugin
 function nshm_init() {
+    // Force class reload by clearing any existing instances
+    global $nshm_core_instance;
+    $nshm_core_instance = null;
+
     new NSHM_Core();
     if (is_admin()) {
         new NSHM_Admin();
@@ -45,7 +78,7 @@ add_action('init', 'nshm_init');
 // Legacy compatibility
 class NS_Hamburger_Menu {
     const OPT_KEY = 'ns_hamburger_options';
-    const VER     = NSHM_VERSION;
+    const VER     = '0.13.0';
 
     public function __construct() {
         // Deprecated: This class is kept for backward compatibility only
@@ -60,21 +93,28 @@ class NS_Hamburger_Menu {
 
     private function defaults() {
         return [
-            'auto_inject'      => 1,
-            'columns'          => 2,
-            'top_font_px'      => 24,
-            'sub_font_px'      => 16,
-            'scheme'           => 'custom',
-            'color_start'      => '#0ea5e9',
-            'color_end'        => '#a78bfa',
-            'hue_anim'         => 1,
-            'hue_speed_sec'    => 12,
-            'hue_range_deg'    => 24,
-            'open_speed_ms'    => 600,
-            'open_shape'       => 'circle',
-            'z_index'          => 9999,
-            'responsive_mode'  => 'off',
-            'responsive_width' => 420,
+            'auto_inject'    => 1,
+            'columns'        => 2,
+            'top_font_px'    => 24,
+            'sub_font_px'    => 16,
+            'scheme'         => 'custom',
+            'color_start'    => '#0ea5e9',
+            'color_end'      => '#a78bfa',
+            'hue_anim'       => 1,
+            'hue_speed_sec'  => 12,
+            'hue_range_deg'  => 24,
+            'open_speed_ms'  => 600,
+            'open_shape'     => 'circle',
+            'z_index'        => 9999,
+            'position_mode'  => 'default',
+            'position_default' => 'top-right',
+            'position_x'     => 0,
+            'position_y'     => 16,
+            'hamburger_top_line'     => '#111111',
+            'hamburger_middle_line'  => '#111111',
+            'hamburger_bottom_line'  => '#111111',
+            'hamburger_cross_line1'  => '#ffffff',
+            'hamburger_cross_line2'  => '#ffffff',
         ];
     }
     private function get_options() {
@@ -102,10 +142,25 @@ class NS_Hamburger_Menu {
             $shape = $input['open_shape'] ?? $d['open_shape'];
             $out['open_shape'] = in_array($shape, $allowed_shapes, true) ? $shape : 'circle';
             $out['z_index']       = max(1000, intval($input['z_index'] ?? $d['z_index']));
-            $allowed_modes = ['off', 'center', 'left_limit', 'right_limit'];
-            $mode = $input['responsive_mode'] ?? $d['responsive_mode'];
-            $out['responsive_mode'] = in_array($mode, $allowed_modes, true) ? $mode : 'off';
-            $out['responsive_width'] = max(320, min(1200, intval($input['responsive_width'] ?? $d['responsive_width'])));
+
+            // Position settings validation
+            $allowed_modes = ['default', 'custom'];
+            $position_mode = $input['position_mode'] ?? $d['position_mode'];
+            $out['position_mode'] = in_array($position_mode, $allowed_modes, true) ? $position_mode : 'default';
+
+            $allowed_defaults = ['top-left', 'top-right'];
+            $position_default = $input['position_default'] ?? $d['position_default'];
+            $out['position_default'] = in_array($position_default, $allowed_defaults, true) ? $position_default : 'top-right';
+
+            $out['position_x'] = max(-960, min(960, intval($input['position_x'] ?? $d['position_x'])));
+            $out['position_y'] = max(0, min(1080, intval($input['position_y'] ?? $d['position_y'])));
+
+            // Hamburger icon colors validation (5 individual colors)
+            $out['hamburger_top_line'] = sanitize_hex_color($input['hamburger_top_line'] ?? $d['hamburger_top_line']) ?: $d['hamburger_top_line'];
+            $out['hamburger_middle_line'] = sanitize_hex_color($input['hamburger_middle_line'] ?? $d['hamburger_middle_line']) ?: $d['hamburger_middle_line'];
+            $out['hamburger_bottom_line'] = sanitize_hex_color($input['hamburger_bottom_line'] ?? $d['hamburger_bottom_line']) ?: $d['hamburger_bottom_line'];
+            $out['hamburger_cross_line1'] = sanitize_hex_color($input['hamburger_cross_line1'] ?? $d['hamburger_cross_line1']) ?: $d['hamburger_cross_line1'];
+            $out['hamburger_cross_line2'] = sanitize_hex_color($input['hamburger_cross_line2'] ?? $d['hamburger_cross_line2']) ?: $d['hamburger_cross_line2'];
             return $out;
         });
     }
@@ -296,7 +351,9 @@ class NS_Hamburger_Menu {
         $overlay_id = function_exists('wp_unique_id') ? wp_unique_id('ns-overlay-') : 'ns-overlay-'.uniqid();
 
         ob_start(); ?>
+        <!-- 【初期状態：閉じている】data-open-shapeでアニメーション形状を指定 -->
         <div data-open-shape="<?php echo esc_attr($open_shape); ?>" data-preset="<?php echo esc_attr($opt['design_preset'] ?? 'normal'); ?>">
+        <!-- 【ハンバーガーボタン】初期：3本線表示、.ns-openクラス追加で×マークに変形 -->
         <button class="ns-hb" aria-controls="<?php echo esc_attr($overlay_id); ?>" aria-expanded="false" aria-label="<?php echo esc_attr(__('Open menu', 'ns-hamburger-menu')); ?>">
             <span class="ns-hb-box"><span class="ns-hb-bar"></span></span>
         </button>
