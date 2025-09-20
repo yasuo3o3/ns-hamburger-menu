@@ -769,11 +769,6 @@ class NSHM_Core {
             list($slot_before, $slot_after) = $this->split_slots_from_content($content);
         }
 
-        // Debug output
-        error_log('NS Hamburger: slot_before = ' . $slot_before);
-        error_log('NS Hamburger: slot_after = ' . $slot_after);
-        error_log('NS Hamburger: content = ' . $content);
-        
         // Generate unique ID
         $overlay_id = function_exists('wp_unique_id') ? wp_unique_id('ns-overlay-') : 'ns-overlay-' . uniqid();
         
