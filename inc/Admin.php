@@ -148,11 +148,6 @@ class NSHM_Admin {
         $nav_source = $input['navigation_source'] ?? $defaults['navigation_source'];
         $output['navigation_source'] = in_array($nav_source, $allowed_nav_sources, true) ? $nav_source : 'auto';
 
-        // デバッグ情報
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('NS Hamburger Menu Admin: Saving navigation_source = ' . $output['navigation_source']);
-            error_log('NS Hamburger Menu Admin: Input navigation_source = ' . ($input['navigation_source'] ?? 'undefined'));
-        }
 
         // 選択されたナビゲーションID（manual時のみ有効）
         if ($output['navigation_source'] === 'manual') {
@@ -164,11 +159,6 @@ class NSHM_Admin {
                 $output['selected_navigation_id'] = $defaults['selected_navigation_id'];
             }
 
-            // デバッグ情報
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('NS Hamburger Menu Admin: Saving selected_navigation_id = ' . $output['selected_navigation_id']);
-                error_log('NS Hamburger Menu Admin: Input selected_navigation_id = ' . ($input['selected_navigation_id'] ?? 'undefined'));
-            }
         } else {
             $output['selected_navigation_id'] = $defaults['selected_navigation_id'];
         }
