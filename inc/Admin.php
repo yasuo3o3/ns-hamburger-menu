@@ -772,6 +772,7 @@ class NSHM_Admin {
                                         if (!empty($nav_posts)) {
                                             echo '<optgroup label="' . esc_attr__('ナビゲーションブロック', 'ns-hamburger-menu') . '">';
                                             foreach ($nav_posts as $nav_post) {
+                                                /* translators: %d: Navigation block ID. */
                                                 $title = $nav_post->post_title ? $nav_post->post_title : sprintf(__('ナビゲーション #%d', 'ns-hamburger-menu'), $nav_post->ID);
                                                 echo '<option value="block_' . esc_attr($nav_post->ID) . '" ' . selected($options['selected_navigation_id'], 'block_' . $nav_post->ID, false) . '>' . esc_html($title) . '</option>';
                                             }
