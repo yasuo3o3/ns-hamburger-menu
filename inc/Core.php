@@ -10,6 +10,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+
 /**
  * Core plugin class
  */
@@ -49,7 +50,6 @@ class NSHM_Core {
         // Ensure the block directory exists and has block.json
         $block_path = NSHM_PLUGIN_PATH . 'blocks';
         if (!file_exists($block_path . '/block.json')) {
-            error_log('NS Hamburger Menu: block.json not found at ' . $block_path);
             return;
         }
 
@@ -58,7 +58,6 @@ class NSHM_Core {
         ));
 
         if (!$result) {
-            error_log('NS Hamburger Menu: Failed to register block type');
         }
 
         // Register child block for slots
@@ -189,9 +188,13 @@ class NSHM_Core {
     private function get_navigation_menu() {
         $options = NSHM_Defaults::get_options();
 
+
         // 手動選択の場合
         if ($options['navigation_source'] === 'manual') {
-            return $this->get_manual_navigation($options['selected_navigation_id']);
+            $manual_result = $this->get_manual_navigation($options['selected_navigation_id']);
+
+
+            return $manual_result;
         }
 
         // 自動選択の場合（従来の動作）
@@ -229,6 +232,7 @@ class NSHM_Core {
      * @return string
      */
     private function get_manual_navigation($navigation_id) {
+
         // フォールバック（ページ一覧）の場合
         if ($navigation_id == 0) {
             return $this->generate_fallback_menu();
@@ -251,10 +255,14 @@ class NSHM_Core {
         if (is_string($navigation_id) && strpos($navigation_id, 'block_') === 0) {
             $block_id = (int) str_replace('block_', '', $navigation_id);
             $content = $this->get_specific_navigation_block($block_id);
+
+
             return $content ?: $this->generate_fallback_menu();
         }
 
         // その他の場合はフォールバックを返す
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+        }
         return $this->generate_fallback_menu();
     }
 
@@ -267,8 +275,11 @@ class NSHM_Core {
     private function get_specific_navigation_block($block_id) {
         global $wpdb;
 
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+        }
+
         $nav_block = $wpdb->get_row($wpdb->prepare("
-            SELECT post_content
+            SELECT post_content, post_title
             FROM {$wpdb->posts}
             WHERE ID = %d
             AND post_type = 'wp_navigation'
@@ -279,11 +290,16 @@ class NSHM_Core {
             return null;
         }
 
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+        }
+
         $content = $this->parse_navigation_block($nav_block->post_content);
         if ($content) {
             return '<ul class="ns-menu">' . $content . '</ul>';
         }
 
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+        }
         return null;
     }
 
@@ -331,12 +347,66 @@ class NSHM_Core {
             return '';
         }
 
+
         $blocks = parse_blocks($content);
         $menu_items = array();
 
         foreach ($blocks as $block) {
+            // 従来の構造：core/navigation ブロック内にナビゲーションリンクがある場合
             if ($block['blockName'] === 'core/navigation') {
-                $menu_items = array_merge($menu_items, $this->extract_nav_items($block));
+                $extracted_items = $this->extract_nav_items($block);
+                $menu_items = array_merge($menu_items, $extracted_items);
+
+            }
+            // 新しい構造：直接ナビゲーションリンクがある場合
+            elseif ($block['blockName'] === 'core/navigation-link') {
+                $attrs = $block['attrs'] ?? array();
+                $title = $attrs['label'] ?? '';
+                $url = $attrs['url'] ?? '#';
+
+                if (!empty(trim($title))) {
+                    $menu_items[] = array(
+                        'title' => $title,
+                        'url' => $url,
+                        'children' => array()
+                    );
+
+                }
+            }
+            // サブメニュー構造の場合
+            elseif ($block['blockName'] === 'core/navigation-submenu') {
+                $attrs = $block['attrs'] ?? array();
+                $title = $attrs['label'] ?? '';
+                $url = $attrs['url'] ?? '#';
+
+                if (!empty(trim($title))) {
+                    // 子要素を処理
+                    $children = array();
+                    if (!empty($block['innerBlocks'])) {
+                        foreach ($block['innerBlocks'] as $inner_block) {
+                            if ($inner_block['blockName'] === 'core/navigation-link') {
+                                $inner_attrs = $inner_block['attrs'] ?? array();
+                                $inner_title = $inner_attrs['label'] ?? '';
+                                $inner_url = $inner_attrs['url'] ?? '#';
+
+                                if (!empty(trim($inner_title))) {
+                                    $children[] = array(
+                                        'title' => $inner_title,
+                                        'url' => $inner_url,
+                                        'children' => array()
+                                    );
+                                }
+                            }
+                        }
+                    }
+
+                    $menu_items[] = array(
+                        'title' => $title,
+                        'url' => $url,
+                        'children' => $children
+                    );
+
+                }
             }
         }
 
@@ -344,10 +414,33 @@ class NSHM_Core {
             return '';
         }
 
+        // HTMLを構築
         $output = '';
         foreach ($menu_items as $item) {
-            $output .= $this->format_nav_item($item);
+            if (empty($item['title'])) {
+                continue;
+            }
+
+            $title = esc_html($item['title']);
+            $url = esc_url($item['url']) ?: '#';
+
+            $output .= '<li><a href="' . $url . '">' . $title . '</a>';
+
+            if (!empty($item['children'])) {
+                $output .= '<ul class="sub-menu">';
+                foreach ($item['children'] as $child) {
+                    if (!empty($child['title'])) {
+                        $child_title = esc_html($child['title']);
+                        $child_url = esc_url($child['url']) ?: '#';
+                        $output .= '<li><a href="' . $child_url . '">' . $child_title . '</a></li>';
+                    }
+                }
+                $output .= '</ul>';
+            }
+
+            $output .= '</li>';
         }
+
 
         return $output;
     }
@@ -365,9 +458,17 @@ class NSHM_Core {
             foreach ($block['innerBlocks'] as $inner_block) {
                 if ($inner_block['blockName'] === 'core/navigation-link') {
                     $attrs = $inner_block['attrs'] ?? array();
+                    $title = $attrs['label'] ?? '';
+                    $url = $attrs['url'] ?? '#';
+
+                    // 空のタイトルの場合はスキップ
+                    if (empty(trim($title))) {
+                        continue;
+                    }
+
                     $items[] = array(
-                        'title' => $attrs['label'] ?? '',
-                        'url'   => $attrs['url'] ?? '',
+                        'title' => $title,
+                        'url'   => $url,
                         'children' => $this->extract_nav_items($inner_block)
                     );
                 }
@@ -378,14 +479,86 @@ class NSHM_Core {
     }
 
     /**
+     * Extract single navigation item from navigation-link block
+     *
+     * @param array $block Navigation-link block
+     * @return array|null
+     */
+    private function extract_single_nav_item($block) {
+        if ($block['blockName'] !== 'core/navigation-link') {
+            return null;
+        }
+
+        $attrs = $block['attrs'] ?? array();
+        $title = $attrs['label'] ?? '';
+        $url = $attrs['url'] ?? '#';
+
+        // 空のタイトルの場合はスキップ
+        if (empty(trim($title))) {
+            return null;
+        }
+
+        return array(
+            'title' => $title,
+            'url' => $url,
+            'children' => array()
+        );
+    }
+
+    /**
+     * Extract navigation submenu item
+     *
+     * @param array $block Navigation-submenu block
+     * @return array|null
+     */
+    private function extract_submenu_item($block) {
+        if ($block['blockName'] !== 'core/navigation-submenu') {
+            return null;
+        }
+
+        $attrs = $block['attrs'] ?? array();
+        $title = $attrs['label'] ?? '';
+        $url = $attrs['url'] ?? '#';
+
+        // 空のタイトルの場合はスキップ
+        if (empty(trim($title))) {
+            return null;
+        }
+
+        // 子要素を処理
+        $children = array();
+        if (!empty($block['innerBlocks'])) {
+            foreach ($block['innerBlocks'] as $inner_block) {
+                if ($inner_block['blockName'] === 'core/navigation-link') {
+                    $child_item = $this->extract_single_nav_item($inner_block);
+                    if ($child_item) {
+                        $children[] = $child_item;
+                    }
+                }
+            }
+        }
+
+        return array(
+            'title' => $title,
+            'url' => $url,
+            'children' => $children
+        );
+    }
+
+    /**
      * Format navigation item as HTML
      *
      * @param array $item Navigation item
      * @return string
      */
     private function format_nav_item($item) {
+        // タイトルが空の場合は何も出力しない
+        if (empty($item['title'])) {
+            return '';
+        }
+
         $title = esc_html($item['title']);
-        $url = esc_url($item['url']);
+        $url = esc_url($item['url']) ?: '#';
 
         $output = '<li>';
         $output .= '<a href="' . $url . '">' . $title . '</a>';
@@ -408,6 +581,7 @@ class NSHM_Core {
      * @return string
      */
     private function generate_fallback_menu() {
+
         $pages = get_pages(array(
             'sort_order' => 'ASC',
             'sort_column' => 'menu_order',
@@ -425,6 +599,12 @@ class NSHM_Core {
             'post_type' => 'page',
             'post_status' => 'publish'
         ));
+
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            if (!empty($pages)) {
+                $page_titles = array_map(function($page) { return $page->post_title; }, $pages);
+            }
+        }
 
         if (empty($pages)) {
             if (current_user_can('edit_theme_options')) {

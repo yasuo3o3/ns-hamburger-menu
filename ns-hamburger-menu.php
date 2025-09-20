@@ -3,7 +3,7 @@
  * Plugin Name:       NS Hamburger Overlay Menu
  * Plugin URI:        https://github.com/netservice/ns-hamburger-menu
  * Description:       Accessible hamburger overlay menu with gradient animations, multi-column layout, and full keyboard navigation support.
- * Version:           0.12.0
+ * Version:           0.12.1
  * Requires at least: 6.5
  * Requires PHP:      7.4
  * Author:            Netservice
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('NSHM_VERSION', '0.12.0');
+define('NSHM_VERSION', '0.12.1');
 define('NSHM_PLUGIN_FILE', __FILE__);
 define('NSHM_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('NSHM_PLUGIN_PATH', plugin_dir_path(__FILE__));
@@ -28,12 +28,45 @@ define('NSHM_PLUGIN_PATH', plugin_dir_path(__FILE__));
 
 // Require core files
 require_once NSHM_PLUGIN_PATH . 'inc/Defaults.php';
+
 require_once NSHM_PLUGIN_PATH . 'inc/Core.php';
+
 require_once NSHM_PLUGIN_PATH . 'inc/Admin.php';
 require_once NSHM_PLUGIN_PATH . 'inc/Frontend.php';
 
+// Global function for theme integration
+add_action('plugins_loaded', function() {
+    if (!function_exists('nshm_display_menu')) {
+        /**
+         * Display hamburger menu (for theme integration)
+         *
+         * @return void
+         */
+        function nshm_display_menu() {
+            static $nshm_core_instance = null;
+
+            // NSHM_Coreのインスタンスが存在する場合は新しいアーキテクチャを使用
+            if (class_exists('NSHM_Core')) {
+                if (!$nshm_core_instance) {
+                    $nshm_core_instance = new NSHM_Core();
+                }
+                echo $nshm_core_instance->shortcode();
+            }
+            // フォールバック：古いアーキテクチャは廃止されました
+            // NSHM_Coreが利用できない場合のエラーメッセージ
+            else {
+                echo '<!-- NS Hamburger Menu: Classes not loaded -->';
+            }
+        }
+    }
+});
+
 // Initialize plugin
 function nshm_init() {
+    // Force class reload by clearing any existing instances
+    global $nshm_core_instance;
+    $nshm_core_instance = null;
+
     new NSHM_Core();
     if (is_admin()) {
         new NSHM_Admin();
@@ -45,7 +78,7 @@ add_action('init', 'nshm_init');
 // Legacy compatibility
 class NS_Hamburger_Menu {
     const OPT_KEY = 'ns_hamburger_options';
-    const VER     = '0.12.0';
+    const VER     = '0.12.1';
 
     public function __construct() {
         // Deprecated: This class is kept for backward compatibility only
