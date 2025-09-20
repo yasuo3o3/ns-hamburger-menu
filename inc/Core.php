@@ -281,27 +281,20 @@ class NSHM_Core {
      * @return string|null
      */
     private function get_specific_navigation_block($block_id) {
-        global $wpdb;
 
         if (defined('WP_DEBUG') && WP_DEBUG) {
         }
 
-        $nav_block = $wpdb->get_row($wpdb->prepare("
-            SELECT post_content, post_title
-            FROM {$wpdb->posts}
-            WHERE ID = %d
-            AND post_type = 'wp_navigation'
-            AND post_status = 'publish'
-        ", $block_id));
+        $nav_post = get_post($block_id);
 
-        if (!$nav_block) {
+        if (!$nav_post || $nav_post->post_type !== 'wp_navigation' || $nav_post->post_status !== 'publish') {
             return null;
         }
 
         if (defined('WP_DEBUG') && WP_DEBUG) {
         }
 
-        $content = $this->parse_navigation_block($nav_block->post_content);
+        $content = $this->parse_navigation_block($nav_post->post_content);
         if ($content) {
             return '<ul class="ns-menu">' . $content . '</ul>';
         }
@@ -317,25 +310,23 @@ class NSHM_Core {
      * @return string|null
      */
     private function get_navigation_from_blocks() {
-        global $wpdb;
 
-        // Navigation blocks from wp_posts
-        $nav_blocks = $wpdb->get_results($wpdb->prepare("
-            SELECT post_content
-            FROM {$wpdb->posts}
-            WHERE post_type = 'wp_navigation'
-            AND post_status = 'publish'
-            ORDER BY post_date DESC
-            LIMIT 5
-        "));
+        // Navigation blocks using WP API
+        $nav_posts = get_posts(array(
+            'post_type' => 'wp_navigation',
+            'post_status' => 'publish',
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'numberposts' => 5
+        ));
 
-        if (empty($nav_blocks)) {
+        if (empty($nav_posts)) {
             return null;
         }
 
         // 最初に見つかったナビゲーションブロックを使用
-        foreach ($nav_blocks as $nav_block) {
-            $content = $this->parse_navigation_block($nav_block->post_content);
+        foreach ($nav_posts as $nav_post) {
+            $content = $this->parse_navigation_block($nav_post->post_content);
             if ($content) {
                 return '<ul class="ns-menu">' . $content . '</ul>';
             }
