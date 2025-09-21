@@ -215,7 +215,7 @@ msgstr "外観→メニューで「%s」位置にメニューを割り当てて�
 
 #: ns-hamburger-menu.php:48
 msgid "NS Hamburger Menu"
-msgstr "NS ハンバーガーメニュー"
+msgstr "NS Hamburger Menu"
 
 #: blocks/index.js:59
 msgid "Add top/bottom slots here to include custom blocks"
