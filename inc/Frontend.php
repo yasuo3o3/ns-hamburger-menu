@@ -23,6 +23,13 @@ class NSHM_Frontend {
 	private $require_assets_flag = false;
 
 	/**
+	 * Flag to track if assets were enqueued
+	 *
+	 * @var bool
+	 */
+	private $assets_enqueued = false;
+
+	/**
 	 * Initialize frontend functionality
 	 */
 	public function __construct() {
@@ -38,6 +45,30 @@ class NSHM_Frontend {
 		if ( ! $this->should_enqueue_assets() ) {
 			return;
 		}
+
+		// Perform actual enqueue
+		$this->do_enqueue_assets();
+	}
+
+	/**
+	 * Force enqueue assets (for theme integration)
+	 */
+	public function force_enqueue_assets() {
+		if ( ! $this->assets_enqueued ) {
+			$this->do_enqueue_assets();
+		}
+	}
+
+	/**
+	 * Perform actual asset enqueue
+	 */
+	private function do_enqueue_assets() {
+		// Prevent duplicate enqueuing
+		if ( $this->assets_enqueued ) {
+			return;
+		}
+
+		$this->assets_enqueued = true;
 
 		$options = NSHM_Defaults::get_options();
 		$preset  = $this->get_scheme_colors( $options['scheme'] );
@@ -329,5 +360,10 @@ class NSHM_Frontend {
 	 */
 	public function set_require_assets_flag() {
 		$this->require_assets_flag = true;
+
+		// Force enqueue immediately if wp_enqueue_scripts has already passed
+		if ( did_action( 'wp_enqueue_scripts' ) ) {
+			$this->force_enqueue_assets();
+		}
 	}
 }

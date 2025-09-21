@@ -46,9 +46,18 @@ add_action(
 			 */
 			function nshm_display_menu() {
 				static $nshm_core_instance = null;
+				static $nshm_frontend_instance = null;
 
 				// Signal that assets are required for theme function
 				do_action( 'nshm/require_assets' );
+
+				// Ensure assets are enqueued even after wp_enqueue_scripts
+				if ( class_exists( 'NSHM_Frontend' ) ) {
+					if ( ! $nshm_frontend_instance ) {
+						$nshm_frontend_instance = new NSHM_Frontend();
+					}
+					$nshm_frontend_instance->force_enqueue_assets();
+				}
 
 				// NSHM_Coreのインスタンスが存在する場合は新しいアーキテクチャを使用
 				if ( class_exists( 'NSHM_Core' ) ) {
