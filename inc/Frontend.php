@@ -16,10 +16,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 class NSHM_Frontend {
 
 	/**
+	 * Flag to require assets from theme function
+	 *
+	 * @var bool
+	 */
+	private $require_assets_flag = false;
+
+	/**
 	 * Initialize frontend functionality
 	 */
 	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_action( 'nshm/require_assets', array( $this, 'set_require_assets_flag' ) );
 	}
 
 	/**
@@ -155,8 +163,13 @@ class NSHM_Frontend {
 			return true;
 		}
 
-		// Check if block is present
-		if ( $post && has_block( 'ns/hamburger-menu', $post ) ) {
+		// Check if block is present (with backward compatibility)
+		if ( $post && ( has_block( 'ns/hamburger', $post ) || has_block( 'ns/hamburger-menu', $post ) ) ) {
+			return true;
+		}
+
+		// Check if assets are required by theme function
+		if ( $this->require_assets_flag ) {
 			return true;
 		}
 
@@ -228,15 +241,33 @@ class NSHM_Frontend {
 			return;
 		}
 
-		// Basic sanitization: remove </style> tags to prevent CSS escape
-		$custom_css = str_replace( array( '</style>', '</STYLE>' ), '', $custom_css );
+		// Enhanced sanitization: remove HTML tags and potential script injection
+		$custom_css = wp_strip_all_tags( $custom_css );
 
-		// Wrap with CDATA comments
-		$safe_css = "/*<![CDATA[*/\n" . $custom_css . "\n/*]]>*/";
+		// Additional protection: use safecss_filter_attr for basic properties
+		// Note: safecss_filter_attr is primarily for inline styles, but provides additional security
+		$custom_css = preg_replace_callback(
+			'/([a-zA-Z-]+)\s*:\s*([^;]+);?/',
+			function( $matches ) {
+				$property = trim( $matches[1] );
+				$value    = trim( $matches[2] );
+				// Use safecss_filter_attr for individual property-value pairs
+				$filtered = safecss_filter_attr( $property . ':' . $value );
+				return $filtered ? $filtered . ';' : '';
+			},
+			$custom_css
+		);
+
+		// Remove any remaining HTML-like content
+		$custom_css = preg_replace( '/<[^>]*>/', '', $custom_css );
+
+		if ( empty( trim( $custom_css ) ) ) {
+			return;
+		}
 
 		// Add inline to preset CSS if exists, otherwise to base CSS
 		$target_handle = wp_style_is( 'ns-hmb-preset', 'enqueued' ) ? 'ns-hmb-preset' : 'ns-hmb-style';
-		wp_add_inline_style( $target_handle, $safe_css );
+		wp_add_inline_style( $target_handle, $custom_css );
 	}
 
 	/**
@@ -286,5 +317,12 @@ class NSHM_Frontend {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Set flag to require assets (called from theme function)
+	 */
+	public function set_require_assets_flag() {
+		$this->require_assets_flag = true;
 	}
 }

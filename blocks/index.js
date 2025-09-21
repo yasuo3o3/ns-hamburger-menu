@@ -15,7 +15,7 @@
   /* ========== 親: ns/hamburger ========== */
   const Title = () => h('div', { style:{padding:'12px',border:'1px dashed #ccc',borderRadius:'8px',background:'#fafafa'} },
     h('strong', null, 'NS Hamburger Menu'),
-    h('div', { style:{marginTop:'6px',opacity:.8} }, 'フロントでは UL の上下にスロット内容が差し込まれます')
+    h('div', { style:{marginTop:'6px',opacity:.8} }, __('フロントでは UL の上下にスロット内容が差し込まれます', 'ns-hamburger-menu'))
   );
 
   registerBlockType('ns/hamburger', {
@@ -44,17 +44,17 @@
 
       return h(Fragment, null,
         h(InspectorControls, null,
-          h(PanelBody, { title:'表示設定（未入力はプラグイン既定を使用）', initialOpen:true },
+          h(PanelBody, { title:__('表示設定（未入力はプラグイン既定を使用）', 'ns-hamburger-menu'), initialOpen:true },
             h(RangeControl, {
-              label:'列数（1〜6）', min:1, max:6, allowReset:true, value: attributes.columns,
+              label:__('列数（1〜6）', 'ns-hamburger-menu'), min:1, max:6, allowReset:true, value: attributes.columns,
               onChange: (v)=> setAttributes({ columns: v ?? null })
             }),
-            h(NumberControl, { label:'親の文字サイズ(px)', value: attributes.topFontPx, min:10, onChange: setNum('topFontPx') }),
-            h(NumberControl, { label:'子の文字サイズ(px)', value: attributes.subFontPx, min:8,  onChange: setNum('subFontPx') }),
-            h(TextControl, { label:'開始色（#0ea5e9 など）', value: attributes.colorStart || '', onChange: setStr('colorStart') }),
-            h(TextControl, { label:'終了色（#a78bfa など）', value: attributes.colorEnd || '', onChange: setStr('colorEnd') }),
-            h(ToggleControl, { label:'色相アニメON', checked: attributes.hueAnim ?? undefined, onChange: (v)=> setAttributes({ hueAnim: v }) }),
-            h(NumberControl, { label:'色相アニメ速度(秒/周)', value: attributes.hueSpeedSec, min:3, onChange: setNum('hueSpeedSec') }),
+            h(NumberControl, { label:__('親の文字サイズ(px)', 'ns-hamburger-menu'), value: attributes.topFontPx, min:10, onChange: setNum('topFontPx') }),
+            h(NumberControl, { label:__('子の文字サイズ(px)', 'ns-hamburger-menu'), value: attributes.subFontPx, min:8,  onChange: setNum('subFontPx') }),
+            h(TextControl, { label:__('開始色（#0ea5e9 など）', 'ns-hamburger-menu'), value: attributes.colorStart || '', onChange: setStr('colorStart') }),
+            h(TextControl, { label:__('終了色（#a78bfa など）', 'ns-hamburger-menu'), value: attributes.colorEnd || '', onChange: setStr('colorEnd') }),
+            h(ToggleControl, { label:__('色相アニメON', 'ns-hamburger-menu'), checked: attributes.hueAnim ?? undefined, onChange: (v)=> setAttributes({ hueAnim: v }) }),
+            h(NumberControl, { label:__('色相アニメ速度(秒/周)', 'ns-hamburger-menu'), value: attributes.hueSpeedSec, min:3, onChange: setNum('hueSpeedSec') }),
             h(NumberControl, { label:'Z-index', value: attributes.zIndex, min:1000, onChange: setNum('zIndex') })
           )
         ),
@@ -84,20 +84,20 @@
       const pos = attributes.position || 'before';
       return h(Fragment, null,
         h(InspectorControls, null,
-          h(PanelBody, { title:'スロット位置', initialOpen:true },
+          h(PanelBody, { title:__('スロット位置', 'ns-hamburger-menu'), initialOpen:true },
             h(RadioControl, {
-              label:'UL との位置',
+              label:__('UL との位置', 'ns-hamburger-menu'),
               selected: pos,
               options: [
-                { label:'上（before）', value:'before' },
-                { label:'下（after）',  value:'after' }
+                { label:__('上（before）', 'ns-hamburger-menu'), value:'before' },
+                { label:__('下（after）', 'ns-hamburger-menu'),  value:'after' }
               ],
               onChange: (v)=> setAttributes({ position: v || 'before' })
             })
           )
         ),
         h('div', { style:{padding:'10px',border:'1px dashed #cbd5e1',borderRadius:'8px',background:'#f8fafc'} },
-          h('div', { style:{fontSize:12,opacity:.65,marginBottom:6} }, `この中身が「${pos==='after'?'UL の下':'UL の上'}」に出ます`),
+          h('div', { style:{fontSize:12,opacity:.65,marginBottom:6} }, __('この中身が「%s」に出ます', 'ns-hamburger-menu').replace('%s', pos==='after'?__('UL の下', 'ns-hamburger-menu'):__('UL の上', 'ns-hamburger-menu'))),
           h(InnerBlocks)
         )
       );
