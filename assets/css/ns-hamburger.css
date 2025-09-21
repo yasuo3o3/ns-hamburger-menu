@@ -217,6 +217,8 @@ body.ns-no-scroll{ overflow:hidden; }
   pointer-events:none;
   transition:opacity .28s ease;
   margin-top:2px;
+  top: 20px;
+  position: absolute;
 }
 
 /* メニューが開いている時はラベルを非表示 */

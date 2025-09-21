@@ -759,7 +759,7 @@ class NSHM_Admin {
 
 								<label for="nshm_menu_label_mode_en">
 									<input type="radio" id="nshm_menu_label_mode_en" name="<?php echo esc_attr( $option_name . '[nshm_menu_label_mode]' ); ?>" value="<?php echo esc_attr( 'en' ); ?>" <?php checked( $options['nshm_menu_label_mode'], 'en' ); ?>>
-									<?php esc_html_e( 'Menu（英語）', 'ns-hamburger-menu' ); ?>
+									<?php esc_html_e( 'MENU（英語）', 'ns-hamburger-menu' ); ?>
 								</label>
 							</fieldset>
 
