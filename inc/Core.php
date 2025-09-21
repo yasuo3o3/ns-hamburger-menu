@@ -848,21 +848,23 @@ class NSHM_Core {
 		<div data-open-shape="<?php echo esc_attr( $open_shape ); ?>" data-preset="<?php echo esc_attr( $options['design_preset'] ?? 'normal' ); ?>">
 		<button class="ns-hb" aria-controls="<?php echo esc_attr( $overlay_id ); ?>" aria-expanded="false" aria-label="<?php esc_attr_e( 'Open menu', 'ns-hamburger-menu' ); ?>">
 			<span class="ns-hb-box">
-				<span class="ns-hb-bar"></span>
-				<?php
-				// メニューラベルの表示
-				if ( $options['nshm_menu_label_mode'] !== 'none' ) {
-					$label_text = '';
-					if ( $options['nshm_menu_label_mode'] === 'ja' ) {
-						$label_text = 'メニュー';
-					} elseif ( $options['nshm_menu_label_mode'] === 'en' ) {
-						$label_text = 'MENU';
+				<span class="ns-hb-content">
+					<span class="ns-hb-bar"></span>
+					<?php
+					// メニューラベルの表示
+					if ( $options['nshm_menu_label_mode'] !== 'none' ) {
+						$label_text = '';
+						if ( $options['nshm_menu_label_mode'] === 'ja' ) {
+							$label_text = 'メニュー';
+						} elseif ( $options['nshm_menu_label_mode'] === 'en' ) {
+							$label_text = 'MENU';
+						}
+						if ( ! empty( $label_text ) ) {
+							echo '<span class="nshm-menu-label">' . esc_html( $label_text ) . '</span>';
+						}
 					}
-					if ( ! empty( $label_text ) ) {
-						echo '<span class="nshm-menu-label">' . esc_html( $label_text ) . '</span>';
-					}
-				}
-				?>
+					?>
+				</span>
 			</span>
 		</button>
 		<div id="<?php echo esc_attr( $overlay_id ); ?>" class="ns-overlay<?php echo $hue_on ? '' : ' ns-hue-off'; ?>" hidden style="<?php echo esc_attr( $style_vars ); ?>">
