@@ -176,8 +176,8 @@ class NSHM_Admin {
      */
     public function add_settings_page() {
         add_options_page(
-            __('NS Hamburger Menu', 'ns-hamburger-menu'),
-            __('NS Hamburger Menu', 'ns-hamburger-menu'),
+            __('ハンバーガーメニュー', 'ns-hamburger-menu'),
+            __('ハンバーガーメニュー', 'ns-hamburger-menu'),
             'manage_options',
             'ns-hamburger-menu',
             array($this, 'render_settings_page')
