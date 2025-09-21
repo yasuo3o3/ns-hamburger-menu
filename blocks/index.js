@@ -19,7 +19,7 @@
   );
 
   registerBlockType('ns/hamburger', {
-    title: 'NS Hamburger Menu',
+    title: __('NS Hamburger Menu', 'ns-hamburger-menu'),
     icon: 'menu',
     category: 'widgets',
     attributes: {
@@ -55,7 +55,7 @@
             h(TextControl, { label:__('終了色（#a78bfa など）', 'ns-hamburger-menu'), value: attributes.colorEnd || '', onChange: setStr('colorEnd') }),
             h(ToggleControl, { label:__('色相アニメON', 'ns-hamburger-menu'), checked: attributes.hueAnim ?? undefined, onChange: (v)=> setAttributes({ hueAnim: v }) }),
             h(NumberControl, { label:__('色相アニメ速度(秒/周)', 'ns-hamburger-menu'), value: attributes.hueSpeedSec, min:3, onChange: setNum('hueSpeedSec') }),
-            h(NumberControl, { label:'Z-index', value: attributes.zIndex, min:1000, onChange: setNum('zIndex') })
+            h(NumberControl, { label:__('Z-index', 'ns-hamburger-menu'), value: attributes.zIndex, min:1000, onChange: setNum('zIndex') })
           )
         ),
         h(Title),
