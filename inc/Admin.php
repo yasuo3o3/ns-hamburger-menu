@@ -401,7 +401,7 @@ class NSHM_Admin {
 								
 								<div class="nshm-preset-custom">
 									<label style="display:flex; gap:6px; align-items:center;">
-										<input type="radio" name="<?php echo esc_attr( $option_name . '[color_preset]' ); ?>" value="custom" <?php checked( $current_preset, 'custom' ); ?>>
+										<input type="radio" name="<?php echo esc_attr( $option_name . '[color_preset]' ); ?>" value="<?php echo esc_attr( 'custom' ); ?>" <?php checked( $current_preset, 'custom' ); ?>>
 										<?php esc_html_e( 'Custom', 'ns-hamburger-menu' ); ?>
 									</label>
 								</div>
@@ -464,22 +464,22 @@ class NSHM_Admin {
 											<label>
 												<?php esc_html_e( 'グラデーション種別:', 'ns-hamburger-menu' ); ?>
 												<select name="<?php echo esc_attr( $option_name . '[grad_type]' ); ?>">
-													<option value="linear" <?php selected( $options['grad_type'], 'linear' ); ?>><?php esc_html_e( '線形', 'ns-hamburger-menu' ); ?></option>
-													<option value="radial" <?php selected( $options['grad_type'], 'radial' ); ?>><?php esc_html_e( '放射', 'ns-hamburger-menu' ); ?></option>
+													<option value="<?php echo esc_attr( 'linear' ); ?>" <?php selected( $options['grad_type'], 'linear' ); ?>><?php esc_html_e( '線形', 'ns-hamburger-menu' ); ?></option>
+													<option value="<?php echo esc_attr( 'radial' ); ?>" <?php selected( $options['grad_type'], 'radial' ); ?>><?php esc_html_e( '放射', 'ns-hamburger-menu' ); ?></option>
 												</select>
 											</label>
 											
 											<label>
 												<?php esc_html_e( 'グラデーション位置:', 'ns-hamburger-menu' ); ?>
 												<select name="<?php echo esc_attr( $option_name . '[grad_pos]' ); ?>">
-													<option value="right top" <?php selected( $options['grad_pos'], 'right top' ); ?>><?php esc_html_e( '右上', 'ns-hamburger-menu' ); ?></option>
-													<option value="left top" <?php selected( $options['grad_pos'], 'left top' ); ?>><?php esc_html_e( '左上', 'ns-hamburger-menu' ); ?></option>
-													<option value="left bottom" <?php selected( $options['grad_pos'], 'left bottom' ); ?>><?php esc_html_e( '左下', 'ns-hamburger-menu' ); ?></option>
-													<option value="right bottom" <?php selected( $options['grad_pos'], 'right bottom' ); ?>><?php esc_html_e( '右下', 'ns-hamburger-menu' ); ?></option>
-													<option value="top" <?php selected( $options['grad_pos'], 'top' ); ?>><?php esc_html_e( '上', 'ns-hamburger-menu' ); ?></option>
-													<option value="bottom" <?php selected( $options['grad_pos'], 'bottom' ); ?>><?php esc_html_e( '下', 'ns-hamburger-menu' ); ?></option>
-													<option value="left" <?php selected( $options['grad_pos'], 'left' ); ?>><?php esc_html_e( '左', 'ns-hamburger-menu' ); ?></option>
-													<option value="right" <?php selected( $options['grad_pos'], 'right' ); ?>><?php esc_html_e( '右', 'ns-hamburger-menu' ); ?></option>
+													<option value="<?php echo esc_attr( 'right top' ); ?>" <?php selected( $options['grad_pos'], 'right top' ); ?>><?php esc_html_e( '右上', 'ns-hamburger-menu' ); ?></option>
+													<option value="<?php echo esc_attr( 'left top' ); ?>" <?php selected( $options['grad_pos'], 'left top' ); ?>><?php esc_html_e( '左上', 'ns-hamburger-menu' ); ?></option>
+													<option value="<?php echo esc_attr( 'left bottom' ); ?>" <?php selected( $options['grad_pos'], 'left bottom' ); ?>><?php esc_html_e( '左下', 'ns-hamburger-menu' ); ?></option>
+													<option value="<?php echo esc_attr( 'right bottom' ); ?>" <?php selected( $options['grad_pos'], 'right bottom' ); ?>><?php esc_html_e( '右下', 'ns-hamburger-menu' ); ?></option>
+													<option value="<?php echo esc_attr( 'top' ); ?>" <?php selected( $options['grad_pos'], 'top' ); ?>><?php esc_html_e( '上', 'ns-hamburger-menu' ); ?></option>
+													<option value="<?php echo esc_attr( 'bottom' ); ?>" <?php selected( $options['grad_pos'], 'bottom' ); ?>><?php esc_html_e( '下', 'ns-hamburger-menu' ); ?></option>
+													<option value="<?php echo esc_attr( 'left' ); ?>" <?php selected( $options['grad_pos'], 'left' ); ?>><?php esc_html_e( '左', 'ns-hamburger-menu' ); ?></option>
+													<option value="<?php echo esc_attr( 'right' ); ?>" <?php selected( $options['grad_pos'], 'right' ); ?>><?php esc_html_e( '右', 'ns-hamburger-menu' ); ?></option>
 												</select>
 											</label>
 										</div>
@@ -648,17 +648,17 @@ class NSHM_Admin {
 
 								<div style="margin-bottom: 16px;">
 									<label style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
-										<input type="radio" name="<?php echo esc_attr( $option_name . '[position_mode]' ); ?>" value="default" <?php checked( $options['position_mode'], 'default' ); ?>>
+										<input type="radio" name="<?php echo esc_attr( $option_name . '[position_mode]' ); ?>" value="<?php echo esc_attr( 'default' ); ?>" <?php checked( $options['position_mode'], 'default' ); ?>>
 										<?php esc_html_e( 'デフォルト位置', 'ns-hamburger-menu' ); ?>
 									</label>
 
 									<div id="default-position-options" style="margin-left: 24px; margin-bottom: 12px;">
 										<label style="display:flex; gap:6px; align-items:center; margin-bottom:4px;">
-											<input type="radio" name="<?php echo esc_attr( $option_name . '[position_default]' ); ?>" value="top-right" <?php checked( $options['position_default'], 'top-right' ); ?>>
+											<input type="radio" name="<?php echo esc_attr( $option_name . '[position_default]' ); ?>" value="<?php echo esc_attr( 'top-right' ); ?>" <?php checked( $options['position_default'], 'top-right' ); ?>>
 											<?php esc_html_e( '右上', 'ns-hamburger-menu' ); ?>
 										</label>
 										<label style="display:flex; gap:6px; align-items:center;">
-											<input type="radio" name="<?php echo esc_attr( $option_name . '[position_default]' ); ?>" value="top-left" <?php checked( $options['position_default'], 'top-left' ); ?>>
+											<input type="radio" name="<?php echo esc_attr( $option_name . '[position_default]' ); ?>" value="<?php echo esc_attr( 'top-left' ); ?>" <?php checked( $options['position_default'], 'top-left' ); ?>>
 											<?php esc_html_e( '左上', 'ns-hamburger-menu' ); ?>
 										</label>
 									</div>
@@ -666,7 +666,7 @@ class NSHM_Admin {
 
 								<div style="margin-bottom: 16px;">
 									<label style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
-										<input type="radio" name="<?php echo esc_attr( $option_name . '[position_mode]' ); ?>" value="custom" <?php checked( $options['position_mode'], 'custom' ); ?>>
+										<input type="radio" name="<?php echo esc_attr( $option_name . '[position_mode]' ); ?>" value="<?php echo esc_attr( 'custom' ); ?>" <?php checked( $options['position_mode'], 'custom' ); ?>>
 										<?php esc_html_e( 'カスタム位置', 'ns-hamburger-menu' ); ?>
 									</label>
 
@@ -743,17 +743,17 @@ class NSHM_Admin {
 								<legend class="screen-reader-text"><?php esc_html_e( 'メニューラベル表示設定', 'ns-hamburger-menu' ); ?></legend>
 
 								<label for="nshm_menu_label_mode_none">
-									<input type="radio" id="nshm_menu_label_mode_none" name="<?php echo esc_attr( $option_name . '[nshm_menu_label_mode]' ); ?>" value="none" <?php checked( $options['nshm_menu_label_mode'], 'none' ); ?>>
+									<input type="radio" id="nshm_menu_label_mode_none" name="<?php echo esc_attr( $option_name . '[nshm_menu_label_mode]' ); ?>" value="<?php echo esc_attr( 'none' ); ?>" <?php checked( $options['nshm_menu_label_mode'], 'none' ); ?>>
 									<?php esc_html_e( '非表示', 'ns-hamburger-menu' ); ?>
 								</label><br>
 
 								<label for="nshm_menu_label_mode_ja">
-									<input type="radio" id="nshm_menu_label_mode_ja" name="<?php echo esc_attr( $option_name . '[nshm_menu_label_mode]' ); ?>" value="ja" <?php checked( $options['nshm_menu_label_mode'], 'ja' ); ?>>
+									<input type="radio" id="nshm_menu_label_mode_ja" name="<?php echo esc_attr( $option_name . '[nshm_menu_label_mode]' ); ?>" value="<?php echo esc_attr( 'ja' ); ?>" <?php checked( $options['nshm_menu_label_mode'], 'ja' ); ?>>
 									<?php esc_html_e( 'メニュー（日本語）', 'ns-hamburger-menu' ); ?>
 								</label><br>
 
 								<label for="nshm_menu_label_mode_en">
-									<input type="radio" id="nshm_menu_label_mode_en" name="<?php echo esc_attr( $option_name . '[nshm_menu_label_mode]' ); ?>" value="en" <?php checked( $options['nshm_menu_label_mode'], 'en' ); ?>>
+									<input type="radio" id="nshm_menu_label_mode_en" name="<?php echo esc_attr( $option_name . '[nshm_menu_label_mode]' ); ?>" value="<?php echo esc_attr( 'en' ); ?>" <?php checked( $options['nshm_menu_label_mode'], 'en' ); ?>>
 									<?php esc_html_e( 'Menu（英語）', 'ns-hamburger-menu' ); ?>
 								</label>
 							</fieldset>
@@ -772,19 +772,19 @@ class NSHM_Admin {
 								<legend class="screen-reader-text"><?php esc_html_e( 'ナビゲーション設定', 'ns-hamburger-menu' ); ?></legend>
 
 								<label for="navigation_source">
-									<input type="radio" id="navigation_source_auto" name="<?php echo esc_attr( $option_name . '[navigation_source]' ); ?>" value="auto" <?php checked( $options['navigation_source'], 'auto' ); ?>>
+									<input type="radio" id="navigation_source_auto" name="<?php echo esc_attr( $option_name . '[navigation_source]' ); ?>" value="<?php echo esc_attr( 'auto' ); ?>" <?php checked( $options['navigation_source'], 'auto' ); ?>>
 									<?php esc_html_e( '自動選択', 'ns-hamburger-menu' ); ?>
 								</label><br>
 
 								<label for="navigation_source_manual">
-									<input type="radio" id="navigation_source_manual" name="<?php echo esc_attr( $option_name . '[navigation_source]' ); ?>" value="manual" <?php checked( $options['navigation_source'], 'manual' ); ?>>
+									<input type="radio" id="navigation_source_manual" name="<?php echo esc_attr( $option_name . '[navigation_source]' ); ?>" value="<?php echo esc_attr( 'manual' ); ?>" <?php checked( $options['navigation_source'], 'manual' ); ?>
 									<?php esc_html_e( '手動選択', 'ns-hamburger-menu' ); ?>
 								</label><br>
 
 								<div id="navigation_manual_selection" style="margin-top: 10px; <?php echo $options['navigation_source'] === 'manual' ? '' : 'display: none;'; ?>">
 									<label for="selected_navigation_id"><?php esc_html_e( '使用するナビゲーション：', 'ns-hamburger-menu' ); ?></label><br>
 									<select id="selected_navigation_id" name="<?php echo esc_attr( $option_name . '[selected_navigation_id]' ); ?>">
-										<option value="0"><?php esc_html_e( 'ページ一覧（フォールバック）', 'ns-hamburger-menu' ); ?></option>
+										<option value="0" <?php selected( $options['selected_navigation_id'], '0' ); ?>><?php esc_html_e( 'ページ一覧（フォールバック）', 'ns-hamburger-menu' ); ?></option>
 										<?php
 										// クラシックテーマのメニュー
 										$menus = wp_get_nav_menus();
