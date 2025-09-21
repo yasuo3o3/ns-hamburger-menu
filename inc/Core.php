@@ -33,6 +33,13 @@ class NSHM_Core {
 
 		// Auto-inject functionality
 		add_action( 'wp_body_open', array( $this, 'auto_inject_body' ), 1 );
+
+		// Cache invalidation hooks
+		add_action( 'save_post', array( $this, 'clear_navigation_cache' ), 10, 2 );
+		add_action( 'delete_post', array( $this, 'clear_navigation_cache' ), 10, 2 );
+		add_action( 'wp_update_nav_menu', array( $this, 'clear_classic_menu_cache' ) );
+		add_action( 'wp_delete_nav_menu', array( $this, 'clear_classic_menu_cache' ) );
+		add_action( 'wp_create_nav_menu', array( $this, 'clear_classic_menu_cache' ) );
 	}
 
 	/**
@@ -278,6 +285,12 @@ class NSHM_Core {
 	 * @return string|null
 	 */
 	private function get_specific_navigation_block( $block_id ) {
+		// Check cache first
+		$cache_key = 'nshm_nav_block_' . intval( $block_id );
+		$cached = get_transient( $cache_key );
+		if ( false !== $cached ) {
+			return $cached;
+		}
 
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		}
@@ -285,7 +298,9 @@ class NSHM_Core {
 		$nav_post = get_post( $block_id );
 
 		if ( ! $nav_post || $nav_post->post_type !== 'wp_navigation' || $nav_post->post_status !== 'publish' ) {
-			return null;
+			$result = null;
+			set_transient( $cache_key, $result, 5 * MINUTE_IN_SECONDS );
+			return $result;
 		}
 
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
@@ -293,12 +308,16 @@ class NSHM_Core {
 
 		$content = $this->parse_navigation_block( $nav_post->post_content );
 		if ( $content ) {
-			return '<ul class="ns-menu">' . $content . '</ul>';
+			$result = '<ul class="ns-menu">' . $content . '</ul>';
+			set_transient( $cache_key, $result, 5 * MINUTE_IN_SECONDS );
+			return $result;
 		}
 
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		}
-		return null;
+		$result = null;
+		set_transient( $cache_key, $result, 5 * MINUTE_IN_SECONDS );
+		return $result;
 	}
 
 	/**
@@ -307,6 +326,12 @@ class NSHM_Core {
 	 * @return string|null
 	 */
 	private function get_navigation_from_blocks() {
+		// Check cache first
+		$cache_key = 'nshm_nav_blocks';
+		$cached = get_transient( $cache_key );
+		if ( false !== $cached ) {
+			return $cached;
+		}
 
 		// Navigation blocks using WP API
 		$nav_posts = get_posts(
@@ -320,18 +345,24 @@ class NSHM_Core {
 		);
 
 		if ( empty( $nav_posts ) ) {
-			return null;
+			$result = null;
+			set_transient( $cache_key, $result, 5 * MINUTE_IN_SECONDS );
+			return $result;
 		}
 
 		// 最初に見つかったナビゲーションブロックを使用
 		foreach ( $nav_posts as $nav_post ) {
 			$content = $this->parse_navigation_block( $nav_post->post_content );
 			if ( $content ) {
-				return '<ul class="ns-menu">' . $content . '</ul>';
+				$result = '<ul class="ns-menu">' . $content . '</ul>';
+				set_transient( $cache_key, $result, 5 * MINUTE_IN_SECONDS );
+				return $result;
 			}
 		}
 
-		return null;
+		$result = null;
+		set_transient( $cache_key, $result, 5 * MINUTE_IN_SECONDS );
+		return $result;
 	}
 
 	/**
@@ -577,6 +608,12 @@ class NSHM_Core {
 	 * @return string
 	 */
 	private function generate_fallback_menu() {
+		// Check cache first
+		$cache_key = 'nshm_fallback_menu';
+		$cached = get_transient( $cache_key );
+		if ( false !== $cached ) {
+			return $cached;
+		}
 
 		$pages = get_pages(
 			array(
@@ -607,11 +644,14 @@ class NSHM_Core {
 
 		if ( empty( $pages ) ) {
 			if ( current_user_can( 'edit_theme_options' ) ) {
-				return '<p style="color:#fff;opacity:.9">' .
+				$result = '<p style="color:#fff;opacity:.9">' .
 						esc_html__( 'No navigation found. Please set up a menu in Appearance → Menus or create a Navigation block.', 'ns-hamburger-menu' ) .
 						'</p>';
+			} else {
+				$result = '';
 			}
-			return '';
+			set_transient( $cache_key, $result, 5 * MINUTE_IN_SECONDS );
+			return $result;
 		}
 
 		$output = '<ul class="ns-menu">';
@@ -620,6 +660,8 @@ class NSHM_Core {
 		}
 		$output .= '</ul>';
 
+		// Cache the result
+		set_transient( $cache_key, $output, 5 * MINUTE_IN_SECONDS );
 		return $output;
 	}
 
@@ -835,5 +877,32 @@ class NSHM_Core {
 		}
 
 		echo wp_kses_post( $html );
+	}
+
+	/**
+	 * Clear navigation cache when wp_navigation posts are updated
+	 *
+	 * @param int $post_id Post ID
+	 * @param WP_Post $post Post object
+	 */
+	public function clear_navigation_cache( $post_id, $post ) {
+		// Only clear cache for wp_navigation posts and pages
+		if ( isset( $post->post_type ) && ( $post->post_type === 'wp_navigation' || $post->post_type === 'page' ) ) {
+			delete_transient( 'nshm_nav_blocks' );
+			delete_transient( 'nshm_nav_posts_admin' );
+			delete_transient( 'nshm_fallback_menu' );
+
+			// Clear specific navigation block cache if it's a wp_navigation post
+			if ( $post->post_type === 'wp_navigation' ) {
+				delete_transient( 'nshm_nav_block_' . intval( $post_id ) );
+			}
+		}
+	}
+
+	/**
+	 * Clear classic menu cache when classic menus are updated
+	 */
+	public function clear_classic_menu_cache() {
+		delete_transient( 'nshm_classic_menus' );
 	}
 }

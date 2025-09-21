@@ -787,7 +787,12 @@ class NSHM_Admin {
 										<option value="0" <?php selected( $options['selected_navigation_id'], '0' ); ?>><?php esc_html_e( 'ページ一覧（フォールバック）', 'ns-hamburger-menu' ); ?></option>
 										<?php
 										// クラシックテーマのメニュー
-										$menus = wp_get_nav_menus();
+										$menus_cache_key = 'nshm_classic_menus';
+										$menus = get_transient( $menus_cache_key );
+										if ( false === $menus ) {
+											$menus = wp_get_nav_menus();
+											set_transient( $menus_cache_key, $menus, 10 * MINUTE_IN_SECONDS );
+										}
 										if ( ! empty( $menus ) ) {
 											echo '<optgroup label="' . esc_attr__( 'クラシックメニュー', 'ns-hamburger-menu' ) . '">';
 											foreach ( $menus as $menu ) {
@@ -797,15 +802,20 @@ class NSHM_Admin {
 										}
 
 										// ナビゲーションブロック
-										$nav_posts = get_posts(
-											array(
-												'post_type' => 'wp_navigation',
-												'post_status' => 'publish',
-												'orderby' => 'title',
-												'order'   => 'ASC',
-												'numberposts' => -1,
-											)
-										);
+										$nav_posts_cache_key = 'nshm_nav_posts_admin';
+										$nav_posts = get_transient( $nav_posts_cache_key );
+										if ( false === $nav_posts ) {
+											$nav_posts = get_posts(
+												array(
+													'post_type' => 'wp_navigation',
+													'post_status' => 'publish',
+													'orderby' => 'title',
+													'order'   => 'ASC',
+													'numberposts' => -1,
+												)
+											);
+											set_transient( $nav_posts_cache_key, $nav_posts, 10 * MINUTE_IN_SECONDS );
+										}
 										if ( ! empty( $nav_posts ) ) {
 											echo '<optgroup label="' . esc_attr__( 'ナビゲーションブロック', 'ns-hamburger-menu' ) . '">';
 											foreach ( $nav_posts as $nav_post ) {
