@@ -37,6 +37,7 @@ NS Hamburger Overlay Menu is a modern, accessible hamburger menu plugin that pro
 * **Layout Options** - 1-6 column grid layouts with separate font sizes for parent/child items
 * **Animation Effects** - Optional hue rotation animation with speed control
 * **Position & Icon Customization** - Default positions (top-left/right) or custom coordinates with responsive adjustments. Individual color controls for all 5 hamburger icon lines
+* **Menu Labels** - Display text labels below the hamburger icon when closed (Hidden/Japanese/English). Label styling can be customized via CSS using `.nshm-menu-label` class
 * **Block Slots** - Add custom content above/below menu using slot blocks
 
 = Accessibility Features =

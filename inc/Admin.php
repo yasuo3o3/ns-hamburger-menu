@@ -163,6 +163,11 @@ class NSHM_Admin {
             $output['selected_navigation_id'] = $defaults['selected_navigation_id'];
         }
 
+        // メニューラベル設定の検証
+        $allowed_label_modes = array('none', 'ja', 'en');
+        $label_mode = $input['nshm_menu_label_mode'] ?? $defaults['nshm_menu_label_mode'];
+        $output['nshm_menu_label_mode'] = in_array($label_mode, $allowed_label_modes, true) ? $label_mode : 'none';
+
         return $output;
     }
     
@@ -725,6 +730,34 @@ class NSHM_Admin {
 
                             <p class="description">
                                 <?php esc_html_e('ハンバーガーメニューの各線の色を個別に設定できます。同じ色にしたい場合は同じ色を選択してください。', 'ns-hamburger-menu'); ?>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row"><?php esc_html_e('メニュー表示', 'ns-hamburger-menu'); ?></th>
+                        <td>
+                            <fieldset>
+                                <legend class="screen-reader-text"><?php esc_html_e('メニューラベル表示設定', 'ns-hamburger-menu'); ?></legend>
+
+                                <label for="nshm_menu_label_mode_none">
+                                    <input type="radio" id="nshm_menu_label_mode_none" name="<?php echo esc_attr($option_name . '[nshm_menu_label_mode]'); ?>" value="none" <?php checked($options['nshm_menu_label_mode'], 'none'); ?>>
+                                    <?php esc_html_e('非表示', 'ns-hamburger-menu'); ?>
+                                </label><br>
+
+                                <label for="nshm_menu_label_mode_ja">
+                                    <input type="radio" id="nshm_menu_label_mode_ja" name="<?php echo esc_attr($option_name . '[nshm_menu_label_mode]'); ?>" value="ja" <?php checked($options['nshm_menu_label_mode'], 'ja'); ?>>
+                                    <?php esc_html_e('メニュー（日本語）', 'ns-hamburger-menu'); ?>
+                                </label><br>
+
+                                <label for="nshm_menu_label_mode_en">
+                                    <input type="radio" id="nshm_menu_label_mode_en" name="<?php echo esc_attr($option_name . '[nshm_menu_label_mode]'); ?>" value="en" <?php checked($options['nshm_menu_label_mode'], 'en'); ?>>
+                                    <?php esc_html_e('Menu（英語）', 'ns-hamburger-menu'); ?>
+                                </label>
+                            </fieldset>
+
+                            <p class="description">
+                                <?php esc_html_e('ハンバーガーアイコンが閉じている状態のとき、3本線の下にラベルを表示できます。', 'ns-hamburger-menu'); ?>
                             </p>
                         </td>
                     </tr>

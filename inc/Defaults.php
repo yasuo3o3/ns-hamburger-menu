@@ -53,6 +53,7 @@ class NSHM_Defaults {
             'design_custom_css' => '',
             'navigation_source' => 'auto',
             'selected_navigation_id' => 0,
+            'nshm_menu_label_mode' => 'none',
         );
     }
     
