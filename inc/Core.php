@@ -794,7 +794,7 @@ class NSHM_Core {
                     if ($options['nshm_menu_label_mode'] === 'ja') {
                         $label_text = 'メニュー';
                     } elseif ($options['nshm_menu_label_mode'] === 'en') {
-                        $label_text = 'Menu';
+                        $label_text = 'MENU';
                     }
                     if (!empty($label_text)) {
                         echo '<span class="nshm-menu-label">' . esc_html($label_text) . '</span>';
