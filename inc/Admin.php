@@ -146,10 +146,9 @@ class NSHM_Admin {
 		// Custom CSS (sanitize and truncate to 10KB)
 		$custom_css = $input['design_custom_css'] ?? $defaults['design_custom_css'];
 
-		// Complete sanitization to prevent stored XSS
+		// Sanitization to prevent stored XSS while preserving CSS functionality
 		$custom_css = sanitize_textarea_field( $custom_css ); // Basic sanitization
 		$custom_css = wp_strip_all_tags( $custom_css ); // Remove all HTML tags
-		$custom_css = str_replace( array( '<', '>', '"', "'" ), '', $custom_css ); // Remove dangerous chars
 
 		$output['design_custom_css'] = substr( $custom_css, 0, 10240 ); // 10KB limit
 
