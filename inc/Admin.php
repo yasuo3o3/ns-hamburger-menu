@@ -143,8 +143,9 @@ class NSHM_Admin {
 		$output['design_preset'] = in_array( $input['design_preset'] ?? $defaults['design_preset'], $allowed_presets, true )
 			? $input['design_preset'] : $defaults['design_preset'];
 
-		// Custom CSS (truncate to 10KB)
+		// Custom CSS (sanitize and truncate to 10KB)
 		$custom_css                  = $input['design_custom_css'] ?? $defaults['design_custom_css'];
+		$custom_css                  = sanitize_textarea_field( $custom_css ); // Sanitize on save
 		$output['design_custom_css'] = substr( $custom_css, 0, 10240 ); // 10KB limit
 
 		// ナビゲーション設定

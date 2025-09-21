@@ -3,7 +3,7 @@
   const { InspectorControls, InnerBlocks } = wp.blockEditor || wp.editor;
   const {
     PanelBody, RangeControl, ToggleControl,
-    __experimentalNumberControl: NumberControl,
+    NumberControl,
     TextControl, RadioControl
   } = wp.components;
   const { createElement: h, Fragment } = wp.element;

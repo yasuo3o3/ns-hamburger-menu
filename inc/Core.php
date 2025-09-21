@@ -106,27 +106,37 @@ class NSHM_Core {
 	public function auto_inject_body() {
 		$options = NSHM_Defaults::get_options();
 		if ( ! empty( $options['auto_inject'] ) ) {
-			// Check if page has ns/hamburger block
+			// Skip if already rendered in this request
+			if ( self::$menu_rendered ) {
+				echo '<!-- NS Hamburger Menu: Auto-inject skipped - already rendered -->';
+				return;
+			}
+
+			// Check if page has ns/hamburger block or shortcode
 			global $post;
 			$current_post  = get_post();
 			$post_to_check = $post ?: $current_post;
 
 			$has_block = false;
+			$has_shortcode = false;
+
 			if ( $post_to_check ) {
 				$has_block = has_block( 'ns/hamburger', $post_to_check );
+				$has_shortcode = has_shortcode( $post_to_check->post_content, 'ns_hamburger_menu' );
 			}
 
 			// Also check queried object for archive pages
-			if ( ! $has_block ) {
+			if ( ! $has_block && ! $has_shortcode ) {
 				$queried_object = get_queried_object();
 				if ( $queried_object && isset( $queried_object->post_content ) ) {
 					$has_block = has_block( 'ns/hamburger', $queried_object );
+					$has_shortcode = has_shortcode( $queried_object->post_content, 'ns_hamburger_menu' );
 				}
 			}
 
-			if ( $has_block || self::$menu_rendered ) {
-				// Skip auto-inject if block exists or menu already rendered
-				echo '<!-- NS Hamburger Menu: Auto-inject skipped - block found or already rendered -->';
+			if ( $has_block || $has_shortcode ) {
+				// Skip auto-inject if block or shortcode exists
+				echo '<!-- NS Hamburger Menu: Auto-inject skipped - block or shortcode found -->';
 				return;
 			}
 
@@ -146,6 +156,8 @@ class NSHM_Core {
 	 * @return string
 	 */
 	public function shortcode( $atts = array() ) {
+		// Mark as rendered to prevent auto-inject
+		self::$menu_rendered = true;
 		return '<!-- NS Hamburger Menu: Shortcode [ns_hamburger_menu] -->' . $this->render_markup( true, array(), null, '' );
 	}
 
