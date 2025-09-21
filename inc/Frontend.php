@@ -163,8 +163,8 @@ class NSHM_Frontend {
 			return true;
 		}
 
-		// Check if block is present (with backward compatibility)
-		if ( $post && ( has_block( 'ns/hamburger', $post ) || has_block( 'ns/hamburger-menu', $post ) ) ) {
+		// Check if block is present
+		if ( $post && has_block( 'ns/hamburger', $post ) ) {
 			return true;
 		}
 
