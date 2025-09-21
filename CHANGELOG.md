@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.0] - 2025-09-22
+
+### Changed
+- Plugin review and code quality improvements following WordPress.org submission guidelines
+- Updated documentation files for enhanced release readiness
+- Enhanced development workflow documentation with comprehensive testing procedures
+
+### Fixed
+- Documentation consistency improvements
+- Code style and formatting refinements for WordPress coding standards compliance
+
 ## [0.13.0] - 2025-09-22
 
 ### Added

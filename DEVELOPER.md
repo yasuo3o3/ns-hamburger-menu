@@ -364,10 +364,10 @@ svn checkout https://plugins.svn.wordpress.org/ns-hamburger-menu/
 cd ns-hamburger-menu
 # Copy files to trunk/
 svn add trunk/*
-svn commit -m "Version 0.13.0"
-# Copy trunk/ to tags/0.13.0/
-svn copy trunk/ tags/0.13.0/
-svn commit -m "Tag version 0.13.0"
+svn commit -m "Version 0.14.0"
+# Copy trunk/ to tags/0.14.0/
+svn copy trunk/ tags/0.14.0/
+svn commit -m "Tag version 0.14.0"
 ```
 
 ### Automated Testing Setup
