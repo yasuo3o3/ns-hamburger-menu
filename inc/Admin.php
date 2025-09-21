@@ -796,7 +796,9 @@ class NSHM_Admin {
 										if ( ! empty( $menus ) ) {
 											echo '<optgroup label="' . esc_attr__( 'クラシックメニュー', 'ns-hamburger-menu' ) . '">';
 											foreach ( $menus as $menu ) {
-												echo '<option value="classic_' . esc_attr( $menu->term_id ) . '" ' . selected( $options['selected_navigation_id'], 'classic_' . $menu->term_id, false ) . '>' . esc_html( $menu->name ) . '</option>';
+												?>
+												<option value="<?php echo esc_attr( 'classic_' . $menu->term_id ); ?>" <?php selected( $options['selected_navigation_id'], 'classic_' . $menu->term_id ); ?>><?php echo esc_html( $menu->name ); ?></option>
+												<?php
 											}
 											echo '</optgroup>';
 										}
@@ -821,7 +823,9 @@ class NSHM_Admin {
 											foreach ( $nav_posts as $nav_post ) {
 												/* translators: %d: Navigation block ID. */
 												$title = $nav_post->post_title ? $nav_post->post_title : sprintf( __( 'ナビゲーション #%d', 'ns-hamburger-menu' ), $nav_post->ID );
-												echo '<option value="block_' . esc_attr( $nav_post->ID ) . '" ' . selected( $options['selected_navigation_id'], 'block_' . $nav_post->ID, false ) . '>' . esc_html( $title ) . '</option>';
+												?>
+												<option value="<?php echo esc_attr( 'block_' . $nav_post->ID ); ?>" <?php selected( $options['selected_navigation_id'], 'block_' . $nav_post->ID ); ?>><?php echo esc_html( $title ); ?></option>
+												<?php
 											}
 											echo '</optgroup>';
 										}
