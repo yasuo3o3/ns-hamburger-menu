@@ -71,7 +71,7 @@
 
   /* ========== 子: ns/hamburger-slot（ULの上/下） ========== */
   registerBlockType('ns/hamburger-slot', {
-    title: 'NS Hamburger Slot',
+    title: __('NS Hamburger Slot', 'ns-hamburger-menu'),
     icon: 'insert',
     category: 'widgets',
     parent: ['ns/hamburger'],

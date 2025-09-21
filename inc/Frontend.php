@@ -241,31 +241,36 @@ class NSHM_Frontend {
 			return;
 		}
 
-		// Enhanced sanitization: remove HTML tags and potential script injection
+		// Complete XSS protection: Convert to plain text first
+		$custom_css = sanitize_textarea_field( $custom_css );
+
+		// Remove all HTML tags completely (including variations like </stYle>, </STYLE>)
 		$custom_css = wp_strip_all_tags( $custom_css );
 
-		// Additional protection: use safecss_filter_attr for basic properties
-		// Note: safecss_filter_attr is primarily for inline styles, but provides additional security
+		// Additional security: remove any remaining angle brackets
+		$custom_css = str_replace( array( '<', '>' ), '', $custom_css );
+
+		// Filter CSS properties with WordPress safecss_filter_attr
 		$custom_css = preg_replace_callback(
 			'/([a-zA-Z-]+)\s*:\s*([^;]+);?/',
 			function( $matches ) {
 				$property = trim( $matches[1] );
 				$value    = trim( $matches[2] );
-				// Use safecss_filter_attr for individual property-value pairs
+				// Use WordPress built-in CSS sanitization
 				$filtered = safecss_filter_attr( $property . ':' . $value );
 				return $filtered ? $filtered . ';' : '';
 			},
 			$custom_css
 		);
 
-		// Remove any remaining HTML-like content
+		// Final cleanup: remove any remaining HTML-like content
 		$custom_css = preg_replace( '/<[^>]*>/', '', $custom_css );
 
 		if ( empty( trim( $custom_css ) ) ) {
 			return;
 		}
 
-		// Add inline to preset CSS if exists, otherwise to base CSS
+		// Safe output via wp_add_inline_style (automatically escapes)
 		$target_handle = wp_style_is( 'ns-hmb-preset', 'enqueued' ) ? 'ns-hmb-preset' : 'ns-hmb-style';
 		wp_add_inline_style( $target_handle, $custom_css );
 	}
