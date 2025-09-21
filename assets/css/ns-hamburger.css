@@ -188,3 +188,24 @@ body.ns-no-scroll{ overflow:hidden; }
   .ns-overlay{ transition: none !important; }
   .ns-open .ns-overlay::before{ animation: none !important; }
 }
+
+/* メニューラベル */
+.nshm-menu-label{
+  position:absolute;
+  top:100%;
+  left:50%;
+  transform:translateX(-50%);
+  margin-top:4px;
+  font-size:10px;
+  font-weight:500;
+  color:#333;
+  white-space:nowrap;
+  pointer-events:none;
+  transition:opacity .28s ease;
+}
+
+/* メニューが開いている時はラベルを非表示 */
+.ns-open .nshm-menu-label,
+body.ns-open .nshm-menu-label{
+  opacity:0;
+}
