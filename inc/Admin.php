@@ -692,17 +692,17 @@ class NSHM_Admin {
                                 <div style="display: flex; gap: 16px; flex-wrap: wrap;">
                                     <div style="min-width: 140px;">
                                         <label for="hamburger_top_line"><?php esc_html_e('上の線', 'ns-hamburger-menu'); ?></label><br>
-                                        <input type="text" class="wp-color-picker" id="hamburger_top_line" name="<?php echo esc_attr($option_name . '[hamburger_top_line]'); ?>" value="<?php echo esc_attr($options['hamburger_top_line']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_top_line']); ?>">
+                                        <input type="text" class="nshm-color" id="hamburger_top_line" name="<?php echo esc_attr($option_name . '[hamburger_top_line]'); ?>" value="<?php echo esc_attr($options['hamburger_top_line']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_top_line']); ?>">
                                     </div>
 
                                     <div style="min-width: 140px;">
                                         <label for="hamburger_middle_line"><?php esc_html_e('中の線', 'ns-hamburger-menu'); ?></label><br>
-                                        <input type="text" class="wp-color-picker" id="hamburger_middle_line" name="<?php echo esc_attr($option_name . '[hamburger_middle_line]'); ?>" value="<?php echo esc_attr($options['hamburger_middle_line']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_middle_line']); ?>">
+                                        <input type="text" class="nshm-color" id="hamburger_middle_line" name="<?php echo esc_attr($option_name . '[hamburger_middle_line]'); ?>" value="<?php echo esc_attr($options['hamburger_middle_line']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_middle_line']); ?>">
                                     </div>
 
                                     <div style="min-width: 140px;">
                                         <label for="hamburger_bottom_line"><?php esc_html_e('下の線', 'ns-hamburger-menu'); ?></label><br>
-                                        <input type="text" class="wp-color-picker" id="hamburger_bottom_line" name="<?php echo esc_attr($option_name . '[hamburger_bottom_line]'); ?>" value="<?php echo esc_attr($options['hamburger_bottom_line']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_bottom_line']); ?>">
+                                        <input type="text" class="nshm-color" id="hamburger_bottom_line" name="<?php echo esc_attr($option_name . '[hamburger_bottom_line]'); ?>" value="<?php echo esc_attr($options['hamburger_bottom_line']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_bottom_line']); ?>">
                                     </div>
                                 </div>
                             </fieldset>
@@ -713,12 +713,12 @@ class NSHM_Admin {
                                 <div style="display: flex; gap: 16px; flex-wrap: wrap;">
                                     <div style="min-width: 160px;">
                                         <label for="hamburger_cross_line1"><?php esc_html_e('左上→右下の線', 'ns-hamburger-menu'); ?></label><br>
-                                        <input type="text" class="wp-color-picker" id="hamburger_cross_line1" name="<?php echo esc_attr($option_name . '[hamburger_cross_line1]'); ?>" value="<?php echo esc_attr($options['hamburger_cross_line1']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_cross_line1']); ?>">
+                                        <input type="text" class="nshm-color" id="hamburger_cross_line1" name="<?php echo esc_attr($option_name . '[hamburger_cross_line1]'); ?>" value="<?php echo esc_attr($options['hamburger_cross_line1']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_cross_line1']); ?>">
                                     </div>
 
                                     <div style="min-width: 160px;">
                                         <label for="hamburger_cross_line2"><?php esc_html_e('右上→左下の線', 'ns-hamburger-menu'); ?></label><br>
-                                        <input type="text" class="wp-color-picker" id="hamburger_cross_line2" name="<?php echo esc_attr($option_name . '[hamburger_cross_line2]'); ?>" value="<?php echo esc_attr($options['hamburger_cross_line2']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_cross_line2']); ?>">
+                                        <input type="text" class="nshm-color" id="hamburger_cross_line2" name="<?php echo esc_attr($option_name . '[hamburger_cross_line2]'); ?>" value="<?php echo esc_attr($options['hamburger_cross_line2']); ?>" data-default-color="<?php echo esc_attr($options['hamburger_cross_line2']); ?>">
                                     </div>
                                 </div>
                             </fieldset>
@@ -857,9 +857,6 @@ class NSHM_Admin {
             });
 
             updateNavigationOptions();
-
-            // Initialize WordPress color picker
-            $('.wp-color-picker').wpColorPicker();
         });
         </script>
         <?php
