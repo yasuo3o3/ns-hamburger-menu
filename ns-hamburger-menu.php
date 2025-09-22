@@ -3,7 +3,7 @@
  * Plugin Name:       NS Hamburger Overlay Menu
  * Plugin URI:        https://github.com/netservice/ns-hamburger-menu
  * Description:       Accessible hamburger overlay menu with gradient animations, multi-column layout, and full keyboard navigation support.
- * Version:           0.13.0
+ * Version:           0.14.0
  * Requires at least: 6.5
  * Requires PHP:      7.4
  * Author:            Netservice
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'NSHM_VERSION', '0.13.0' );
+define( 'NSHM_VERSION', '0.14.0' );
 define( 'NSHM_PLUGIN_FILE', __FILE__ );
 define( 'NSHM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'NSHM_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
@@ -46,6 +46,18 @@ add_action(
 			 */
 			function nshm_display_menu() {
 				static $nshm_core_instance = null;
+				static $nshm_frontend_instance = null;
+
+				// Signal that assets are required for theme function
+				do_action( 'nshm/require_assets' );
+
+				// Ensure assets are enqueued even after wp_enqueue_scripts
+				if ( class_exists( 'NSHM_Frontend' ) ) {
+					if ( ! $nshm_frontend_instance ) {
+						$nshm_frontend_instance = new NSHM_Frontend();
+					}
+					$nshm_frontend_instance->force_enqueue_assets();
+				}
 
 				// NSHM_Coreのインスタンスが存在する場合は新しいアーキテクチャを使用
 				if ( class_exists( 'NSHM_Core' ) ) {
@@ -82,7 +94,7 @@ add_action( 'init', 'nshm_init' );
 // Legacy compatibility
 class NS_Hamburger_Menu {
 	const OPT_KEY = 'ns_hamburger_options';
-	const VER     = '0.13.0';
+	const VER     = '0.14.0';
 
 	public function __construct() {
 		// Deprecated: This class is kept for backward compatibility only

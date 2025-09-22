@@ -143,8 +143,13 @@ class NSHM_Admin {
 		$output['design_preset'] = in_array( $input['design_preset'] ?? $defaults['design_preset'], $allowed_presets, true )
 			? $input['design_preset'] : $defaults['design_preset'];
 
-		// Custom CSS (truncate to 10KB)
-		$custom_css                  = $input['design_custom_css'] ?? $defaults['design_custom_css'];
+		// Custom CSS (sanitize and truncate to 10KB)
+		$custom_css = $input['design_custom_css'] ?? $defaults['design_custom_css'];
+
+		// Sanitization to prevent stored XSS while preserving CSS functionality
+		$custom_css = sanitize_textarea_field( $custom_css ); // Basic sanitization
+		$custom_css = wp_strip_all_tags( $custom_css ); // Remove all HTML tags
+
 		$output['design_custom_css'] = substr( $custom_css, 0, 10240 ); // 10KB limit
 
 		// ナビゲーション設定
@@ -754,7 +759,7 @@ class NSHM_Admin {
 
 								<label for="nshm_menu_label_mode_en">
 									<input type="radio" id="nshm_menu_label_mode_en" name="<?php echo esc_attr( $option_name . '[nshm_menu_label_mode]' ); ?>" value="<?php echo esc_attr( 'en' ); ?>" <?php checked( $options['nshm_menu_label_mode'], 'en' ); ?>>
-									<?php esc_html_e( 'Menu（英語）', 'ns-hamburger-menu' ); ?>
+									<?php esc_html_e( 'MENU（英語）', 'ns-hamburger-menu' ); ?>
 								</label>
 							</fieldset>
 
@@ -787,31 +792,45 @@ class NSHM_Admin {
 										<option value="0" <?php selected( $options['selected_navigation_id'], '0' ); ?>><?php esc_html_e( 'ページ一覧（フォールバック）', 'ns-hamburger-menu' ); ?></option>
 										<?php
 										// クラシックテーマのメニュー
-										$menus = wp_get_nav_menus();
+										$menus_cache_key = 'nshm_classic_menus';
+										$menus = get_transient( $menus_cache_key );
+										if ( false === $menus ) {
+											$menus = wp_get_nav_menus();
+											set_transient( $menus_cache_key, $menus, 10 * MINUTE_IN_SECONDS );
+										}
 										if ( ! empty( $menus ) ) {
 											echo '<optgroup label="' . esc_attr__( 'クラシックメニュー', 'ns-hamburger-menu' ) . '">';
 											foreach ( $menus as $menu ) {
-												echo '<option value="classic_' . esc_attr( $menu->term_id ) . '" ' . selected( $options['selected_navigation_id'], 'classic_' . $menu->term_id, false ) . '>' . esc_html( $menu->name ) . '</option>';
+												?>
+												<option value="<?php echo esc_attr( 'classic_' . $menu->term_id ); ?>" <?php selected( $options['selected_navigation_id'], 'classic_' . $menu->term_id ); ?>><?php echo esc_html( $menu->name ); ?></option>
+												<?php
 											}
 											echo '</optgroup>';
 										}
 
 										// ナビゲーションブロック
-										$nav_posts = get_posts(
-											array(
-												'post_type' => 'wp_navigation',
-												'post_status' => 'publish',
-												'orderby' => 'title',
-												'order'   => 'ASC',
-												'numberposts' => -1,
-											)
-										);
+										$nav_posts_cache_key = 'nshm_nav_posts_admin';
+										$nav_posts = get_transient( $nav_posts_cache_key );
+										if ( false === $nav_posts ) {
+											$nav_posts = get_posts(
+												array(
+													'post_type' => 'wp_navigation',
+													'post_status' => 'publish',
+													'orderby' => 'title',
+													'order'   => 'ASC',
+													'numberposts' => -1,
+												)
+											);
+											set_transient( $nav_posts_cache_key, $nav_posts, 10 * MINUTE_IN_SECONDS );
+										}
 										if ( ! empty( $nav_posts ) ) {
 											echo '<optgroup label="' . esc_attr__( 'ナビゲーションブロック', 'ns-hamburger-menu' ) . '">';
 											foreach ( $nav_posts as $nav_post ) {
 												/* translators: %d: Navigation block ID. */
 												$title = $nav_post->post_title ? $nav_post->post_title : sprintf( __( 'ナビゲーション #%d', 'ns-hamburger-menu' ), $nav_post->ID );
-												echo '<option value="block_' . esc_attr( $nav_post->ID ) . '" ' . selected( $options['selected_navigation_id'], 'block_' . $nav_post->ID, false ) . '>' . esc_html( $title ) . '</option>';
+												?>
+												<option value="<?php echo esc_attr( 'block_' . $nav_post->ID ); ?>" <?php selected( $options['selected_navigation_id'], 'block_' . $nav_post->ID ); ?>><?php echo esc_html( $title ); ?></option>
+												<?php
 											}
 											echo '</optgroup>';
 										}

@@ -16,10 +16,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 class NSHM_Frontend {
 
 	/**
+	 * Flag to require assets from theme function
+	 *
+	 * @var bool
+	 */
+	private $require_assets_flag = false;
+
+	/**
+	 * Flag to track if assets were enqueued
+	 *
+	 * @var bool
+	 */
+	private $assets_enqueued = false;
+
+	/**
 	 * Initialize frontend functionality
 	 */
 	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_action( 'nshm/require_assets', array( $this, 'set_require_assets_flag' ) );
 	}
 
 	/**
@@ -30,6 +45,30 @@ class NSHM_Frontend {
 		if ( ! $this->should_enqueue_assets() ) {
 			return;
 		}
+
+		// Perform actual enqueue
+		$this->do_enqueue_assets();
+	}
+
+	/**
+	 * Force enqueue assets (for theme integration)
+	 */
+	public function force_enqueue_assets() {
+		if ( ! $this->assets_enqueued ) {
+			$this->do_enqueue_assets();
+		}
+	}
+
+	/**
+	 * Perform actual asset enqueue
+	 */
+	private function do_enqueue_assets() {
+		// Prevent duplicate enqueuing
+		if ( $this->assets_enqueued ) {
+			return;
+		}
+
+		$this->assets_enqueued = true;
 
 		$options = NSHM_Defaults::get_options();
 		$preset  = $this->get_scheme_colors( $options['scheme'] );
@@ -156,7 +195,12 @@ class NSHM_Frontend {
 		}
 
 		// Check if block is present
-		if ( $post && has_block( 'ns/hamburger-menu', $post ) ) {
+		if ( $post && has_block( 'ns/hamburger', $post ) ) {
+			return true;
+		}
+
+		// Check if assets are required by theme function
+		if ( $this->require_assets_flag ) {
 			return true;
 		}
 
@@ -228,15 +272,38 @@ class NSHM_Frontend {
 			return;
 		}
 
-		// Basic sanitization: remove </style> tags to prevent CSS escape
-		$custom_css = str_replace( array( '</style>', '</STYLE>' ), '', $custom_css );
+		// Complete XSS protection: Convert to plain text first
+		$custom_css = sanitize_textarea_field( $custom_css );
 
-		// Wrap with CDATA comments
-		$safe_css = "/*<![CDATA[*/\n" . $custom_css . "\n/*]]>*/";
+		// Remove all HTML tags completely (including variations like </stYle>, </STYLE>)
+		$custom_css = wp_strip_all_tags( $custom_css );
 
-		// Add inline to preset CSS if exists, otherwise to base CSS
+		// Additional security: remove any remaining angle brackets
+		$custom_css = str_replace( array( '<', '>' ), '', $custom_css );
+
+		// Filter CSS properties with WordPress safecss_filter_attr
+		$custom_css = preg_replace_callback(
+			'/([a-zA-Z-]+)\s*:\s*([^;]+);?/',
+			function( $matches ) {
+				$property = trim( $matches[1] );
+				$value    = trim( $matches[2] );
+				// Use WordPress built-in CSS sanitization
+				$filtered = safecss_filter_attr( $property . ':' . $value );
+				return $filtered ? $filtered . ';' : '';
+			},
+			$custom_css
+		);
+
+		// Final cleanup: remove any remaining HTML-like content
+		$custom_css = preg_replace( '/<[^>]*>/', '', $custom_css );
+
+		if ( empty( trim( $custom_css ) ) ) {
+			return;
+		}
+
+		// Safe output via wp_add_inline_style (automatically escapes)
 		$target_handle = wp_style_is( 'ns-hmb-preset', 'enqueued' ) ? 'ns-hmb-preset' : 'ns-hmb-style';
-		wp_add_inline_style( $target_handle, $safe_css );
+		wp_add_inline_style( $target_handle, $custom_css );
 	}
 
 	/**
@@ -286,5 +353,17 @@ class NSHM_Frontend {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Set flag to require assets (called from theme function)
+	 */
+	public function set_require_assets_flag() {
+		$this->require_assets_flag = true;
+
+		// Force enqueue immediately if wp_enqueue_scripts has already passed
+		if ( did_action( 'wp_enqueue_scripts' ) ) {
+			$this->force_enqueue_assets();
+		}
 	}
 }
