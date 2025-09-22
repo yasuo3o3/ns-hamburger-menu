@@ -4,7 +4,7 @@ Tags: hamburger menu, overlay menu, responsive menu, accessibility, mobile menu
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.13.0
+Stable tag: 0.14.0
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,14 @@ No, the plugin uses vanilla JavaScript for better performance and compatibility.
 
 == Changelog ==
 
+= 0.13.0 =
+* Added: Support for direct navigation block structure (core/navigation-link and core/navigation-submenu)
+* Added: Enhanced manual navigation selection functionality for block themes
+* Added: Improved navigation block parsing to handle various WordPress navigation structures
+* Fixed: Manual navigation selection now correctly displays selected navigation blocks instead of fallback page list
+* Fixed: Navigation block parsing now supports both wrapped (core/navigation) and direct link structures
+* Fixed: Resolved issue where navigation block content was not being extracted properly
+
 = 0.12.0 =
 * Added: Custom position settings with default (top-left/top-right) and custom positioning modes
 * Added: Browser width-responsive X-axis positioning to prevent off-screen display
@@ -108,11 +116,11 @@ No, the plugin uses vanilla JavaScript for better performance and compatibility.
 * Technical: Enhanced CSS variable system and validation for new features
 
 = 0.11.0 =
-* Added: デザインプリセット（Pattern 1-3）でメニューの視覚効果を選択可能
-* Added: 開閉形状設定（円形/線形）によるアニメーション制御
-* Added: 追加CSS欄でカスタムスタイリングが可能
-* Changed: 管理UIのレイアウト最適化とカラー設定UIの統一
-* Fixed: 一部の出力エスケープ不足とオープンアニメーションが発火しないケースを修正
+* Added: Design presets (Pattern 1-3) for visual menu effects selection
+* Added: Open/close animation shape settings (circular/linear) for animation control
+* Added: Additional CSS field for custom styling capabilities
+* Changed: Optimized admin UI layout and unified color settings UI
+* Fixed: Some output escaping issues and cases where open animation wouldn't trigger
 
 = 0.10.0 =
 * Initial release

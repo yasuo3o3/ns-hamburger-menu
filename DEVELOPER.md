@@ -274,6 +274,118 @@ add_filter('nshm_navigation_fallback', function($pages) {
 - Supports hierarchical navigation blocks
 - Preserves menu styling and structure
 
+## Development Workflow
+
+### Code Standards & Testing
+```bash
+# PHP syntax check
+php -l $(git ls-files '*.php')
+
+# WordPress Coding Standards (PHPCS)
+vendor/bin/phpcs --standard=WordPress --report=summary .
+
+# Plugin Check (WordPress.org compliance)
+wp plugin check ns-hamburger-menu
+
+# Auto-fix coding standards
+vendor/bin/phpcbf --standard=WordPress .
+```
+
+### Build & Release Process
+```bash
+# 1. Update version numbers
+# - Update version in ns-hamburger-menu.php header
+# - Update NSHM_VERSION constant
+# - Update readme.txt Stable tag
+# - Update CHANGELOG.txt with new version
+
+# 2. Run quality checks
+php -l $(git ls-files '*.php')
+vendor/bin/phpcs --standard=WordPress .
+wp plugin check ns-hamburger-menu
+
+# 3. Create distribution ZIP
+git archive --format=zip --output=../ns-hamburger-menu.zip --prefix=ns-hamburger-menu/ HEAD
+
+# 4. Test distribution package
+unzip -l ../ns-hamburger-menu.zip | grep -E '\.(php|css|js|txt|json)$'
+```
+
+### Testing Checklist
+- [ ] PHP syntax validation (`php -l`)
+- [ ] PHPCS WordPress standards compliance
+- [ ] Plugin Check tool passes
+- [ ] Manual functionality testing
+- [ ] Cross-browser compatibility
+- [ ] Accessibility validation
+- [ ] Performance profiling
+
+## CI/CD Integration Notes
+
+### GitHub Actions Workflow (Planned)
+```yaml
+# .github/workflows/quality-check.yml
+name: Quality Check
+on: [push, pull_request]
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+      - name: Install dependencies
+        run: composer install
+      - name: Run PHPCS
+        run: vendor/bin/phpcs --standard=WordPress .
+
+  plugin-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup WordPress environment
+        # Use wordpress-develop or similar action
+      - name: Run Plugin Check
+        run: wp plugin check .
+```
+
+### WordPress.org SVN Deployment
+```bash
+# Prepare for WordPress.org submission
+# 1. Ensure all files comply with Plugin Directory guidelines
+# 2. Create release tag matching version
+# 3. Upload to SVN trunk/
+# 4. Create SVN tag for version
+
+# SVN commands (when ready for WordPress.org)
+svn checkout https://plugins.svn.wordpress.org/ns-hamburger-menu/
+cd ns-hamburger-menu
+# Copy files to trunk/
+svn add trunk/*
+svn commit -m "Version 0.14.0"
+# Copy trunk/ to tags/0.14.0/
+svn copy trunk/ tags/0.14.0/
+svn commit -m "Tag version 0.14.0"
+```
+
+### Automated Testing Setup
+```bash
+# Install WP-CLI for local testing
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
+sudo mv wp-cli.phar /usr/local/bin/wp
+
+# Setup local WordPress environment
+wp core download
+wp config create --dbname=test_db --dbuser=root --dbpass=password
+wp core install --url=localhost --title="Test Site" --admin_user=admin --admin_password=password --admin_email=admin@example.com
+
+# Install and activate plugin for testing
+wp plugin activate ns-hamburger-menu
+```
+
 ## Troubleshooting
 
 ### Common Issues

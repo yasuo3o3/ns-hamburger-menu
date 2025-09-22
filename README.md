@@ -6,6 +6,8 @@
 
 An accessible hamburger overlay menu plugin for WordPress with gradient animations, multi-column layout, and full keyboard navigation support.
 
+> **Note**: This plugin is being prepared for submission to the WordPress.org Plugin Directory and follows all WordPress coding standards and guidelines.
+
 ## Features
 
 - ✅ **Accessible**: Full ARIA support, keyboard navigation, focus management
@@ -121,6 +123,8 @@ A: Yes, follows WCAG guidelines with full keyboard and screen reader support.
 ## Support
 
 For issues and feature requests, please use the [GitHub repository](https://github.com/netservice/ns-hamburger-menu).
+
+Once available on WordPress.org, you can also find support through the official plugin page and community forums.
 
 ## License
 
