@@ -60,3 +60,4 @@ phpcs.xml export-ignore
 phpstan.neon export-ignore
 composer.json export-ignore
 vendor/ export-ignore
+.github/ export-ignore

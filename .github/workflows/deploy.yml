@@ -1,0 +1,19 @@
+name: Deploy to WordPress.org
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'   # SemVerタグのみで起動
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: WordPress Plugin Deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          # SLUG: selective-recaptcha-loader  # リポ名とWP.orgのスラッグが違う場合だけ有効化
